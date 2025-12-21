@@ -1,7 +1,16 @@
-import React from "react";
+
+import HomeLayouts from '../Layouts/HomeLayouts'
+import Home from './Home'
 
 const Homepage = () => {
-  return <div>Homepage</div>;
-};
+    
+  return (
+    <div>
+      <HomeLayouts>
+        <Home/>
+      </HomeLayouts>
+    </div>
+  )
+}
 
-export default Homepage;
+export default Homepage
