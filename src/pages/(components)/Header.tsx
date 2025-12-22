@@ -179,11 +179,11 @@ const Header = () => {
         </button>
 
         {mobileMenuOpen && (
-          <div className="absolute top-16 left-0 right-0 bg-purple-800 p-4 flex flex-col gap-4 md:hidden">
+          <div className="absolute top-18 left-0 right-0 bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 p-4 flex flex-col gap-4 md:hidden">
             <a href="/" className="text-purple-100 hover:text-white">Home</a>
             <a href="/about" className="text-purple-100 hover:text-white">About</a>
             <a href="/contact" className="text-purple-100 hover:text-white">Contact</a>
-            <button onClick={()=> router.push("/auth")} className="bg-purple-400 hover:bg-purple-300 text-purple-900 px-6 py-2 rounded-lg font-semibold w-full">
+            <button onClick={()=> router.push("/auth")} className="bg-purple-700 hover:bg-purple-300 text-white px-6 py-2 rounded-lg font-semibold w-full">
               Get Started
             </button>
           </div>
