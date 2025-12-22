@@ -163,10 +163,10 @@ const Header = () => {
         </div>
 
         <div className="hidden md:flex gap-8 items-center">
-          <button className="bg-purple-800 bg-opacity-40 hover:bg-purple-700 cursor-pointer border border-purple-800 text-white px-6 py-2 rounded-lg font-semibold transition">
+          <button onClick={()=>router.push("/auth")} className="bg-purple-800 bg-opacity-40 hover:bg-purple-700 cursor-pointer border border-purple-800 text-white px-6 py-2 rounded-lg font-semibold transition">
            Login
           </button>
-          <button className="bg-transparent hover:bg-purple-800 hover:text-white cursor-pointer border border-purple-800 text-purple-400 px-6 py-2 rounded-lg font-semibold transition">
+          <button onClick={()=>router.push("/auth")} className="bg-transparent hover:bg-purple-800 hover:text-white cursor-pointer border border-purple-800 text-purple-400 px-6 py-2 rounded-lg font-semibold transition">
             Register
           </button>
         </div>
@@ -180,10 +180,10 @@ const Header = () => {
 
         {mobileMenuOpen && (
           <div className="absolute top-16 left-0 right-0 bg-purple-800 p-4 flex flex-col gap-4 md:hidden">
-            <a href="#features" className="text-purple-100 hover:text-white">Features</a>
-            <a href="#benefits" className="text-purple-100 hover:text-white">Benefits</a>
-            <a href="#pricing" className="text-purple-100 hover:text-white">Pricing</a>
-            <button className="bg-purple-400 hover:bg-purple-300 text-purple-900 px-6 py-2 rounded-lg font-semibold w-full">
+            <a href="/" className="text-purple-100 hover:text-white">Home</a>
+            <a href="/about" className="text-purple-100 hover:text-white">About</a>
+            <a href="/contact" className="text-purple-100 hover:text-white">Contact</a>
+            <button onClick={()=> router.push("/auth")} className="bg-purple-400 hover:bg-purple-300 text-purple-900 px-6 py-2 rounded-lg font-semibold w-full">
               Get Started
             </button>
           </div>

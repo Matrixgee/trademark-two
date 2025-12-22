@@ -1,5 +1,6 @@
-import React from 'react'
+"use client"
 import { easeOut, motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 
 const CTASection = () => {
   const containerVariants = {
@@ -24,6 +25,8 @@ const CTASection = () => {
       },
     },
   };
+
+  const router = useRouter()
 
   return (
     <section className="py-20 px-6 bg-gradient-to-r from-purple-900 via-purple-800 to-slate-900 relative overflow-hidden">
@@ -89,7 +92,8 @@ const CTASection = () => {
           >
             {/* Shimmer effect */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+              onClick={()=> router.push("/auth")}
+              className="absolute inset-0 cursor-pointer bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
               initial={{ x: "-100%" }}
               whileHover={{
                 x: "100%",
