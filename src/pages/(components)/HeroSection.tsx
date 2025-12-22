@@ -1,6 +1,8 @@
+"use client"
+
 import { ArrowRight, DollarSign, TrendingUp, Users } from 'lucide-react';
-import React from 'react'
 import { easeInOut, easeOut, motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 
 const HeroSection = () => {
   const statVariants = {
@@ -27,6 +29,8 @@ const HeroSection = () => {
       },
     },
   };
+
+  const router = useRouter()
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-purple-800 pt-20 px-6 flex items-center justify-center">
@@ -65,7 +69,8 @@ const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <motion.button 
-            className="bg-purple-500 hover:bg-purple-400 flex gap-1.5 items-center justify-center text-white px-8 py-4 rounded-lg font-bold text-lg transition"
+          onClick={()=> router.push("/auth")}
+            className="bg-purple-600 hover:bg-purple-500 flex gap-1.5 items-center justify-center cursor-pointer text-white px-8 py-4 rounded-lg font-bold text-lg transition"
             whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168, 85, 247, 0.5)" }}
             whileTap={{ scale: 0.95 }}
           >
