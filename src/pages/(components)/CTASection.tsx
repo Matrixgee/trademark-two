@@ -90,7 +90,6 @@ const CTASection = () => {
               scale: 0.95,
             }}
           >
-            {/* Shimmer effect */}
             <motion.div
               onClick={()=> router.push("/auth")}
               className="absolute inset-0 cursor-pointer bg-gradient-to-r from-transparent via-white to-transparent opacity-0"

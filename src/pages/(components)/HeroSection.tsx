@@ -36,12 +36,12 @@ const HeroSection = () => {
     <section className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-purple-800 pt-20 px-6 flex items-center justify-center">
       <div className="max-w-6xl mx-auto text-center">
         <motion.div 
-          className="mb-8 inline-block px-4 py-2 bg-purple-800 rounded-full border border-purple-600"
+          className="mb-8 mt-4 inline-block px-4 py-2 bg-purple-800 rounded-full border border-purple-600"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-purple-300 text-sm font-semibold">🚀 Welcome to Smart Investing</span>
+          <span className="text-purple-300 text-sm font-semibold">Welcome to Smart Investing</span>
         </motion.div>
 
         <motion.h1 
