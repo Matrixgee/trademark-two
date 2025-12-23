@@ -7,18 +7,21 @@ import HeroSection from './HeroSection'
 import Home from './Home'
 import HowItWorks from './HowItWorks'
 import PricingSection from './PricingSection'
+import SecuritySection from './SecuritySection'
+import TestimonialsSection from './TestimonialsSection'
 
 const Homepage = () => {
     
   return (
     <div>
       <HomeLayouts>
-        {/* <Home/> */}
       <HeroSection />
       <HowItWorks/>
       <FeaturesSection />
       <BenefitsSection />
       <PricingSection/>
+      <SecuritySection/>
+      <TestimonialsSection/>
       <CTASection />
       </HomeLayouts>
     </div>
