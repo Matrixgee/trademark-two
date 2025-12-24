@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function AuthForms() {
   const [isLogin, setIsLogin] = useState(true);
@@ -43,6 +44,8 @@ export default function AuthForms() {
       borderColor: "rgba(168, 85, 247, 1)",
     },
   };
+
+  const router = useRouter()
 
   return (
     <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
@@ -227,7 +230,8 @@ export default function AuthForms() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 }}
-                  className="w-full py-3 bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group"
+                  onClick={()=>router.push("/user")}
+                  className="w-full py-3 cursor-pointer bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -408,14 +412,14 @@ export default function AuthForms() {
                   </span>
                 </motion.label>
 
-                {/* Submit Button */}
                 <motion.button
                   type="submit"
                   disabled={loading}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1 }}
-                  className="w-full py-3 bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group"
+                  onClick={()=>router.push("/user")}
+                  className="w-full py-3 cursor-pointer bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -428,7 +432,7 @@ export default function AuthForms() {
                     }}
                     transition={{ duration: 0.6 }}
                   />
-                  <span className="relative z-10 flex items-center justify-center gap-2">
+                  <span className="relative z-10 flex items-center justify-center gap-2" >
                     {loading ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
