@@ -10,7 +10,7 @@ const DashboardHeader = () => {
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-r from-slate-900 via-purple-800 to-purple-900 sticky top-0 z-40"
+      className="bg-gradient-to-r from-slate-950 via-purple-800 to-purple-900 sticky top-0 z-40"
     >
       <div className="px-6 py-1">
         <div className="flex items-center justify-between">
@@ -18,13 +18,13 @@ const DashboardHeader = () => {
                       <Image
                     src="/logo.png"
                     alt="TradeMark"
-                    width={45}
-                    height={45}
+                    width={48}
+                    height={48}
                     onClick={() => router.push('/')}
                     className="cursor-pointer"
                   />
           </div>
-          <div className="flex items-center gap-16">
+          <div className="flex items-center gap-16 w-[42%] justify-between">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

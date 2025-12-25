@@ -1,150 +1,356 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { motion } from 'framer-motion';
-import { ChevronDown, Download, Router, Send, TrendingUp, User } from 'lucide-react';
-import ProfileDropdown from './ProfileDropdown';
-import { useRouter } from 'next/router';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  ChartNoAxesColumn,
+  ChevronDown,
+  Download,
+  Send,
+  TrendingUp,
+  User,
+} from "lucide-react";
+import ProfileDropdown from "./ProfileDropdown";
+import { useRouter } from "next/router";
+import Chartone from "../TV/Chartone";
+import Image from "next/image";
 
 const Portfolio_Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const assets = [
-    { id: 'btc', name: 'Bitcoin', symbol: 'BTC', balance: '$54,000.00', icon: '₿', color: 'bg-orange-500' },
-    { id: 'eth', name: 'Ethereum', symbol: 'ETH', balance: '$7,000.00', icon: '⟠', color: 'bg-gray-400' },
-    { id: 'sol', name: 'Solana', symbol: 'SOL', balance: '$70,000.00', icon: '◎', color: 'bg-black' }
+    { id: "btc", name: "Bitcoin", symbol: "BTC", balance: "$54,000.00", icon: "/bitcoin.svg", alt: "btc" },
+    { id: "eth", name: "Ethereum", symbol: "ETH", balance: "$7,000.00", icon: "/ethimage.png", alt: "eth" },
+    { id: "sol", name: "Solana", symbol: "SOL", balance: "$70,000.00", icon: "/solimage.png", alt: "sol" },
   ];
-  const router = useRouter()
+
+  const router = useRouter();
+
   return (
-    <div className='bg-white p-3'>
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mb-6"
-    >
-      <div className="flex items-start justify-between mb-4 px-3 bg-white">
-        <div>
-          <p className="text-gray-500 text-sm">Total portfolio</p>
-          <h2 className="text-xl font-bold text-gray-900">$15,000.00</h2>
-        </div>
-        <div className="relative">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="relative cursor-pointer"
-          >
-            <div className='flex items-end cursor-pointer'>
-              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-              <User size={32} className="text-white" />
+    <div className="bg-white p-3">
+      <div className="max-w-7xl mx-auto">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <div className="flex items-start justify-between px-3 py-3 bg-white rounded-lg shadow-sm">
+            <div>
+              <p className="text-gray-500 text-sm">Total portfolio</p>
+              <h2 className="text-xl font-bold text-gray-900">$15,000.00</h2>
             </div>
-            <ChevronDown size={15} className='text-gray-500 pb-1' />
+
+            <div className="relative">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-end gap-1 cursor-pointer"
+              >
+                <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center border-4 border-white shadow-md">
+                  <User size={24} className="text-white" />
+                </div>
+                <ChevronDown size={15} className="text-gray-500 pb-1" />
+              </motion.button>
+
+              <ProfileDropdown
+                isOpen={dropdownOpen}
+                onClose={() => setDropdownOpen(false)}
+              />
             </div>
-          </motion.button>
-          <ProfileDropdown isOpen={dropdownOpen} onClose={() => setDropdownOpen(false)} />
+          </div>
+        </motion.div>
+
+        {/* Welcome Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-6 sm:p-8 text-white mb-6 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500 rounded-full opacity-20 -mr-16 -mt-16" />
+
+          <div className="text-center relative z-10">
+            <h3 className="text-2xl font-bold mb-2">Hello, Michael Jordan</h3>
+            <p className="text-purple-200 text-sm mb-6 leading-relaxed">
+              Welcome to Trademark Investment <br />
+              Crypto Investment Made Easy.
+            </p>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white text-purple-900 font-semibold text-sm py-2 px-6 rounded-lg hover:bg-purple-50 transition inline-flex items-center gap-2"
+            >
+              <ChartNoAxesColumn className="w-4 h-4" />
+              Start Trading
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Chart */}
+        <div className="w-full h-[57vh] mb-8 rounded-lg shadow-md overflow-hidden">
+          <Chartone />
         </div>
-      </div>
-    </motion.div>
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
-      className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-8 text-white mb-6 relative overflow-hidden"
-    >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500 rounded-full opacity-20 -mr-16 -mt-16"></div>
-      
-      <div className="flex items-center justify-center">
-        <div className="relative z-10 text-center">
-          <h3 className="text-2xl font-bold mb-2">Hello, Michael Jordan</h3>
-          <p className="text-purple-200 text-sm leading-relaxed mb-6">
-            Welcome to Block Crypto Investment<br/>
-            Crypto Investment Made Easy.
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-white text-purple-900 font-semibold py-2 px-6 rounded-lg hover:bg-purple-50 transition inline-flex items-center gap-2"
-          >
-            📊 Start Trading
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-    <div className="p-6 w-full">
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="bg-white flex flex-col h-max items-start rounded-lg p-2 shadow-md">
-          <div className="flex flex-col items-start gap-1">
-            <div className="rounded-lg flex items-start justify-start">
-              <Send className="w-4 h-4 text-purple-600" />
-            </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <div className="bg-white rounded-lg p-3 shadow-sm">
+            <Send className="w-4 h-4 text-purple-600 mb-1" />
             <p className="text-gray-600 text-sm">Total Withdraw</p>
+            <p className="text-sm font-bold">$6,000.00</p>
           </div>
-          <p className="text-sm font-bold">$6,000.00</p>
-        </div>
 
-        <div className="bg-white flex flex-col items-start rounded-lg p-2 shadow-md">
-          <div className="flex flex-col items-start gap-1">
-            <div className="rounded-lg flex items-start justify-start">
-              <Download className="w-4 h-4 text-purple-600" />
-            </div>
+          <div className="bg-white rounded-lg p-3 shadow-sm">
+            <Download className="w-4 h-4 text-purple-600 mb-1" />
             <p className="text-gray-600 text-sm">Total Deposit</p>
+            <p className="text-sm font-bold">$137,000.00</p>
           </div>
-          <p className="text-sm font-bold">$137,000.00</p>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <button 
-          onClick={() => router.push("/user/withdrawal")}
-          className="border-2 border-gray-300 rounded-lg cursor-pointer h-max p-3 hover:border-purple-600 hover:bg-purple-50 transition">
-          <div className="flex flex-col items-center gap-2">
-            <Send className="w-5 h-5 text-purple-600" />
-            <span className="font-semibold">Withdraw</span>
-          </div>
-        </button>
+        {/* Actions */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <button
+            onClick={() => router.push("/user/withdrawal")}
+            className="border rounded-lg p-3 hover:border-purple-600 hover:bg-purple-50 transition"
+          >
+            <Send className="mx-auto w-5 h-5 text-purple-600" />
+            <p className="text-sm font-semibold mt-1 text-center">Withdraw</p>
+          </button>
 
-        <button 
-          onClick={() => router.push("/user/deposit")}
-          className="border-2 border-gray-300 rounded-lg cursor-pointer p-3 h-max hover:border-purple-600 hover:bg-purple-50 transition">
-          <div className="flex flex-col items-center gap-2">
-            <Download className="w-5 h-5 text-purple-600" />
-            <span className="font-semibold">Deposit</span>
-          </div>
-        </button>
+          <button
+            onClick={() => router.push("/user/deposit")}
+            className="border rounded-lg p-3 hover:border-purple-600 hover:bg-purple-50 transition"
+          >
+            <Download className="mx-auto w-5 h-5 text-purple-600" />
+            <p className="text-sm font-semibold mt-1 text-center">Deposit</p>
+          </button>
 
-        <button className="border-2 border-gray-300 rounded-lg cursor-pointer p-3 h-max hover:border-purple-600 hover:bg-purple-50 transition">
-          <div className="flex flex-col items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-purple-600" />
-            <span className="font-semibold">Trade</span>
-          </div>
-        </button>
-      </div>
+          <button className="border rounded-lg p-3 hover:border-purple-600 hover:bg-purple-50 transition">
+            <TrendingUp className="mx-auto w-5 h-5 text-purple-600" />
+            <p className="text-sm font-semibold mt-1 text-center">Trade</p>
+          </button>
+        </div>
 
-      <div>
+        {/* Assets */}
         <h2 className="text-xl font-bold mb-4">My Assets</h2>
         <div className="space-y-3">
-          {assets.map(asset => (
-            <div key={asset.id} className="bg-white border rounded-lg p-4 flex items-center justify-between hover:shadow-md transition">
-              <div className="flex items-center gap-4">
-                <div className={`${asset.color} w-12 h-12 rounded-full flex items-center justify-center text-white text-xl font-bold`}>
-                  {asset.icon}
-                </div>
+          {assets.map((asset) => (
+            <div
+              key={asset.id}
+              className="bg-white rounded-lg p-4 flex items-center justify-between shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <Image
+                  src={asset.icon}
+                  alt={asset.alt}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
                 <div>
-                  <p className="font-bold text-[16px]">{asset.name}</p>
-                  <p className="text-gray-500 text-xs">{asset.symbol}</p>
+                  <p className="font-bold">{asset.name}</p>
+                  <p className="text-xs text-gray-500">{asset.symbol}</p>
                 </div>
               </div>
+
               <div className="text-right">
-                <p className="font-bold text-[16px]">{asset.balance}</p>
-                <p className="text-gray-500 text-sm">Total {asset.symbol.toLowerCase()} Balance</p>
+                <p className="font-bold">{asset.balance}</p>
+                <p className="text-xs text-gray-500">
+                  Total {asset.symbol.toLowerCase()} balance
+                </p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default Portfolio_Home
+export default Portfolio_Home;
+
+
+// "use client";
+
+// import { useState } from "react";
+// import { motion } from "framer-motion";
+// import {
+//   ChartNoAxesColumn,
+//   ChevronDown,
+//   Download,
+//   Send,
+//   TrendingUp,
+//   User,
+// } from "lucide-react";
+// import ProfileDropdown from "./ProfileDropdown";
+// import { useRouter } from "next/router";
+// import Chartone from "../TV/Chartone";
+// import Image from "next/image";
+
+// const Portfolio_Home = () => {
+//   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+//   const assets = [
+//     { id: "btc", name: "Bitcoin", symbol: "BTC", balance: "$54,000.00", icon: "/bitcoin.svg", alt: "btc" },
+//     { id: "eth", name: "Ethereum", symbol: "ETH", balance: "$7,000.00", icon: "/ethimage.png", alt: "eth" },
+//     { id: "sol", name: "Solana", symbol: "SOL", balance: "$70,000.00", icon: "/solimage.png", alt: "sol" },
+//   ];
+
+//   const router = useRouter();
+
+//   return (
+//     <div className="bg-gray-50 p-4 min-h-screen">
+//       <div className="max-w-7xl mx-auto space-y-6">
+
+//         {/* Header */}
+//         <motion.div
+//           initial={{ opacity: 0, y: 15 }}
+//           animate={{ opacity: 1, y: 0 }}
+//         >
+//           <div className="flex justify-between items-center bg-white rounded-xl px-4 py-4 shadow-sm border">
+//             <div>
+//               <p className="text-gray-400 text-sm">Total portfolio</p>
+//               <h2 className="text-2xl font-bold text-gray-900">$15,000.00</h2>
+//             </div>
+
+//             <div className="relative">
+//               <motion.button
+//                 whileTap={{ scale: 0.95 }}
+//                 onClick={() => setDropdownOpen(!dropdownOpen)}
+//                 className="flex items-center gap-2"
+//               >
+//                 <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center shadow">
+//                   <User size={22} className="text-white" />
+//                 </div>
+//                 <ChevronDown size={16} className="text-gray-500" />
+//               </motion.button>
+
+//               <ProfileDropdown
+//                 isOpen={dropdownOpen}
+//                 onClose={() => setDropdownOpen(false)}
+//               />
+//             </div>
+//           </div>
+//         </motion.div>
+
+//         {/* Welcome Card */}
+//         <motion.div
+//           initial={{ opacity: 0, y: 15 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ delay: 0.1 }}
+//           className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 p-7 text-white"
+//         >
+//           <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
+
+//           <div className="relative z-10 text-center">
+//             <h3 className="text-2xl font-semibold mb-2">
+//               Hello, Michael Jordan 👋
+//             </h3>
+//             <p className="text-purple-200 text-sm mb-6">
+//               Welcome to Trademark Investment <br />
+//               Crypto Investment Made Easy.
+//             </p>
+
+//             <motion.button
+//               whileHover={{ scale: 1.05 }}
+//               whileTap={{ scale: 0.95 }}
+//               className="inline-flex items-center gap-2 bg-white text-purple-900 px-6 py-2.5 rounded-lg text-sm font-semibold shadow hover:bg-purple-50"
+//             >
+//               <ChartNoAxesColumn className="w-4 h-4" />
+//               Start Trading
+//             </motion.button>
+//           </div>
+//         </motion.div>
+
+//         {/* Chart */}
+//         <div className="bg-white rounded-xl p-4 shadow-sm border">
+//           <div className="h-[45vh]">
+//             <Chartone />
+//           </div>
+//         </div>
+
+//         {/* Stats */}
+//         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//           {[
+//             { label: "Total Withdraw", value: "$6,000.00", icon: Send },
+//             { label: "Total Deposit", value: "$137,000.00", icon: Download },
+//           ].map(({ label, value, icon: Icon }) => (
+//             <div
+//               key={label}
+//               className="bg-white rounded-xl p-4 shadow-sm border flex items-center gap-4"
+//             >
+//               <div className="p-2 bg-purple-50 rounded-lg">
+//                 <Icon className="w-4 h-4 text-purple-600" />
+//               </div>
+//               <div>
+//                 <p className="text-gray-500 text-sm">{label}</p>
+//                 <p className="font-bold">{value}</p>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Actions */}
+//         <div className="grid grid-cols-3 gap-4">
+//           {[
+//             { label: "Withdraw", icon: Send, action: () => router.push("/user/withdrawal") },
+//             { label: "Deposit", icon: Download, action: () => router.push("/user/deposit") },
+//             { label: "Trade", icon: TrendingUp },
+//           ].map(({ label, icon: Icon, action }) => (
+//             <motion.button
+//               key={label}
+//               whileHover={{ y: -2 }}
+//               onClick={action}
+//               className="bg-white border rounded-xl p-4 shadow-sm hover:border-purple-600 hover:bg-purple-50 transition text-center"
+//             >
+//               <Icon className="mx-auto w-5 h-5 text-purple-600 mb-1" />
+//               <p className="text-sm font-semibold">{label}</p>
+//             </motion.button>
+//           ))}
+//         </div>
+
+//         {/* Assets */}
+//         <div>
+//           <h2 className="text-lg font-bold mb-4">My Assets</h2>
+//           <div className="space-y-3">
+//             {assets.map((asset) => (
+//               <motion.div
+//                 key={asset.id}
+//                 whileHover={{ scale: 1.01 }}
+//                 className="bg-white border rounded-xl p-4 flex items-center justify-between shadow-sm"
+//               >
+//                 <div className="flex items-center gap-3">
+//                   <Image
+//                     src={asset.icon}
+//                     alt={asset.alt}
+//                     width={40}
+//                     height={40}
+//                     className="rounded-full"
+//                   />
+//                   <div>
+//                     <p className="font-semibold">{asset.name}</p>
+//                     <p className="text-xs text-gray-500">{asset.symbol}</p>
+//                   </div>
+//                 </div>
+
+//                 <div className="text-right">
+//                   <p className="font-semibold">{asset.balance}</p>
+//                   <p className="text-xs text-gray-400">
+//                     Total balance
+//                   </p>
+//                 </div>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Portfolio_Home;

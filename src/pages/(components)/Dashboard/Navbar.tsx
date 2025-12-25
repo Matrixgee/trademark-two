@@ -6,7 +6,7 @@ const Navbar = () => {
 const router = useRouter();
 
   return (
-    <div  className='z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.12)] pt-3 px-15 pb-5 bg-white w-full flex justify-between text-black'>
+    <div  className='z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.12)] pt-3 max-md:px-3 md:px-15 p-1 bg-white w-full flex justify-between text-black'>
         {
             [
     {
@@ -27,7 +27,7 @@ const router = useRouter();
     {
       icon: <ChartCandlestick size={20} />,
       label: "Market",
-      path: "",
+      path: "/user/market",
     },
   ].map((item)=>{
           const isActive = router.pathname === item.path;
@@ -36,12 +36,12 @@ const router = useRouter();
             <button
               key={item.label}
               onClick={() => router.push(item.path)}
-              className={`flex flex-col items-center gap-1 text-xs transition cursor-pointer
+              className={`flex flex-col items-center gap-3 text-xs transition cursor-pointer
                 ${isActive ? "text-purple-700 font-medium" : "text-gray-500"}
               `}
             >
               {item.icon}
-              <span>{item.label}</span>
+              <span className='text-sm'>{item.label}</span>
             </button>
           );
         })}
