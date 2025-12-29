@@ -1,3 +1,4 @@
+import { userInfo } from '@/Global/UserSlice';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LogOut, Settings, User } from 'lucide-react';
 import React from 'react'
