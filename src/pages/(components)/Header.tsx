@@ -163,10 +163,10 @@ const Header = () => {
         </div>
 
         <div className="hidden md:flex gap-8 items-center">
-          <button onClick={()=>router.push("/auth")} className="bg-purple-800 bg-opacity-40 hover:bg-purple-700 cursor-pointer border border-purple-800 text-white px-6 py-2 rounded-lg font-semibold transition">
+          <button onClick={()=>router.push("/auth/login")} className="bg-purple-800 bg-opacity-40 hover:bg-purple-700 cursor-pointer border border-purple-800 text-white px-6 py-2 rounded-lg font-semibold transition">
            Login
           </button>
-          <button onClick={()=>router.push("/auth")} className="bg-transparent hover:bg-purple-800 hover:text-white cursor-pointer border border-purple-800 text-purple-400 px-6 py-2 rounded-lg font-semibold transition">
+          <button onClick={()=>router.push("/auth/register")} className="bg-transparent hover:bg-purple-800 hover:text-white cursor-pointer border border-purple-800 text-purple-400 px-6 py-2 rounded-lg font-semibold transition">
             Register
           </button>
         </div>

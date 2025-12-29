@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ChartNoAxesColumn,
@@ -14,9 +14,14 @@ import ProfileDropdown from "./ProfileDropdown";
 import { useRouter } from "next/router";
 import Chartone from "../TV/Chartone";
 import Image from "next/image";
+import axios from "@/config/axiosconfig";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Global/store";
 
 const Portfolio_Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+    const user = useSelector((state: RootState) => state?.user);
+    const userDetails = user.User?.user?.user
 
   const assets = [
     { id: "btc", name: "Bitcoin", symbol: "BTC", balance: "$54,000.00", icon: "/bitcoin.svg", alt: "btc" },
@@ -25,6 +30,20 @@ const Portfolio_Home = () => {
   ];
 
   const router = useRouter();
+
+  const getProfileInfo = async()=>{
+    try {
+      const res = await axios.get("/user/profile")
+      console.log(res?.data)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    getProfileInfo()
+  },[])
 
   return (
     <div className="bg-white p-3">
@@ -73,7 +92,7 @@ const Portfolio_Home = () => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500 rounded-full opacity-20 -mr-16 -mt-16" />
 
           <div className="text-center relative z-10">
-            <h3 className="text-2xl font-bold mb-2">Hello, Michael Jordan</h3>
+            <h3 className="text-2xl font-bold mb-2">Hello, {userDetails?.name}</h3>
             <p className="text-purple-200 text-sm mb-6 leading-relaxed">
               Welcome to Trademark Investment <br />
               Crypto Investment Made Easy.
