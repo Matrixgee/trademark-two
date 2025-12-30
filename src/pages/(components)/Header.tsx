@@ -197,9 +197,12 @@ const Header = () => {
             <a href="/contact" className="text-purple-100 hover:text-white">
               Contact
             </a>
+            <a href="/auth/login" className="text-purple-500 font-semibold hover:text-purple-500">
+              Login
+            </a>
             <button
-              onClick={() => router.push("/auth")}
-              className="bg-purple-700 hover:bg-purple-300 text-white px-6 py-2 rounded-lg font-semibold w-full"
+              onClick={() => router.push("/auth/register")}
+              className="bg-purple-700 hover:bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold w-full"
             >
               Get Started
             </button>
