@@ -1,30 +1,36 @@
-import React from 'react'
-import { AnimatePresence, easeOut, motion, spring } from 'framer-motion';
-import { Star } from 'lucide-react';
+import React from "react";
+import { AnimatePresence, easeOut, motion, spring } from "framer-motion";
+import { Star } from "lucide-react";
 
 const TestimonialsSection: React.FC = () => {
   const testimonials = [
     {
-      name: 'Sarah Johnson',
-      title: 'Entrepreneur',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
-      quote: 'I\'ve tripled my investment returns in just 8 months. The AI strategies are incredibly smart and easy to understand.',
-      rating: 5
+      name: "Sarah Johnson",
+      title: "Entrepreneur",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+      quote:
+        "I've tripled my investment returns in just 8 months. The AI strategies are incredibly smart and easy to understand.",
+      rating: 5,
     },
     {
-      name: 'Michael Chen',
-      title: 'Software Engineer',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
-      quote: 'The platform is so intuitive. I love how I can monitor everything from my phone and the insights are always on point.',
-      rating: 5
+      name: "Michael Chen",
+      title: "Software Engineer",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+      quote:
+        "The platform is so intuitive. I love how I can monitor everything from my phone and the insights are always on point.",
+      rating: 5,
     },
     {
-      name: 'Emma Rodriguez',
-      title: 'Marketing Manager',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
-      quote: 'Finally, an investment app that doesn\'t feel intimidating. The zero-fee structure saved me hundreds already.',
-      rating: 5
-    }
+      name: "Emma Rodriguez",
+      title: "Marketing Manager",
+      image:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
+      quote:
+        "Finally, an investment app that doesn't feel intimidating. The zero-fee structure saved me hundreds already.",
+      rating: 5,
+    },
   ];
 
   const containerVariants = {
@@ -48,8 +54,8 @@ const TestimonialsSection: React.FC = () => {
   };
 
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 50,
       rotateX: -10,
     },
@@ -130,7 +136,10 @@ const TestimonialsSection: React.FC = () => {
 
   return (
     <AnimatePresence mode="wait">
-      <section id="testimonials" className="py-20 px-6 bg-gradient-to-b from-purple-900 to-slate-900">
+      <section
+        id="testimonials"
+        className="py-20 px-6 bg-linear-to-b from-purple-900 to-slate-900"
+      >
         <div className="max-w-6xl mx-auto">
           <motion.div
             variants={titleVariants}
@@ -139,11 +148,11 @@ const TestimonialsSection: React.FC = () => {
             viewport={{ once: true, amount: 0.3 }}
             className="text-center mb-16"
           >
-            <motion.h2 
+            <motion.h2
               className="text-4xl md:text-5xl font-bold text-white mb-4"
               variants={{
                 hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
+                visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
               }}
               initial="hidden"
               whileInView="visible"
@@ -151,11 +160,15 @@ const TestimonialsSection: React.FC = () => {
             >
               What Our Users Say
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="text-center text-purple-200 text-lg max-w-2xl mx-auto"
               variants={{
                 hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.1 } }
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.8, delay: 0.1 },
+                },
               }}
               initial="hidden"
               whileInView="visible"
@@ -165,7 +178,7 @@ const TestimonialsSection: React.FC = () => {
             </motion.p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="grid md:grid-cols-3 gap-8"
             variants={containerVariants}
             initial="hidden"
@@ -177,16 +190,16 @@ const TestimonialsSection: React.FC = () => {
                 key={idx}
                 variants={cardVariants}
                 whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                className="bg-gradient-to-br from-purple-800 to-slate-800 p-6 rounded-xl border border-purple-600 border-opacity-50 hover:border-opacity-100 transition"
+                className="bg-linear-to-br from-purple-800 to-slate-800 p-6 rounded-xl border border-purple-600 border-opacity-50 hover:border-opacity-100 transition"
                 style={{ perspective: 1000 }}
               >
-                <motion.div 
+                <motion.div
                   className="flex items-center gap-4 mb-6"
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={{
-                    visible: { transition: { staggerChildren: 0.1 } }
+                    visible: { transition: { staggerChildren: 0.1 } },
                   }}
                 >
                   <motion.img
@@ -197,12 +210,16 @@ const TestimonialsSection: React.FC = () => {
                     whileHover={{ scale: 1.15, transition: { duration: 0.3 } }}
                   />
                   <motion.div variants={textVariants}>
-                    <h3 className="text-white font-bold text-lg">{testimonial.name}</h3>
-                    <p className="text-purple-300 text-sm">{testimonial.title}</p>
+                    <h3 className="text-white font-bold text-lg">
+                      {testimonial.name}
+                    </h3>
+                    <p className="text-purple-300 text-sm">
+                      {testimonial.title}
+                    </p>
                   </motion.div>
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                   className="flex gap-1 mb-4"
                   variants={starsVariants}
                   initial="hidden"
@@ -210,16 +227,16 @@ const TestimonialsSection: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      variants={starVariants}
-                    >
-                      <Star size={18} className="fill-yellow-400 text-yellow-400" />
+                    <motion.div key={i} variants={starVariants}>
+                      <Star
+                        size={18}
+                        className="fill-yellow-400 text-yellow-400"
+                      />
                     </motion.div>
                   ))}
                 </motion.div>
 
-                <motion.p 
+                <motion.p
                   className="text-purple-100 italic"
                   variants={quoteVariants}
                   initial="hidden"
@@ -237,4 +254,4 @@ const TestimonialsSection: React.FC = () => {
   );
 };
 
-export default TestimonialsSection
+export default TestimonialsSection;

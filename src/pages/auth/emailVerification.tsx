@@ -1,61 +1,63 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // EmailVerificationSuccess.tsx
-"use client"
+"use client";
 
 import { easeOut, motion, spring } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Check, Mail, ArrowRight } from "lucide-react";
+import { Check, ArrowRight } from "lucide-react";
 import { useRouter } from "next/router";
 import axios from "@/config/axiosconfig";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../Global/store";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "../../Global/store";
 
 export default function EmailVerificationSuccess() {
   const router = useRouter();
 
-  const [verificationSuccessful, setVerificationSuccessful] = useState<boolean>(false)
-  const user = useSelector((state: RootState) => state?.user);
-//   const userEmail = user.User?.user?.user.email;
+  const [verificationSuccessful, setVerificationSuccessful] =
+    useState<boolean>(false);
+  // const user = useSelector((state: RootState) => state?.user);
+  // console.log(user);
 
-useEffect(() => {
-  if (!router.isReady) return;
+  //   const userEmail = user.User?.user?.user.email;
 
-  const { otp, token } = router.query;
+  useEffect(() => {
+    if (!router.isReady) return;
 
-  let timer: NodeJS.Timeout;
+    const { otp, token } = router.query;
 
-  const verifyEmail = async () => {
-    try {
-      if (!otp || !token) return;
+    let timer: NodeJS.Timeout;
 
-      const res = await axios.post("/auth/verify-email", {
-        otp,
-        token,
-      });
+    const verifyEmail = async () => {
+      try {
+        if (!otp || !token) return;
 
-      console.log("Email verified:", res.data);
-      setVerificationSuccessful(true);
+        const res = await axios.post("/auth/verify-email", {
+          otp,
+          token,
+        });
 
-      timer = setTimeout(() => {
-        router.replace("/auth/login");
-      }, 5000);
-    } catch (error) {
-      console.error("Verification error:", error);
-      setVerificationSuccessful(false);
+        console.log("Email verified:", res.data);
+        setVerificationSuccessful(true);
 
-      timer = setTimeout(() => {
-        router.replace("/auth/notverified");
-      }, 5000);
-    }
-  };
+        timer = setTimeout(() => {
+          router.replace("/auth/login");
+        }, 5000);
+      } catch (error) {
+        console.error("Verification error:", error);
+        setVerificationSuccessful(false);
 
-  verifyEmail();
+        timer = setTimeout(() => {
+          router.replace("/auth/notverified");
+        }, 5000);
+      }
+    };
 
-  return () => {
-    if (timer) clearTimeout(timer);
-  };
-}, [router.isReady, router.query]);
+    verifyEmail();
 
-
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [router.isReady, router.query]);
 
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -106,7 +108,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="bg-linear-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
         className="w-full max-w-md"
         variants={containerVariants}
@@ -127,13 +129,13 @@ useEffect(() => {
             animate="animate"
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full border border-green-500/50"
+              className="absolute inset-0 bg-linear-to-br from-green-500/20 to-green-600/20 rounded-full border border-green-500/50"
               variants={checkmarkVariants}
               initial="hidden"
               animate="visible"
             />
             <motion.div
-              className="absolute inset-2 bg-gradient-to-br from-green-500/10 to-green-600/10 rounded-full flex items-center justify-center"
+              className="absolute inset-2 bg-linear-to-br from-green-500/10 to-green-600/10 rounded-full flex items-center justify-center"
               variants={checkmarkVariants}
               initial="hidden"
               animate="visible"
@@ -161,15 +163,13 @@ useEffect(() => {
 
           {/* Success Message */}
           <motion.h1
-            className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-green-300 mb-3"
+            className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-purple-300 to-green-300 mb-3"
             custom={0}
             variants={textVariants}
             initial="hidden"
             animate="visible"
           >
-            {
-              verificationSuccessful ? "Email Verified!" : "Verification Failed"
-            }
+            {verificationSuccessful ? "Email Verified!" : "Verification Failed"}
           </motion.h1>
 
           {/* Subtitle */}
@@ -180,7 +180,9 @@ useEffect(() => {
             initial="hidden"
             animate="visible"
           >
-            {verificationSuccessful ? "Your email address has been successfully verified." : "Your email address has not been verified."}
+            {verificationSuccessful
+              ? "Your email address has been successfully verified."
+              : "Your email address has not been verified."}
           </motion.p>
 
           {/* Email Display */}
@@ -205,8 +207,9 @@ useEffect(() => {
             initial="hidden"
             animate="visible"
           >
-            {verificationSuccessful ?
-            "Your account is now fully activated. You can now access all features and enjoy our platform." : ""}
+            {verificationSuccessful
+              ? "Your account is now fully activated. You can now access all features and enjoy our platform."
+              : ""}
           </motion.p>
 
           {/* Progress Bar */}
@@ -218,7 +221,7 @@ useEffect(() => {
             animate="visible"
           >
             <motion.div
-              className="h-full bg-gradient-to-r from-green-500 to-green-600"
+              className="h-full bg-linear-to-r from-green-500 to-green-600"
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
               transition={{ delay: 1.5, duration: 3.5, ease: "linear" }}
@@ -233,38 +236,37 @@ useEffect(() => {
             initial="hidden"
             animate="visible"
           >
-            {
-              verificationSuccessful ? "Redirecting to login in 5 seconds..." : "Redirecting to in 5 seconds..."
-            }
+            {verificationSuccessful
+              ? "Redirecting to login in 5 seconds..."
+              : "Redirecting to in 5 seconds..."}
           </motion.p>
 
-          {
-            verificationSuccessful ? (<motion.button
-            onClick={() => router.push("/user")}
-            className="w-full py-3 bg-gradient-to-r from-green-600 via-green-700 to-green-800 text-white font-semibold rounded-lg relative overflow-hidden group"
-            custom={6}
-            variants={textVariants}
-            initial="hidden"
-            animate="visible"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
-              initial={{ x: "-100%" }}
-              whileHover={{
-                x: "100%",
-                opacity: 0.2,
-              }}
-              transition={{ duration: 0.6 }}
-            />
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              Go to Login
-              <ArrowRight className="w-5 h-5" />
-            </span>
-          </motion.button>) : null
-          }
-
+          {verificationSuccessful ? (
+            <motion.button
+              onClick={() => router.push("/user")}
+              className="w-full py-3 bg-linear-to-r from-green-600 via-green-700 to-green-800 text-white font-semibold rounded-lg relative overflow-hidden group"
+              custom={6}
+              variants={textVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-linear-to-r from-transparent via-white to-transparent opacity-0"
+                initial={{ x: "-100%" }}
+                whileHover={{
+                  x: "100%",
+                  opacity: 0.2,
+                }}
+                transition={{ duration: 0.6 }}
+              />
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Go to Login
+                <ArrowRight className="w-5 h-5" />
+              </span>
+            </motion.button>
+          ) : null}
         </motion.div>
       </motion.div>
     </div>

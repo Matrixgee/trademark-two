@@ -1,6 +1,6 @@
-"use client"
-import { easeOut, motion } from 'framer-motion';
-import { useRouter } from 'next/router';
+"use client";
+import { easeOut, motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 const CTASection = () => {
   const containerVariants = {
@@ -26,10 +26,10 @@ const CTASection = () => {
     },
   };
 
-  const router = useRouter()
+  const router = useRouter();
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-r from-purple-900 via-purple-800 to-slate-900 relative overflow-hidden">
+    <section className="py-20 px-6 bg-linear-to-r from-purple-900 via-purple-800 to-slate-900 relative overflow-hidden">
       {/* Animated background elements */}
       <motion.div
         className="absolute top-10 left-10 w-32 h-32 bg-purple-500 rounded-full opacity-10 blur-3xl"
@@ -56,33 +56,34 @@ const CTASection = () => {
         }}
       />
 
-      <motion.div 
+      <motion.div
         className="max-w-4xl mx-auto text-center relative z-10"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
       >
-        <motion.h2 
+        <motion.h2
           className="text-4xl md:text-5xl font-bold text-white mb-6"
           variants={itemVariants}
         >
           Ready to Start Your Investment Journey?
         </motion.h2>
 
-        <motion.p 
+        <motion.p
           className="text-xl text-purple-200 mb-8 max-w-2xl mx-auto"
           variants={itemVariants}
         >
-          Join thousands of investors who are already building wealth with Trademark. Get started in minutes.
+          Join thousands of investors who are already building wealth with
+          Trademark. Get started in minutes.
         </motion.p>
 
-        <motion.div 
+        <motion.div
           className="flex flex-col sm:flex-row gap-4 justify-center"
           variants={itemVariants}
         >
-          <motion.button 
-            className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition relative overflow-hidden group"
+          <motion.button
+            className="bg-linear-to-r from-purple-600 to-purple-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition relative overflow-hidden group"
             whileHover={{
               scale: 1.05,
             }}
@@ -91,8 +92,8 @@ const CTASection = () => {
             }}
           >
             <motion.div
-              onClick={()=> router.push("/auth")}
-              className="absolute inset-0 cursor-pointer bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+              onClick={() => router.push("/auth")}
+              className="absolute inset-0 cursor-pointer bg-linear-to-r from-transparent via-white to-transparent opacity-0"
               initial={{ x: "-100%" }}
               whileHover={{
                 x: "100%",
@@ -112,4 +113,4 @@ const CTASection = () => {
   );
 };
 
-export default CTASection
+export default CTASection;

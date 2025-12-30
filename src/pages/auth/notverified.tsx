@@ -1,5 +1,4 @@
-
-"use client"
+"use client";
 
 import axios from "@/config/axiosconfig";
 import { RootState } from "@/Global/store";
@@ -13,22 +12,24 @@ import { useSelector } from "react-redux";
 export default function AccountNotVerified() {
   const router = useRouter();
   const { otp, token } = router.query;
-  const [loading, setLoading] = useState<boolean>(false)
-    const user = useSelector((state: RootState) => state?.user);
-    const userEmail = user.User?.user?.user.email;
+  const [loading, setLoading] = useState<boolean>(false);
+  const user = useSelector((state: RootState) => state?.user);
+  const userEmail = user.User?.user?.user.email;
 
   const handleSendVerificationLink = async () => {
-          setLoading(true)
-          try {
-              const res = await axios.post("/auth/resend-verification", {email:userEmail})
-              console.log(res.data?.message)
-              toast.success(res?.data?.message)
-          } catch (error) {
-              console.log(error)
-          }finally{
-              setLoading(false)
-          }
-      }
+    setLoading(true);
+    try {
+      const res = await axios.post("/auth/resend-verification", {
+        email: userEmail,
+      });
+      console.log(res.data?.message);
+      toast.success(res?.data?.message);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -77,7 +78,7 @@ export default function AccountNotVerified() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="bg-linear-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
         className="w-full max-w-md"
         variants={containerVariants}
@@ -102,7 +103,7 @@ export default function AccountNotVerified() {
             animate="visible"
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-full border border-amber-500/50"
+              className="absolute inset-0 bg-linear-to-br from-amber-500/20 to-orange-500/20 rounded-full border border-amber-500/50"
               animate={floatVariants}
             />
             <motion.div
@@ -129,7 +130,7 @@ export default function AccountNotVerified() {
             initial="hidden"
             animate="visible"
           >
-            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-300 mb-2">
+            <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-amber-300 to-orange-300 mb-2">
               Account Not Verified
             </h1>
             <p className="text-purple-200 text-sm">
@@ -140,7 +141,7 @@ export default function AccountNotVerified() {
           {/* Start Verification Button */}
           <motion.button
             onClick={handleSendVerificationLink}
-            className="w-full py-3 bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group mb-4"
+            className="w-full py-3 bg-linear-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group mb-4"
             custom={1}
             variants={contentVariants}
             initial="hidden"
@@ -149,7 +150,7 @@ export default function AccountNotVerified() {
             whileTap={{ scale: 0.98 }}
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+              className="absolute inset-0 bg-linear-to-r from-transparent via-white to-transparent opacity-0"
               initial={{ x: "-100%" }}
               whileHover={{
                 x: "100%",

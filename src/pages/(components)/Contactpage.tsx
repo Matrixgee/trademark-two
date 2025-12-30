@@ -1,25 +1,41 @@
-"use client"
+"use client";
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react'
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
 const Contactpage = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000);
-    setFormData({ name: '', email: '', message: '' });
+    setFormData({ name: "", email: "", message: "" });
   };
 
   const faqs = [
-    { q: 'What is the minimum investment?', a: 'The minimum investment is $100 for our Starter plan.' },
-    { q: 'How long does withdrawal take?', a: 'Withdrawals are processed within 2-5 business days.' },
-    { q: 'Is my money safe?', a: 'Yes, we use bank-level encryption and insurance protection.' },
-    { q: 'What are the fees?', a: 'We charge a small 2% annual management fee on your portfolio.' },
+    {
+      q: "What is the minimum investment?",
+      a: "The minimum investment is $100 for our Starter plan.",
+    },
+    {
+      q: "How long does withdrawal take?",
+      a: "Withdrawals are processed within 2-5 business days.",
+    },
+    {
+      q: "Is my money safe?",
+      a: "Yes, we use bank-level encryption and insurance protection.",
+    },
+    {
+      q: "What are the fees?",
+      a: "We charge a small 2% annual management fee on your portfolio.",
+    },
   ];
 
   const containerVariants = {
@@ -52,7 +68,7 @@ const Contactpage = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen mt-18 space-y-16 pb-20 pt-12">
+    <div className="bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen mt-18 space-y-16 pb-20 pt-12">
       <AnimatePresence>
         <motion.div
           className="max-w-4xl mx-auto px-4 text-center"
@@ -60,12 +76,10 @@ const Contactpage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          <motion.h1 
-            className="text-5xl font-bold mb-4 text-white"
-          >
+          <motion.h1 className="text-5xl font-bold mb-4 text-white">
             Get in Touch
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-xl text-purple-200"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -97,12 +111,16 @@ const Contactpage = () => {
                 transition={{ delay: 0.1 }}
                 viewport={{ once: true }}
               >
-                <label className="block text-sm font-semibold mb-3 text-purple-300">Name</label>
+                <label className="block text-sm font-semibold mb-3 text-purple-300">
+                  Name
+                </label>
                 <motion.input
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="w-full px-4 py-3 border border-purple-500/50 rounded-lg focus:outline-none bg-purple-900/30 text-white placeholder-purple-300/50 transition"
                   placeholder="Your name"
                   variants={inputVariants}
@@ -116,12 +134,16 @@ const Contactpage = () => {
                 transition={{ delay: 0.15 }}
                 viewport={{ once: true }}
               >
-                <label className="block text-sm font-semibold mb-3 text-purple-300">Email</label>
+                <label className="block text-sm font-semibold mb-3 text-purple-300">
+                  Email
+                </label>
                 <motion.input
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full px-4 py-3 border border-purple-500/50 rounded-lg focus:outline-none bg-purple-900/30 text-white placeholder-purple-300/50 transition"
                   placeholder="your@email.com"
                   variants={inputVariants}
@@ -135,11 +157,15 @@ const Contactpage = () => {
                 transition={{ delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <label className="block text-sm font-semibold mb-3 text-purple-300">Message</label>
+                <label className="block text-sm font-semibold mb-3 text-purple-300">
+                  Message
+                </label>
                 <motion.textarea
                   required
                   value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
                   className="w-full px-4 py-3 border border-purple-500/50 rounded-lg focus:outline-none h-32 bg-purple-900/30 text-white placeholder-purple-300/50 transition resize-none"
                   placeholder="Your message"
                   variants={inputVariants}
@@ -149,7 +175,7 @@ const Contactpage = () => {
 
               <motion.button
                 onClick={handleSubmit}
-                className="w-full py-3 rounded-lg font-bold text-white bg-gradient-to-r from-purple-600 to-purple-700 relative overflow-hidden group"
+                className="w-full py-3 rounded-lg font-bold text-white bg-linear-to-r from-purple-600 to-purple-700 relative overflow-hidden group"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0 }}
@@ -158,7 +184,7 @@ const Contactpage = () => {
                 viewport={{ once: true }}
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-white to-transparent opacity-0"
                   initial={{ x: "-100%" }}
                   whileHover={{
                     x: "100%",
@@ -202,7 +228,7 @@ const Contactpage = () => {
               y: -5,
             }}
           >
-            <motion.h3 
+            <motion.h3
               className="text-2xl font-bold mb-6 text-purple-300"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -213,9 +239,12 @@ const Contactpage = () => {
             </motion.h3>
             <div className="space-y-6">
               {[
-                { title: 'Email', value: 'hello@trademark.com' },
-                { title: 'Phone', value: '+1 (800) 123-4567' },
-                { title: 'Address', value: '123 Investment Ave, Financial City, FC 12345' },
+                { title: "Email", value: "hello@trademark.com" },
+                { title: "Phone", value: "+1 (800) 123-4567" },
+                {
+                  title: "Address",
+                  value: "123 Investment Ave, Financial City, FC 12345",
+                },
               ].map((item, i) => (
                 <motion.div
                   key={i}
@@ -224,7 +253,9 @@ const Contactpage = () => {
                   transition={{ delay: 0.2 + i * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <p className="font-semibold mb-2 text-purple-300">{item.title}</p>
+                  <p className="font-semibold mb-2 text-purple-300">
+                    {item.title}
+                  </p>
                   <p className="text-purple-100">{item.value}</p>
                 </motion.div>
               ))}
@@ -250,7 +281,7 @@ const Contactpage = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
         >
-          <motion.h2 
+          <motion.h2
             className="text-4xl font-bold mb-8 text-center text-white"
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -284,7 +315,7 @@ const Contactpage = () => {
                     transition={{ duration: 0.3 }}
                     className="text-purple-400 font-bold"
                   >
-                    {expandedFaq === i ? '−' : '+'}
+                    {expandedFaq === i ? "−" : "+"}
                   </motion.span>
                 </motion.button>
 
@@ -292,7 +323,7 @@ const Contactpage = () => {
                   {expandedFaq === i && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
+                      animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
                       className="px-4 pb-4 text-purple-100 bg-purple-900/20 border-t border-purple-500/30"
@@ -309,4 +340,4 @@ const Contactpage = () => {
     </div>
   );
 };
-export default Contactpage
+export default Contactpage;

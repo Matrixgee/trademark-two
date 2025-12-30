@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
-import { Menu, TrendingUp, X } from 'lucide-react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import { Menu, TrendingUp, X } from "lucide-react";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navItems = [
-    { name: 'Home', id: '/' },
-    { name: 'About', id: '/about' },
-    { name: 'Contact', id: '/contact' },
+    { name: "Home", id: "/" },
+    { name: "About", id: "/about" },
+    { name: "Contact", id: "/contact" },
   ];
 
-  const router = useRouter()
-  const currentPage = router.pathname
+  const router = useRouter();
+  const currentPage = router.pathname;
 
-  console.log(currentPage)
+  console.log(currentPage);
   // return (
   //   <motion.header
   //     className="bg-white shadow-lg sticky top-0 z-50"
@@ -130,28 +130,30 @@ const Header = () => {
   //     </AnimatePresence>
   //   </motion.header>
   // );
-    return (
-    <header className="fixed w-full top-0 z-50 bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 shadow-lg">
+  return (
+    <header className="fixed w-full top-0 z-50 bg-linear-to-r from-slate-900 via-gray-900 to-slate-900 shadow-lg">
       <nav className="w-fullx1 mx-auto px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Image
-        src="/logo.png"
-        alt="TradeMark"
-        width={50}
-        height={50}
-        onClick={() => router.push('/')}
-        className="cursor-pointer"
-      />
+            src="/logo.png"
+            alt="TradeMark"
+            width={50}
+            height={50}
+            onClick={() => router.push("/")}
+            className="cursor-pointer"
+          />
         </div>
-     <div className="hidden md:flex gap-8 items-center">
-        {navItems.map((item) => (
+        <div className="hidden md:flex gap-8 items-center">
+          {navItems.map((item) => (
             <motion.button
               key={item.id}
-              onClick={() => router.push(item.id) }
+              onClick={() => router.push(item.id)}
               className={`transition-colors cursor-pointer
                  ${
-                currentPage === item.id ? 'font-bold text-[#7615d6]' : 'font-semibold text-white'
-              }`}
+                   currentPage === item.id
+                     ? "font-bold text-[#7615d6]"
+                     : "font-semibold text-white"
+                 }`}
               // style={{
               //   color: currentPage === item.id ? '#e0c0ff' : '#ffffff',
               // }}
@@ -163,15 +165,21 @@ const Header = () => {
         </div>
 
         <div className="hidden md:flex gap-8 items-center">
-          <button onClick={()=>router.push("/auth/login")} className="bg-purple-800 bg-opacity-40 hover:bg-purple-700 cursor-pointer border border-purple-800 text-white px-6 py-2 rounded-lg font-semibold transition">
-           Login
+          <button
+            onClick={() => router.push("/auth/login")}
+            className="bg-purple-800 bg-opacity-40 hover:bg-purple-700 cursor-pointer border border-purple-800 text-white px-6 py-2 rounded-lg font-semibold transition"
+          >
+            Login
           </button>
-          <button onClick={()=>router.push("/auth/register")} className="bg-transparent hover:bg-purple-800 hover:text-white cursor-pointer border border-purple-800 text-purple-400 px-6 py-2 rounded-lg font-semibold transition">
+          <button
+            onClick={() => router.push("/auth/register")}
+            className="bg-transparent hover:bg-purple-800 hover:text-white cursor-pointer border border-purple-800 text-purple-400 px-6 py-2 rounded-lg font-semibold transition"
+          >
             Register
           </button>
         </div>
 
-        <button 
+        <button
           className="md:hidden text-white"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
@@ -179,11 +187,20 @@ const Header = () => {
         </button>
 
         {mobileMenuOpen && (
-          <div className="absolute top-18 left-0 right-0 bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 p-4 flex flex-col gap-4 md:hidden">
-            <a href="/" className="text-purple-100 hover:text-white">Home</a>
-            <a href="/about" className="text-purple-100 hover:text-white">About</a>
-            <a href="/contact" className="text-purple-100 hover:text-white">Contact</a>
-            <button onClick={()=> router.push("/auth")} className="bg-purple-700 hover:bg-purple-300 text-white px-6 py-2 rounded-lg font-semibold w-full">
+          <div className="absolute top-18 left-0 right-0 bg-linear-to-r from-slate-900 via-gray-900 to-slate-900 p-4 flex flex-col gap-4 md:hidden">
+            <a href="/" className="text-purple-100 hover:text-white">
+              Home
+            </a>
+            <a href="/about" className="text-purple-100 hover:text-white">
+              About
+            </a>
+            <a href="/contact" className="text-purple-100 hover:text-white">
+              Contact
+            </a>
+            <button
+              onClick={() => router.push("/auth")}
+              className="bg-purple-700 hover:bg-purple-300 text-white px-6 py-2 rounded-lg font-semibold w-full"
+            >
               Get Started
             </button>
           </div>
@@ -193,5 +210,4 @@ const Header = () => {
   );
 };
 
-
-export default Header
+export default Header;

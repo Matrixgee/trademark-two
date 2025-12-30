@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { motion, AnimatePresence, easeOut } from 'framer-motion';
-import Image from 'next/image';
+import { motion, AnimatePresence, easeOut } from "framer-motion";
+import Image from "next/image";
 
 const Aboutpage = () => {
   const containerVariants = {
@@ -55,7 +55,7 @@ const Aboutpage = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-slate-900 mt-18 via-purple-900 to-slate-900 min-h-screen space-y-16 pb-20 pt-12">
+    <div className="bg-linear-to-br from-slate-900 mt-18 via-purple-900 to-slate-900 min-h-screen space-y-16 pb-20 pt-12">
       <AnimatePresence>
         <motion.div
           className="max-w-4xl mx-auto px-4"
@@ -63,9 +63,7 @@ const Aboutpage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          <motion.h1 
-            className="text-5xl font-bold mb-12 text-center text-white"
-          >
+          <motion.h1 className="text-5xl font-bold mb-12 text-center text-white">
             About TradeMark
           </motion.h1>
         </motion.div>
@@ -78,33 +76,35 @@ const Aboutpage = () => {
           viewport={{ once: true, margin: "-100px" }}
           variants={containerVariants}
         >
-          <motion.div 
+          <motion.div
             className="bg-purple-800/30 backdrop-blur-md w-full lg:w-[49%] rounded-xl shadow-lg p-8 border-l-4 border-purple-400"
             variants={sectionLeftVariants}
-            whileHover={{ 
+            whileHover={{
               boxShadow: "0 20px 40px rgba(168, 85, 247, 0.3)",
               y: -5,
             }}
             transition={{ duration: 0.3 }}
           >
-            <motion.h2 
+            <motion.h2
               className="text-4xl font-bold mb-4 text-white"
               variants={itemVariants}
             >
               Our Mission
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="text-purple-100 text-[18px] leading-relaxed"
               variants={itemVariants}
             >
-              At TradeMark, our mission is to democratize investment opportunities for everyone. We believe
-              that financial growth should be accessible, transparent, and secure for all individuals,
-              regardless of their experience level. We're committed to providing innovative investment
-              solutions that empower our clients to build lasting wealth and achieve their financial goals.
+              At TradeMark, our mission is to democratize investment
+              opportunities for everyone. We believe that financial growth
+              should be accessible, transparent, and secure for all individuals,
+              regardless of their experience level. We're committed to providing
+              innovative investment solutions that empower our clients to build
+              lasting wealth and achieve their financial goals.
             </motion.p>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="w-full lg:w-[49%] h-[300px] bg-gray-600 rounded-xl relative overflow-hidden"
             variants={imageVariants}
             whileHover={{ scale: 1.02 }}
@@ -126,7 +126,7 @@ const Aboutpage = () => {
           viewport={{ once: true, margin: "-100px" }}
           variants={containerVariants}
         >
-          <motion.div 
+          <motion.div
             className="w-full lg:w-[49%] h-[300px] bg-gray-600 rounded-xl relative overflow-hidden"
             variants={imageVariants}
             whileHover={{ scale: 1.02 }}
@@ -139,29 +139,31 @@ const Aboutpage = () => {
             />
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="bg-purple-700/40 backdrop-blur-md w-full lg:w-[49%] rounded-xl shadow-lg p-8 border-r-4 border-purple-400"
             variants={sectionRightVariants}
-            whileHover={{ 
+            whileHover={{
               boxShadow: "0 20px 40px rgba(168, 85, 247, 0.3)",
               y: -5,
             }}
             transition={{ duration: 0.3 }}
           >
-            <motion.h2 
+            <motion.h2
               className="text-4xl font-bold mb-4 text-white"
               variants={itemVariants}
             >
               Our Vision
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="text-purple-100 text-lg leading-relaxed"
               variants={itemVariants}
             >
-              We envision a world where every individual has the knowledge, tools, and confidence to make
-              informed investment decisions. By combining cutting-edge technology with expert financial
-              guidance, we aim to be the most trusted and innovative investment platform globally. Our vision
-              extends to creating a community of financially literate and successful investors.
+              We envision a world where every individual has the knowledge,
+              tools, and confidence to make informed investment decisions. By
+              combining cutting-edge technology with expert financial guidance,
+              we aim to be the most trusted and innovative investment platform
+              globally. Our vision extends to creating a community of
+              financially literate and successful investors.
             </motion.p>
           </motion.div>
         </motion.section>
@@ -174,7 +176,7 @@ const Aboutpage = () => {
           viewport={{ once: true, margin: "-100px" }}
           variants={containerVariants}
         >
-          <motion.h2 
+          <motion.h2
             className="text-4xl font-bold mb-12 text-center text-white"
             variants={itemVariants}
           >
@@ -183,10 +185,22 @@ const Aboutpage = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             {[
-              { title: 'Integrity', desc: 'We operate with honesty and transparency in all our dealings.' },
-              { title: 'Innovation', desc: 'We constantly evolve to provide the best investment solutions.' },
-              { title: 'Security', desc: 'Your financial safety and data protection is our top priority.' },
-              { title: 'Customer First', desc: 'Every decision we make is guided by our clients\' best interests.' },
+              {
+                title: "Integrity",
+                desc: "We operate with honesty and transparency in all our dealings.",
+              },
+              {
+                title: "Innovation",
+                desc: "We constantly evolve to provide the best investment solutions.",
+              },
+              {
+                title: "Security",
+                desc: "Your financial safety and data protection is our top priority.",
+              },
+              {
+                title: "Customer First",
+                desc: "Every decision we make is guided by our clients' best interests.",
+              },
             ].map((value, i) => (
               <motion.div
                 key={i}
@@ -203,14 +217,14 @@ const Aboutpage = () => {
                     },
                   },
                 }}
-                whileHover={{ 
+                whileHover={{
                   y: -8,
                   boxShadow: "0 15px 30px rgba(168, 85, 247, 0.2)",
                   borderColor: "rgba(168, 85, 247, 1)",
                 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.h3 
+                <motion.h3
                   className="text-2xl font-bold mb-3 text-purple-300"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
@@ -219,7 +233,7 @@ const Aboutpage = () => {
                 >
                   {value.title}
                 </motion.h3>
-                <motion.p 
+                <motion.p
                   className="text-purple-100"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
@@ -237,4 +251,4 @@ const Aboutpage = () => {
   );
 };
 
-export default Aboutpage
+export default Aboutpage;
