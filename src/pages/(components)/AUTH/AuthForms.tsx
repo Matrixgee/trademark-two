@@ -65,20 +65,14 @@ export default function AuthForms() {
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateEmail(formData.email)) {
-      alert("Please input valid email");
-    }
-    if (!formData.name) {
-      alert("Please input valid email");
-    }
-    if (!formData.username) {
-      alert("Please input valid email");
-    }
-    if (!formData.phoneNumber) {
-      alert("Please input valid email");
+      toast.error("Please input valid email");
+      return;
     }
     if (!validatePassword(formData.password)) {
-      alert("Please input valid email");
+      toast.error("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+      return;
     }
+
     setLoading(true);
     try {
       const res = await axios.post("/auth/register", formData);
@@ -100,11 +94,13 @@ export default function AuthForms() {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateEmail(formData.email)) {
-      alert("Please input valid email");
+      toast.error("Please input valid email");
+      return;
     }
-    if (!validatePassword(formData.password)) {
-      alert("Please input valid email");
-    }
+    // if (!validatePassword(formData.password)) {
+    //   toast.error("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
+    //   return;
+    // }
     setLoading(true);
     try {
       const res = await axios.post("/auth/login", formData);

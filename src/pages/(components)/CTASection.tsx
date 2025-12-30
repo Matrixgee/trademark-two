@@ -92,7 +92,7 @@ const CTASection = () => {
             }}
           >
             <motion.div
-              onClick={() => router.push("/auth")}
+              onClick={() => router.push("/auth/register")}
               className="absolute inset-0 cursor-pointer bg-linear-to-r from-transparent via-white to-transparent opacity-0"
               initial={{ x: "-100%" }}
               whileHover={{
