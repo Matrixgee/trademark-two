@@ -72,7 +72,7 @@ const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <motion.button 
-          onClick={()=> router.push("/auth")}
+          onClick={()=> router.push("/auth/register")}
             className="bg-purple-600 hover:bg-purple-500 flex gap-1.5 items-center justify-center cursor-pointer text-white px-8 py-4 rounded-lg font-bold text-lg transition"
             whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168, 85, 247, 0.5)" }}
             whileTap={{ scale: 0.95 }}
