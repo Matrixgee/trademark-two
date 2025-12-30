@@ -1,5 +1,5 @@
 // ResetPassword.tsx
-"use client"
+"use client";
 
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 export default function ResetPassword() {
   const router = useRouter();
   const { token } = router.query;
-  
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="bg-linear-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
         className="w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
@@ -190,12 +190,12 @@ export default function ResetPassword() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group disabled:opacity-50"
+              className="w-full py-3 bg-linear-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group disabled:opacity-50"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0"
+                className="absolute inset-0 bg-linear-to-r from-transparent via-white to-transparent opacity-0"
                 initial={{ x: "-100%" }}
                 whileHover={{
                   x: "100%",

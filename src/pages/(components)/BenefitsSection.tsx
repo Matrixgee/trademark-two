@@ -1,5 +1,5 @@
-import React from 'react'
-import { easeOut, motion } from 'framer-motion';
+import React from "react";
+import { easeOut, motion } from "framer-motion";
 
 const BenefitsSection = () => {
   const benefits = [
@@ -7,12 +7,12 @@ const BenefitsSection = () => {
     "24/7 customer support via AI assistant",
     "Fractional shares starting at $1",
     "Tax-loss harvesting built-in",
-    "Socially responsible investing options"
+    "Socially responsible investing options",
   ];
 
   const benefitVariants = {
     hidden: { opacity: 0, x: -20 },
-    visible: (i:any) => ({
+    visible: (i: any) => ({
       opacity: 1,
       x: 0,
       transition: {
@@ -49,7 +49,7 @@ const BenefitsSection = () => {
 
   const progressVariants = {
     hidden: { scaleX: 0, transformOrigin: "left" },
-    visible: (delay:any) => ({
+    visible: (delay: any) => ({
       scaleX: 1,
       transition: {
         delay,
@@ -68,11 +68,14 @@ const BenefitsSection = () => {
   };
 
   return (
-    <section id="benefits" className="py-20 px-6 bg-gradient-to-b from-purple-900 to-slate-900">
+    <section
+      id="benefits"
+      className="py-20 px-6 bg-linear-to-b from-purple-900 to-slate-900"
+    >
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <motion.h2 
+            <motion.h2
               className="text-4xl font-bold text-white mb-6"
               initial={{ opacity: 0, y: -20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -83,8 +86,8 @@ const BenefitsSection = () => {
             </motion.h2>
             <ul className="space-y-4">
               {benefits.map((benefit, idx) => (
-                <motion.li 
-                  key={idx} 
+                <motion.li
+                  key={idx}
                   custom={idx}
                   variants={benefitVariants}
                   initial="hidden"
@@ -92,7 +95,7 @@ const BenefitsSection = () => {
                   viewport={{ once: true, margin: "-50px" }}
                   className="flex items-center gap-3"
                 >
-                  <motion.div 
+                  <motion.div
                     className="w-6 h-6 bg-purple-400 rounded-full flex items-center justify-center flex-shrink-0"
                     variants={checkmarkVariants}
                   >
@@ -104,16 +107,19 @@ const BenefitsSection = () => {
             </ul>
           </div>
 
-          <motion.div 
-            className="bg-gradient-to-br from-purple-700 to-purple-900 rounded-2xl p-8 border border-purple-500 border-opacity-50"
+          <motion.div
+            className="bg-linear-to-br from-purple-700 to-purple-900 rounded-2xl p-8 border border-purple-500 border-opacity-50"
             variants={portfolioVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
-            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(168, 85, 247, 0.3)" }}
+            whileHover={{
+              y: -8,
+              boxShadow: "0 20px 40px rgba(168, 85, 247, 0.3)",
+            }}
             transition={{ duration: 0.3 }}
           >
-            <motion.div 
+            <motion.div
               className="bg-purple-800 bg-opacity-50 rounded-lg p-6 mb-4"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -121,7 +127,7 @@ const BenefitsSection = () => {
               viewport={{ once: true }}
             >
               <p className="text-purple-300 text-sm">Sample Portfolio</p>
-              <motion.p 
+              <motion.p
                 className="text-4xl font-bold text-white mt-2"
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -130,7 +136,7 @@ const BenefitsSection = () => {
               >
                 $24,532
               </motion.p>
-              <motion.p 
+              <motion.p
                 className="text-green-400 text-sm mt-1 font-semibold"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -143,9 +149,24 @@ const BenefitsSection = () => {
 
             <div className="space-y-4 text-sm">
               {[
-                { label: "Stocks", percentage: 45, color: "bg-purple-400", delay: 0.3 },
-                { label: "ETFs", percentage: 35, color: "bg-purple-300", delay: 0.4 },
-                { label: "Bonds", percentage: 20, color: "bg-purple-500", delay: 0.5 }
+                {
+                  label: "Stocks",
+                  percentage: 45,
+                  color: "bg-purple-400",
+                  delay: 0.3,
+                },
+                {
+                  label: "ETFs",
+                  percentage: 35,
+                  color: "bg-purple-300",
+                  delay: 0.4,
+                },
+                {
+                  label: "Bonds",
+                  percentage: 20,
+                  color: "bg-purple-500",
+                  delay: 0.5,
+                },
               ].map((item, idx) => (
                 <div key={idx}>
                   <div className="flex justify-between text-purple-100 mb-2">
@@ -181,4 +202,4 @@ const BenefitsSection = () => {
   );
 };
 
-export default BenefitsSection
+export default BenefitsSection;

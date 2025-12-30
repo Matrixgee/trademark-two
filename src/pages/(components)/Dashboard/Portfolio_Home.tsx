@@ -20,35 +20,54 @@ import { RootState } from "@/Global/store";
 
 const Portfolio_Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-    const user = useSelector((state: RootState) => state?.user);
-    const userDetails = user.User?.user?.user
+  const user = useSelector((state: RootState) => state?.user);
+  const userDetails = user.User?.user?.user;
 
   const assets = [
-    { id: "btc", name: "Bitcoin", symbol: "BTC", balance: "$54,000.00", icon: "/bitcoin.svg", alt: "btc" },
-    { id: "eth", name: "Ethereum", symbol: "ETH", balance: "$7,000.00", icon: "/ethimage.png", alt: "eth" },
-    { id: "sol", name: "Solana", symbol: "SOL", balance: "$70,000.00", icon: "/solimage.png", alt: "sol" },
+    {
+      id: "btc",
+      name: "Bitcoin",
+      symbol: "BTC",
+      balance: "$54,000.00",
+      icon: "/bitcoin.svg",
+      alt: "btc",
+    },
+    {
+      id: "eth",
+      name: "Ethereum",
+      symbol: "ETH",
+      balance: "$7,000.00",
+      icon: "/ethimage.png",
+      alt: "eth",
+    },
+    {
+      id: "sol",
+      name: "Solana",
+      symbol: "SOL",
+      balance: "$70,000.00",
+      icon: "/solimage.png",
+      alt: "sol",
+    },
   ];
 
   const router = useRouter();
 
-  const getProfileInfo = async()=>{
+  const getProfileInfo = async () => {
     try {
-      const res = await axios.get("/user/profile")
-      console.log(res?.data)
-
+      const res = await axios.get("/user/profile");
+      console.log(res?.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  useEffect(()=>{
-    getProfileInfo()
-  },[])
+  useEffect(() => {
+    getProfileInfo();
+  }, []);
 
   return (
     <div className="bg-white p-3">
       <div className="max-w-7xl mx-auto">
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -87,12 +106,14 @@ const Portfolio_Home = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-6 sm:p-8 text-white mb-6 relative overflow-hidden"
+          className="bg-linear-to-r from-purple-600 to-purple-800 rounded-2xl p-6 sm:p-8 text-white mb-6 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500 rounded-full opacity-20 -mr-16 -mt-16" />
 
           <div className="text-center relative z-10">
-            <h3 className="text-2xl font-bold mb-2">Hello, {userDetails?.name}</h3>
+            <h3 className="text-2xl font-bold mb-2">
+              Hello, {userDetails?.name}
+            </h3>
             <p className="text-purple-200 text-sm mb-6 leading-relaxed">
               Welcome to Trademark Investment <br />
               Crypto Investment Made Easy.
@@ -184,14 +205,12 @@ const Portfolio_Home = () => {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );
 };
 
 export default Portfolio_Home;
-
 
 // "use client";
 
@@ -261,7 +280,7 @@ export default Portfolio_Home;
 //           initial={{ opacity: 0, y: 15 }}
 //           animate={{ opacity: 1, y: 0 }}
 //           transition={{ delay: 0.1 }}
-//           className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 p-7 text-white"
+//           className="relative overflow-hidden rounded-2xl bg-linear-to-br from-purple-600 via-purple-700 to-purple-900 p-7 text-white"
 //         >
 //           <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
 
