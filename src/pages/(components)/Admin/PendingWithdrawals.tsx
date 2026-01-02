@@ -1,0 +1,206 @@
+import { CheckCircle, Eye, XCircle } from "lucide-react";
+import { useState } from "react";
+
+interface Withdrawal {
+  id: number;
+  user: string;
+  email: string;
+  amount: number;
+  asset: 'BTC' | 'ETH' | 'SOL';
+  walletAddress: string;
+  status: 'Pending' | 'Processed';
+  requestedDate: string;
+}
+
+const PendingWithdrawals = () => {
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([
+    { id: 1, user: 'John Doe', email: 'john@example.com', amount: 2000, asset: 'BTC', walletAddress: '1A1z7aD...', status: 'Pending', requestedDate: '2024-01-18 10:30' },
+    { id: 2, user: 'Jane Smith', email: 'jane@example.com', amount: 1500, asset: 'ETH', walletAddress: '0x742d...', status: 'Pending', requestedDate: '2024-01-18 11:15' },
+    { id: 3, user: 'Mike Johnson', email: 'mike@example.com', amount: 3000, asset: 'SOL', walletAddress: 'So11P...', status: 'Processed', requestedDate: '2024-01-17 14:20' },
+    { id: 4, user: 'Sarah Wilson', email: 'sarah@example.com', amount: 1200, asset: 'BTC', walletAddress: '3J98t...', status: 'Pending', requestedDate: '2024-01-18 09:45' },
+  ]);
+
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState<Withdrawal | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  const handleApprove = (id: number) => {
+    setWithdrawals(withdrawals.map(w => w.id === id ? { ...w, status: 'Processed' } : w));
+  };
+
+  const handleDecline = (id: number) => {
+    setWithdrawals(withdrawals.filter(w => w.id !== id));
+  };
+
+  const viewDetails = (withdrawal: Withdrawal) => {
+    setSelectedWithdrawal(withdrawal);
+    setShowDetailsModal(true);
+  };
+
+  const pendingCount = withdrawals.filter(w => w.status === 'Pending').length;
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Pending Withdrawals</h1>
+        <p className="text-gray-600">{pendingCount} withdrawal(s) awaiting approval</p>
+      </div>
+
+      {pendingCount > 0 && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+          <div className="text-yellow-600 text-xl">⚠️</div>
+          <div>
+            <p className="font-semibold text-yellow-900">Action Required</p>
+            <p className="text-sm text-yellow-800">You have {pendingCount} pending withdrawal request(s) to review</p>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-200">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">User</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Amount</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Asset</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Wallet Address</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Requested</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {withdrawals.map((withdrawal) => (
+                <tr key={withdrawal.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td className="px-6 py-4">
+                    <div>
+                      <p className="font-medium text-gray-900">{withdrawal.user}</p>
+                      <p className="text-sm text-gray-500">{withdrawal.email}</p>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="font-semibold text-gray-900">${withdrawal.amount.toLocaleString()}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                      {withdrawal.asset}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="font-mono text-sm text-gray-600">{withdrawal.walletAddress}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="text-gray-600 text-sm">{withdrawal.requestedDate}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${withdrawal.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}`}>
+                      {withdrawal.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => viewDetails(withdrawal)}
+                        className="p-2 hover:bg-blue-100 rounded-lg transition"
+                        title="View Details"
+                      >
+                        <Eye size={18} className="text-blue-600" />
+                      </button>
+                      {withdrawal.status === 'Pending' && (
+                        <>
+                          <button
+                            onClick={() => handleApprove(withdrawal.id)}
+                            className="p-2 hover:bg-green-100 rounded-lg transition"
+                            title="Approve"
+                          >
+                            <CheckCircle size={18} className="text-green-600" />
+                          </button>
+                          <button
+                            onClick={() => handleDecline(withdrawal.id)}
+                            className="p-2 hover:bg-red-100 rounded-lg transition"
+                            title="Decline"
+                          >
+                            <XCircle size={18} className="text-red-600" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {withdrawals.length === 0 && (
+          <div className="p-8 text-center">
+            <p className="text-gray-500 text-lg">No pending withdrawals</p>
+          </div>
+        )}
+      </div>
+
+      {showDetailsModal && selectedWithdrawal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold mb-4">Withdrawal Details</h2>
+            <div className="space-y-4 mb-6">
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">User:</span>
+                <span className="font-semibold">{selectedWithdrawal.user}</span>
+              </div>
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Email:</span>
+                <span className="font-semibold">{selectedWithdrawal.email}</span>
+              </div>
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Amount:</span>
+                <span className="font-semibold text-lg">${selectedWithdrawal.amount.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Asset:</span>
+                <span className="font-semibold">{selectedWithdrawal.asset}</span>
+              </div>
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Wallet Address:</span>
+                <span className="font-mono text-sm">{selectedWithdrawal.walletAddress}</span>
+              </div>
+              <div className="flex justify-between py-2">
+                <span className="text-gray-600">Requested:</span>
+                <span className="font-semibold">{selectedWithdrawal.requestedDate}</span>
+              </div>
+            </div>
+            {selectedWithdrawal.status === 'Pending' && (
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    handleApprove(selectedWithdrawal.id);
+                    setShowDetailsModal(false);
+                  }}
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => {
+                    handleDecline(selectedWithdrawal.id);
+                    setShowDetailsModal(false);
+                  }}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition"
+                >
+                  Decline
+                </button>
+              </div>
+            )}
+            <button
+              onClick={() => setShowDetailsModal(false)}
+              className="w-full mt-3 px-4 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PendingWithdrawals;

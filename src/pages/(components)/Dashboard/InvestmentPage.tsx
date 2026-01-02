@@ -1,17 +1,31 @@
 "use client"
 
+import axios from "@/config/axiosconfig";
 import { useDepositContext } from "@/context/DepositContext";
 import { RootState } from "@/Global/store";
 import DepositModal from "@/Modals/DepositModal";
+import InvestmentModal from "@/Modals/InvestmentModal";
 import { isAxiosError } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-const DepositPage = () => {
+export interface InvestmentPlan {
+  name: string;
+  returns: string;
+  minAmount: string;
+  maxAmount: string;
+  duration: string;
+  uid: string;
+}
 
+const InvestmentPage = () => {
 
+    
+      const [planInfo, setPlanInfo] = useState([])
+const [plan, setPlan] = useState<InvestmentPlan[] | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [loading, setLoading] = useState(false);
   
@@ -19,7 +33,13 @@ const DepositPage = () => {
     const handleCancel = () => setIsModalVisible(false);
     const user = useSelector((state: RootState) => state?.user);
     const userDetails = user.User?.user?.user;
-    // const financeDetails = user?.User?.user
+    const token = useSelector((state:RootState)=> state?.user?.Token)
+      const fetchPlans = () => {
+    setPlan([
+      { name: "Basic", returns: "5%", minAmount: "100", maxAmount: "1000", duration: "30 days", uid: "1" },
+      { name: "Premium", returns: "10%", minAmount: "1000", maxAmount: "10000", duration: "60 days", uid: "2" },
+    ]);
+  };
     const assets = [
     { id: 'btc', name: 'Bitcoin', symbol: 'BTC', balance: `$${userDetails?.btcBal}`, icon: '/bitcoin.svg', color: 'bg-orange-500' },
     { id: 'eth', name: 'Ethereum', symbol: 'ETH', balance: `$${userDetails?.ethBal}`, icon: '/ethimage.png', color: 'bg-gray-400' },
@@ -27,14 +47,61 @@ const DepositPage = () => {
   ];
   
     const {setMode, setFrom} = useDepositContext()
+            const userId = localStorage.getItem("userId");
+        if (!userId) {
+          toast.error("User ID not found");
+          return;
+        }
 
   const router = useRouter()
 
+    const getPlans =async()=>{
+      setLoading(true)
+      try {
+          const res = await axios.get(`/plan/all`, {
+              headers:{
+                  Authorization: `Bearer ${token}`
+              }
+          })
+          setPlanInfo(res?.data?.data)
+          console.log(res)
+      } catch (error) {
+          if (isAxiosError(error)) {
+              console.log(error)
+          }
+      }finally{
+          setLoading(false)
+      }
+    }
+  
+    useEffect(()=>{
+      getPlans()
+      fetchPlans()
+    },[])
+
+    
+    const getPlanById = async ()=> {
+            setLoading(true)
+      try {
+          const res = await axios.get(`/plan/all/${userId}`, {
+              headers:{
+                  Authorization: `Bearer ${token}`
+              }
+          })
+          console.log(res)
+      } catch (error) {
+          if (isAxiosError(error)) {
+              console.log(error)
+          }
+      }finally{
+          setLoading(false)
+      }
+    }
   return (
     <div className="p-6 w-full">
-        <DepositModal setIsModalVisible={setIsModalVisible} isModalVisible={isModalVisible} showModal={showModal} handleCancel={handleCancel} loading={loading} setLoading={setLoading}/>
+        <InvestmentModal plan={plan} setIsModalVisible={setIsModalVisible} isModalVisible={isModalVisible} showModal={showModal} handleCancel={handleCancel} loading={loading} setLoading={setLoading}/>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Deposit</h1>
+        <h1 className="text-3xl font-bold">Invest</h1>
         <button className="text-purple-600 text-lg cursor-pointer" onClick={()=>router.back}>← Back</button>
       </div>
 
@@ -66,7 +133,7 @@ const DepositPage = () => {
             </div>
             <div className="">
               <button onClick={()=>{showModal(); setMode(asset.id); setFrom(userDetails?.username) } } className="bg-purple-600 max-sm:p-2 px-6 py-2 cursor-pointer text-white rounded-lg font-semibold hover:bg-purple-700">
-              Fund
+              Invest
             </button>
             </div>
           </div>
@@ -76,4 +143,4 @@ const DepositPage = () => {
   );
 }
 
-export default DepositPage
+export default InvestmentPage

@@ -1,18 +1,16 @@
-import { useState } from 'react'
-import DepositPage from '../(components)/Dashboard/DepositPage'
+import React from 'react'
 import DashboardLayout from '../Layouts/DashboardLayout'
 import DashHomeLayout from '../Layouts/DashHomeLayout'
+import PaymentPage from '../(components)/Dashboard/PaymentPage'
 
-
-const Deposit = () => {
-
+const PaymentInfo = () => {
   return (
 <DashboardLayout>
       <DashHomeLayout>
-      <DepositPage/>
+      <PaymentPage/>
     </DashHomeLayout>
 </DashboardLayout>
   )
 }
 
-export default Deposit
+export default PaymentInfo

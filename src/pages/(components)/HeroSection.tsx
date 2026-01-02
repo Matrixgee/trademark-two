@@ -1,4 +1,3 @@
-"use client"
 
 import { ArrowRight, DollarSign, TrendingUp, Users } from 'lucide-react';
 import { easeInOut, easeOut, motion } from 'framer-motion';

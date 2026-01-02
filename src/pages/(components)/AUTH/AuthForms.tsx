@@ -105,7 +105,6 @@ export default function AuthForms() {
     try {
       const res = await axios.post("/auth/login", formData);
       setVerified(res?.data?.data?.user?.user?.verified);
-      console.log(verified);
       const userId = res?.data?.data?.user?.user?._id;
 
       setTimeout(() => {
@@ -116,9 +115,10 @@ export default function AuthForms() {
           dispatch(setUser(res.data.data));
           dispatch(setToken(res.data.token));
           localStorage.setItem("userId", userId);
-          if (!verified) {
+          if (!res?.data?.data?.user?.user?.verified) {
             router.push("/auth/notverified");
-          } else {
+          } else if(res?.data?.data?.user?.user?.verified) {
+            toast.success("Login successful")
             router.push("/user/");
           }
         }
@@ -134,6 +134,9 @@ export default function AuthForms() {
     }
   };
 
+  const handleForgotPassword =()=>{
+    
+  }
   return (
     <div className="bg-linear-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
@@ -306,7 +309,7 @@ export default function AuthForms() {
                     <span className="text-purple-300">Remember me</span>
                   </label>
                   <a
-                    href="#"
+                    onClick={()=>router.push("/auth/forgotpassword")}
                     className="text-purple-400 hover:text-purple-300 transition"
                   >
                     Forgot password?

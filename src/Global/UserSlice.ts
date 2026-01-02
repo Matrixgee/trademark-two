@@ -42,7 +42,12 @@ export interface userInfo {
 }
 interface User {
 user: {
-    user:userInfo
+  activeInvestments: number;
+  pendingWithdrawals: number;
+  totalWithdrawals: number;
+  totalDeposits: number;
+  earnings: number;
+  user:userInfo
 }
 }
 
