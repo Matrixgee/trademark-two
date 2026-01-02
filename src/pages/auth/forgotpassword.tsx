@@ -5,6 +5,10 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Mail, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/router";
+import axios from "@/config/axiosconfig";
+import { validateEmail } from "@/utils/utils";
+import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
 
 export default function ForgotPassword() {
   const router = useRouter();
@@ -23,6 +27,40 @@ export default function ForgotPassword() {
       setEmail("");
     }, 2000);
   };
+
+
+const handleForgotPassword = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!validateEmail(email)) {
+    toast.error("Please input a valid mail.")
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await axios.post("/auth/forgot-password", { email });
+    console.log("Email sent", res.data);
+    setSuccess(true);
+
+    setTimeout(() => {
+      setSuccess(false);
+      setEmail("");
+      router.replace("/auth/resetpassword");
+    }, 3000);
+
+  }catch (error) {
+        if (isAxiosError(error)) {
+          toast.error(error.response?.data?.error);
+        } else {
+          console.log("Unknown error", error);
+        }
+      } finally {
+    setLoading(false);
+  }
+};
+
 
   const inputVariants = {
     focus: {
@@ -71,7 +109,7 @@ export default function ForgotPassword() {
 
           {/* Form */}
           <motion.form
-            onSubmit={handleSubmit}
+            onSubmit={handleForgotPassword}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
@@ -108,7 +146,7 @@ export default function ForgotPassword() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="w-full py-3 bg-linear-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group"
+              className="w-full cursor-pointer py-3 bg-linear-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -142,7 +180,7 @@ export default function ForgotPassword() {
               exit={{ opacity: 0, y: -10, scale: 0.8 }}
               className="mt-6 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-300 text-center font-semibold"
             >
-              ✓ Reset link sent successfully!
+              ✓ Reset link has been sent to your email!
             </motion.div>
           )}
 

@@ -1,8 +1,14 @@
 "use client"
 
+import axios from "@/config/axiosconfig";
+import { RootState } from "@/Global/store";
+import { isAxiosError } from "axios";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const TransactionHistory = () => {
+ const [loading, setLoading] = useState<boolean>(false) 
 const transactions = [
     { method: 'BTC', type: 'Deposit', amount: '$60,000', date: '1/4/2025, 4:22:37 PM', status: 'APPROVED' },
     { method: 'BTC', type: 'Deposit', amount: '$50,000', date: '1/6/2025, 11:44:01 PM', status: 'DECLINED' },
@@ -13,6 +19,30 @@ const transactions = [
   ];
 
   const router = useRouter()
+
+  const token = useSelector((state:RootState)=> state?.user?.Token)
+
+  const getAllTransactions = async()=>{
+    setLoading(true)
+    try {
+      const res = await axios.get("/transaction/all", {
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log(res)
+    } catch (error) {
+      if(isAxiosError(error)){
+        console.log(error)
+      }
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  useEffect(()=>{
+    getAllTransactions()
+  },[])
 
   return (
     <div className="p-6 w-full">

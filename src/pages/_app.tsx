@@ -5,15 +5,18 @@ import { Toaster } from "react-hot-toast";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "@/Global/store";
 import { Provider } from "react-redux";
+import { DepositProvider } from "@/context/DepositContext";
 
 export default function App({ Component, pageProps, router }: AppProps) {
   return (
       <AnimatePresence >
-      <Provider store={store}>
+      <DepositProvider>
+        <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
         <Component {...pageProps} key={router.route} />
       </PersistGate>
       </Provider>
+      </DepositProvider>
       <Toaster />
     </AnimatePresence>
     

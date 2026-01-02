@@ -17,7 +17,7 @@ const router = useRouter();
     {
       icon: <ChartPie size={20} />,
       label: "Trade",
-      path: "",
+      path: "/user/investment-log",
     },
     {
       icon: <Wallet size={20} />,
@@ -37,7 +37,7 @@ const router = useRouter();
               key={item.label}
               onClick={() => router.push(item.path)}
               className={`flex flex-col items-center gap-3 text-xs transition cursor-pointer
-                ${isActive ? "text-purple-700 font-medium" : "text-gray-500"}
+                ${isActive ? "text-purple-700 font-medium" : "text-gray-500 hove"}
               `}
             >
               {item.icon}

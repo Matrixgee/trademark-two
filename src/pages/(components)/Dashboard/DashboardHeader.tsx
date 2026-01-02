@@ -39,7 +39,7 @@ const DashboardHeader = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => router.push("/user/withdrawal")}
-              className="flex items-center flex-col text-xs gap-2 px-4 py-2 rounded-lg text-white font-semibold transition"
+              className="flex items-center flex-col hover:text-purple-400 cursor-pointer text-xs gap-2 px-4 py-2 rounded-lg text-white font-semibold transition"
             >
               <Send size={23} />
               Withdraw
@@ -48,7 +48,7 @@ const DashboardHeader = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => router.push("/user/deposit")}
-              className="flex items-center flex-col text-xs gap-2 px-4 py-2 rounded-lg text-white font-semibold transition"
+              className="flex cursor-pointer items-center hover:text-purple-400 flex-col text-xs gap-2 px-4 py-2 rounded-lg text-white font-semibold transition"
             >
               <Download size={23} />
               Deposit
@@ -56,9 +56,10 @@ const DashboardHeader = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center flex-col text-xs gap-2 px-4 py-2 rounded-lg text-white font-semibold transition"
+              onClick={() => router.push("/user/invest")}
+              className="flex items-center cursor-pointer hover:text-purple-400 flex-col text-xs gap-2 px-4 py-2 rounded-lg text-white font-semibold transition"
             >
-              <Coins size={23} />
+              <Coins size={23}  />
               Trade
             </motion.button>
           </div>

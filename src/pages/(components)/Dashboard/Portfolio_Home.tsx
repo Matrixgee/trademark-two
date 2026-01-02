@@ -22,13 +22,14 @@ const Portfolio_Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector((state: RootState) => state?.user);
   const userDetails = user.User?.user?.user;
+  const financeDetails = user?.User?.user
 
   const assets = [
     {
       id: "btc",
       name: "Bitcoin",
       symbol: "BTC",
-      balance: "$54,000.00",
+      balance: `$${userDetails?.btcBal}`,
       icon: "/bitcoin.svg",
       alt: "btc",
     },
@@ -36,7 +37,7 @@ const Portfolio_Home = () => {
       id: "eth",
       name: "Ethereum",
       symbol: "ETH",
-      balance: "$7,000.00",
+      balance: `$${userDetails?.ethBal}`,
       icon: "/ethimage.png",
       alt: "eth",
     },
@@ -44,26 +45,13 @@ const Portfolio_Home = () => {
       id: "sol",
       name: "Solana",
       symbol: "SOL",
-      balance: "$70,000.00",
+      balance: `$${userDetails?.solBal}`,
       icon: "/solimage.png",
       alt: "sol",
     },
   ];
 
   const router = useRouter();
-
-  const getProfileInfo = async () => {
-    try {
-      const res = await axios.get("/user/profile");
-      console.log(res?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getProfileInfo();
-  }, []);
 
   return (
     <div className="bg-white p-3">
@@ -77,7 +65,7 @@ const Portfolio_Home = () => {
           <div className="flex items-start justify-between px-3 py-3 bg-white rounded-lg shadow-sm">
             <div>
               <p className="text-gray-500 text-sm">Total portfolio</p>
-              <h2 className="text-xl font-bold text-gray-900">$15,000.00</h2>
+              <h2 className="text-xl font-bold text-gray-900">${userDetails?.balance}</h2>
             </div>
 
             <div className="relative">
@@ -140,13 +128,13 @@ const Portfolio_Home = () => {
           <div className="bg-white rounded-lg p-3 shadow-sm">
             <Send className="w-4 h-4 text-purple-600 mb-1" />
             <p className="text-gray-600 text-sm">Total Withdraw</p>
-            <p className="text-sm font-bold">$6,000.00</p>
+            <p className="text-sm font-bold">${financeDetails?.totalWithdrawals}</p>
           </div>
 
           <div className="bg-white rounded-lg p-3 shadow-sm">
             <Download className="w-4 h-4 text-purple-600 mb-1" />
             <p className="text-gray-600 text-sm">Total Deposit</p>
-            <p className="text-sm font-bold">$137,000.00</p>
+            <p className="text-sm font-bold">${financeDetails?.totalDeposits}</p>
           </div>
         </div>
 
@@ -154,7 +142,7 @@ const Portfolio_Home = () => {
         <div className="grid grid-cols-3 gap-4 mb-8">
           <button
             onClick={() => router.push("/user/withdrawal")}
-            className="border rounded-lg p-3 hover:border-purple-600 hover:bg-purple-50 transition"
+            className="border rounded-lg p-3 hover:border-purple-600 cursor-pointer hover:bg-purple-50 transition"
           >
             <Send className="mx-auto w-5 h-5 text-purple-600" />
             <p className="text-sm font-semibold mt-1 text-center">Withdraw</p>
@@ -162,13 +150,15 @@ const Portfolio_Home = () => {
 
           <button
             onClick={() => router.push("/user/deposit")}
-            className="border rounded-lg p-3 hover:border-purple-600 hover:bg-purple-50 transition"
+            className="border rounded-lg p-3 hover:border-purple-600 cursor-pointer hover:bg-purple-50 transition"
           >
             <Download className="mx-auto w-5 h-5 text-purple-600" />
             <p className="text-sm font-semibold mt-1 text-center">Deposit</p>
           </button>
 
-          <button className="border rounded-lg p-3 hover:border-purple-600 hover:bg-purple-50 transition">
+          <button 
+          onClick={() => router.push("/user/invest")}
+          className="border rounded-lg p-3 hover:border-purple-600 cursor-pointer hover:bg-purple-50 transition">
             <TrendingUp className="mx-auto w-5 h-5 text-purple-600" />
             <p className="text-sm font-semibold mt-1 text-center">Trade</p>
           </button>

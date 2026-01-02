@@ -1,18 +1,15 @@
-import { useState } from 'react'
-import DepositPage from '../(components)/Dashboard/DepositPage'
 import DashboardLayout from '../Layouts/DashboardLayout'
 import DashHomeLayout from '../Layouts/DashHomeLayout'
+import ProfilePage from '../(components)/Dashboard/ProfilePage'
 
-
-const Deposit = () => {
-
+const profile = () => {
   return (
 <DashboardLayout>
       <DashHomeLayout>
-      <DepositPage/>
+      <ProfilePage/>
     </DashHomeLayout>
 </DashboardLayout>
   )
 }
 
-export default Deposit
+export default profile
