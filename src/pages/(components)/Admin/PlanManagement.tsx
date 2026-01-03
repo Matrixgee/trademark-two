@@ -85,7 +85,6 @@ const handleInputChange = (
               Authorization: `Bearer ${adminToken}`
             }
           })
-          // setDeposits(response?.data?.data)
           console.log(response)
         }catch(error){
           if (isAxiosError(error)) {
@@ -96,20 +95,6 @@ const handleInputChange = (
         }
       }
 
-        const handleSavePlan = () => {
-    if (editingId) {
-      setPlans(plans.map(p => p.name === editingId ? { ...p, ...formData } : p));
-    } else {
-      const newPlan: Plan = {
-        ...formData as Omit<Plan, 'id'>,
-      };
-      setPlans([...plans, newPlan]);
-    }
-    handleCloseModal();
-  };
-  // const handleToggleStatus = (id: number) => {
-  //   setPlans(plans.map(p => p.id === id ? { ...p, status: p.status === 'Active' ? 'Inactive' : 'Active' } : p));
-  // };
 
   return (
     <div>
