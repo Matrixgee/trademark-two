@@ -1,4 +1,3 @@
-import React from 'react'
 import AdminDashboard from '../Layouts/AdminDashboard'
 import AllUsers from '../(components)/Admin/AllUsers'
 

@@ -14,7 +14,7 @@ export default function AccountNotVerified() {
   const { otp, token } = router.query;
   const [loading, setLoading] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state?.user);
-  const userEmail = user.User?.user?.user.email;
+  const userEmail = user.User?.user?.user?.email;
 
   const handleSendVerificationLink = async () => {
     setLoading(true);

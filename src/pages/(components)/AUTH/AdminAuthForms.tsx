@@ -12,8 +12,9 @@ import { useDispatch } from "react-redux";
 import { setToken, setUser } from "@/Global/UserSlice";
 import toast from "react-hot-toast";
 import { isAxiosError } from "axios";
+import { setAdminToken } from "@/Global/AdminSlice";
 
-export default function AuthForms() {
+export default function AdminAuthForms() {
   const router = useRouter();
   const { type } = router.query;
 
@@ -21,11 +22,7 @@ export default function AuthForms() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    username: "",
-    password: "",
-    phoneNumber: "",
-    name: "",
-    referralId: "",
+    password: ""
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -57,7 +54,7 @@ export default function AuthForms() {
     },
   };
 
-  const [verified, setVerified] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -74,14 +71,14 @@ export default function AuthForms() {
 
     setLoading(true);
     try {
-      const res = await axios.post("/auth/register", formData);
+      const res = await axios.post("/auth/register-admin", formData);
       console.log(res);
 
       if (res.data?.message === "success") {
         toast.success("Registration successful");
-        setTimeout(() => {
-          router.push("/auth/notverified");
-        }, 3000);
+        // setTimeout(() => {
+        //   router.push("/auth/notverified");
+        // }, 3000);
       }
     } catch (error) {
       console.log(error);
@@ -103,13 +100,15 @@ export default function AuthForms() {
     setLoading(true);
     try {
       const res = await axios.post("/auth/login", formData);
-      setVerified(res?.data?.data?.user?.user?.verified);
       const userId = res?.data?.data?.user?.user?._id;
+      console.log(res?.data?.token)
+
 
       setTimeout(() => {
-        if (res?.data?.data?.isAdmin) {
-          //   dispatch(setAdminToken(res.data.data.token));
-          //   navigate("/admin/adminhome");
+        if (res?.data?.data?.user?.type.toLowerCase() === "admin") {
+            toast.success("Login successful")
+            dispatch(setAdminToken(res?.data?.token));
+            router.push("/admin");
         } else {
           dispatch(setUser(res.data.data));
           dispatch(setToken(res.data.token));
@@ -132,10 +131,6 @@ export default function AuthForms() {
       setLoading(false);
     }
   };
-
-  const handleForgotPassword =()=>{
-    
-  }
   return (
     <div className="bg-linear-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
@@ -181,7 +176,7 @@ export default function AuthForms() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              {isLogin ? "Welcome back" : "Join our community"}
+              {isLogin ? "Welcome back" : "Register as an Admin"}
             </motion.p>
           </motion.div>
 
@@ -193,7 +188,7 @@ export default function AuthForms() {
             transition={{ delay: 0.4 }}
           >
             <motion.button
-              onClick={() => router.push("/auth/login")}
+              onClick={() => router.push("/admin/login")}
               className={`flex-1 py-2 rounded-md font-semibold cursor-pointer transition-all ${
                 isLogin
                   ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-lg"
@@ -205,7 +200,7 @@ export default function AuthForms() {
               Login
             </motion.button>
             <motion.button
-              onClick={() => router.push("/auth/register")}
+              onClick={() => router.push("/admin/register")}
               className={`flex-1 py-2 rounded-md font-semibold cursor-pointer transition-all ${
                 !isLogin
                   ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-lg"
@@ -357,53 +352,6 @@ export default function AuthForms() {
                 transition={{ duration: 0.3 }}
                 className="space-y-5"
               >
-                {/* Full Name Field */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <label className="block text-sm font-semibold text-purple-300 mb-2">
-                    Name <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3.5 w-5 h-5 text-purple-400" />
-                    <motion.input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="John Doe"
-                      required
-                      className="w-full pl-10 pr-4 py-2.5 bg-purple-900/20 border border-purple-500/30 rounded-lg text-white placeholder-purple-300/50 focus:outline-none transition-all"
-                      variants={inputVariants}
-                      whileFocus="focus"
-                    />
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <label className="block text-sm font-semibold text-purple-300 mb-2">
-                    Username <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3.5 w-5 h-5 text-purple-400" />
-                    <motion.input
-                      type="text"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      placeholder="John Doe"
-                      required
-                      className="w-full pl-10 pr-4 py-2.5 bg-purple-900/20 border border-purple-500/30 rounded-lg text-white placeholder-purple-300/50 focus:outline-none transition-all"
-                      variants={inputVariants}
-                      whileFocus="focus"
-                    />
-                  </div>
-                </motion.div>
 
                 {/* Email Field */}
                 <motion.div
@@ -429,52 +377,6 @@ export default function AuthForms() {
                     />
                   </div>
                 </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <label className="block text-sm font-semibold text-purple-300 mb-2">
-                    Phone number <span className="text-red-400">*</span>
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-3.5 w-5 h-5 text-purple-400" />
-                    <motion.input
-                      type="tel"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      placeholder="+2347090347629"
-                      required
-                      className="w-full pl-10 pr-4 py-2.5 bg-purple-900/20 border border-purple-500/30 rounded-lg text-white placeholder-purple-300/50 focus:outline-none transition-all"
-                      variants={inputVariants}
-                      whileFocus="focus"
-                    />
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <label className="block text-sm font-semibold text-purple-300 mb-2">
-                    Referral Id
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3.5 w-5 h-5 text-purple-400" />
-                    <motion.input
-                      type="text"
-                      name="username"
-                      value={formData.referralId}
-                      onChange={handleInputChange}
-                      placeholder="y789Hb"
-                      className="w-full pl-10 pr-4 py-2.5 bg-purple-900/20 border border-purple-500/30 rounded-lg text-white placeholder-purple-300/50 focus:outline-none transition-all"
-                      variants={inputVariants}
-                      whileFocus="focus"
-                    />
-                  </div>
-                </motion.div>
-                {/* Password Field */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -597,7 +499,7 @@ export default function AuthForms() {
               <p>
                 Don&#39;t have an account?{" "}
                 <motion.button
-                  onClick={() => router.push("/auth/register")}
+                  onClick={() => router.push("/admin/register")}
                   className="text-purple-400 hover:text-purple-300 font-semibold transition"
                   whileHover={{ scale: 1.05 }}
                 >
@@ -608,7 +510,7 @@ export default function AuthForms() {
               <p>
                 Already have an account?{" "}
                 <motion.button
-                  onClick={() => router.push("/auth/login")}
+                  onClick={() => router.push("/admin/login")}
                   className="text-purple-400 hover:text-purple-300 font-semibold transition"
                   whileHover={{ scale: 1.05 }}
                 >
