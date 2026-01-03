@@ -1,5 +1,9 @@
+import axios from "@/config/axiosconfig";
+import { RootState } from "@/Global/store";
+import { isAxiosError } from "axios";
 import { Eye, Filter, Search, TrendingDown, TrendingUp, Wallet } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 interface Transaction {
   id: number;
@@ -58,6 +62,31 @@ const AllHistory = () => {
   const withdrawalsCount = filteredTransactions.filter(t => t.type === 'Withdrawal').length;
   const investmentsCount = filteredTransactions.filter(t => t.type === 'Investment').length;
 
+    const adminToken = useSelector((state: RootState) => state?.admin?.token);
+    const [loading, setLoading] = useState<boolean>(false);
+  
+    const getAllTransactions = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get("/transaction/all", {
+          headers: {
+            Authorization: `Bearer ${adminToken}`
+          }
+        });
+        console.log(response?.data?.data);
+      } catch (error) {
+        if (isAxiosError(error)) {
+          console.log(error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    useEffect(() => {
+      getAllTransactions();
+    }, []);
+  
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'Deposit':

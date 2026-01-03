@@ -1,26 +1,101 @@
+import axios from "@/config/axiosconfig";
+import { RootState } from "@/Global/store";
+import { isAxiosError } from "axios";
 import { CheckCircle, Eye, XCircle } from "lucide-react";
-import { useState } from "react";
+import { headers } from "next/headers";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
-interface Deposit {
-  id: number; user: string; email: string; amount: number; asset: 'BTC' | 'ETH' | 'SOL'; status: 'Pending' | 'Verified'; submittedDate: string; txHash?: string;
+export interface Deposit {
+  id: string;
+  uid: string;
+  amount: number;
+  from: string;
+  to: string;
+  method: string;
+  status: "pending" | "approved" | "declined";
+  createdAt: number;
+  updatedAt: number;
+  user: {
+    name: string;
+    email: string;
+  };
 }
 
 const PendingDeposits = () => {
-  const [deposits, setDeposits] = useState<Deposit[]>([
-    { id: 1, user: 'John Doe', email: 'john@example.com', amount: 5000, asset: 'BTC', status: 'Pending', submittedDate: '2024-01-18 10:30', txHash: '0x1234...abcd' },
-    { id: 2, user: 'Jane Smith', email: 'jane@example.com', amount: 3500, asset: 'ETH', status: 'Pending', submittedDate: '2024-01-18 11:15', txHash: '0x5678...efgh' },
-    { id: 3, user: 'Mike Johnson', email: 'mike@example.com', amount: 7200, asset: 'SOL', status: 'Pending', submittedDate: '2024-01-18 09:45', txHash: '0x9012...ijkl' },
-    { id: 4, user: 'Sarah Wilson', email: 'sarah@example.com', amount: 2100, asset: 'BTC', status: 'Verified', submittedDate: '2024-01-17 14:20', txHash: '0x3456...mnop' },
-  ]);
+  const [deposits, setDeposits] = useState<Deposit[]>([]);
 
   const [selectedDeposit, setSelectedDeposit] = useState<Deposit | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  const handleApprove = (id: number) => { setDeposits(deposits.map(d => d.id === id ? { ...d, status: 'Verified' } : d)); };
-  const handleDecline = (id: number) => { setDeposits(deposits.filter(d => d.id !== id)); };
+
+  const adminToken = useSelector((state: RootState) => state?.admin?.token)
+  const [loading, setLoading] = useState<boolean>(false)
+  const getAllDeposits = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get("/admin/deposits/all", {
+        headers: {
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      setDeposits(response?.data?.data.filter(
+        (deposit: Deposit) => deposit.status === "pending"
+      )
+      );
+      console.log(response?.data?.data)
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    getAllDeposits()
+  }, [])
+
+
+  const handleApproving = async (id: string, method: string) => {
+    const loadingId = toast.loading("Approving, Please wait...")
+    try {
+      const response = await axios.patch(`/admin/deposits/${id}/${method}/approve`, {}, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      toast.success(response?.data?.message || "Deposit approve successfully")
+      getAllDeposits()
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      toast.dismiss(loadingId)
+    }
+  }
+  const handleDecline = async (id: string) => {
+    const loadingId = toast.loading("Declining, Please wait...")
+    try {
+      const response = await axios.patch(`/admin/deposits/${id}/decline`, {}, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      toast.success(response?.data?.message || "Deposit Declined successfully")
+      console.log(response)
+      getAllDeposits()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      toast.dismiss(loadingId)
+    }
+  }
+  
   const viewDetails = (deposit: Deposit) => { setSelectedDeposit(deposit); setShowDetailsModal(true); };
 
-  const pendingCount = deposits.filter(d => d.status === 'Pending').length;
+  const pendingCount = 0;
 
   return (
     <div>
@@ -34,7 +109,8 @@ const PendingDeposits = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">User</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Amount</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Asset</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Submitted</th>
+                {/* <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Submitted</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Processed</th> */}
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
               </tr>
@@ -42,12 +118,62 @@ const PendingDeposits = () => {
             <tbody>
               {deposits.map((deposit) => (
                 <tr key={deposit.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                  <td className="px-6 py-4"><div><p className="font-medium text-gray-900">{deposit.user}</p><p className="text-sm text-gray-500">{deposit.email}</p></div></td>
-                  <td className="px-6 py-4"><p className="font-semibold text-gray-900">${deposit.amount.toLocaleString()}</p></td>
-                  <td className="px-6 py-4"><span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">{deposit.asset}</span></td>
-                  <td className="px-6 py-4"><p className="text-gray-600 text-sm">{deposit.submittedDate}</p></td>
-                  <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-medium ${deposit.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}`}>{deposit.status}</span></td>
-                  <td className="px-6 py-4"><div className="flex items-center justify-center gap-2"><button onClick={() => viewDetails(deposit)} className="p-2 hover:bg-blue-100 rounded-lg transition" title="View Details"><Eye size={18} className="text-blue-600" /></button>{deposit.status === 'Pending' && (<><button onClick={() => handleApprove(deposit.id)} className="p-2 hover:bg-green-100 rounded-lg transition" title="Approve"><CheckCircle size={18} className="text-green-600" /></button><button onClick={() => handleDecline(deposit.id)} className="p-2 hover:bg-red-100 rounded-lg transition" title="Decline"><XCircle size={18} className="text-red-600" /></button></>)}</div></td>
+                  <td className="px-6 py-4">
+                    <div>
+                      <p className="font-medium text-gray-900">{deposit?.from}</p>
+                      <p className="text-sm text-gray-500">{deposit?.from}</p>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="font-semibold text-gray-900">${deposit?.amount.toLocaleString()}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                      {deposit?.method}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium${deposit.status === "approved"
+                      ? " text-green-700 bg-green-100"
+                      : deposit.status === "pending"
+                        ? " text-yellow-700 bg-yellow-100"
+                        : "text-red-700 bg-red-100"
+                      }`}>
+                      {deposit.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => viewDetails(deposit)}
+                        className="p-2 hover:bg-blue-100 rounded-lg transition"
+                        title="View Details"
+                      >
+                        <Eye size={18} className="text-blue-600" />
+                      </button>
+
+                      {deposit.status === "pending" && (
+                        <>
+                          <button
+                            onClick={() => handleApproving(deposit.id, deposit.method)}
+                            className="p-2 hover:bg-green-100 rounded-lg transition"
+                            title="Approve"
+                          >
+                            <CheckCircle size={18} className="text-green-600" />
+                          </button>
+
+                          <button
+                            onClick={() => handleDecline(deposit.id)}
+                            className="p-2 hover:bg-red-100 rounded-lg transition"
+                            title="Decline"
+                          >
+                            <XCircle size={18} className="text-red-600" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </td>
+
                 </tr>
               ))}
             </tbody>
@@ -60,17 +186,35 @@ const PendingDeposits = () => {
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h2 className="text-2xl font-bold mb-4">Deposit Details</h2>
             <div className="space-y-4 mb-6">
-              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">User:</span><span className="font-semibold">{selectedDeposit.user}</span></div>
-              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">Email:</span><span className="font-semibold">{selectedDeposit.email}</span></div>
+              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">User:</span><span className="font-semibold">{selectedDeposit.from}</span></div>
+              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">Email:</span><span className="font-semibold">{selectedDeposit?.user?.email}</span></div>
               <div className="flex justify-between py-2 border-b"><span className="text-gray-600">Amount:</span><span className="font-semibold text-lg">${selectedDeposit.amount.toLocaleString()}</span></div>
-              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">Asset:</span><span className="font-semibold">{selectedDeposit.asset}</span></div>
-              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">TX Hash:</span><span className="font-mono text-sm">{selectedDeposit.txHash}</span></div>
-              <div className="flex justify-between py-2"><span className="text-gray-600">Submitted:</span><span className="font-semibold">{selectedDeposit.submittedDate}</span></div>
+              <div className="flex justify-between py-2 border-b"><span className="text-gray-600">Asset:</span><span className="font-semibold">{selectedDeposit.method}</span></div>
+              <div className="flex justify-between py-2"><span className="text-gray-600">Submitted:</span><span className="font-semibold">{selectedDeposit.createdAt}</span></div>
             </div>
-            {selectedDeposit.status === 'Pending' && (
+            {selectedDeposit?.status === "pending" && (
               <div className="flex gap-3">
-                <button onClick={() => { handleApprove(selectedDeposit.id); setShowDetailsModal(false); }} className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition">Approve</button>
-                <button onClick={() => { handleDecline(selectedDeposit.id); setShowDetailsModal(false); }} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">Decline</button>
+                <button
+                  onClick={() => {
+                    handleApproving(selectedDeposit.id, selectedDeposit.method);
+                    setShowDetailsModal(false);
+                  }}
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition"
+                >
+                  Approve
+                </button>
+
+
+                <button
+                  onClick={() => {
+                    handleDecline(selectedDeposit.id);
+                    setShowDetailsModal(false);
+                  }}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition"
+                >
+                  Decline
+                </button>
+
               </div>
             )}
             <button onClick={() => setShowDetailsModal(false)} className="w-full mt-3 px-4 py-2 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition">Close</button>

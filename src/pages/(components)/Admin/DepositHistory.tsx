@@ -1,29 +1,29 @@
+import axios from "@/config/axiosconfig";
+import { RootState } from "@/Global/store";
+import { isAxiosError } from "axios";
 import { Eye, Filter, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-interface Deposit {
-  id: number;
-  user: string;
-  email: string;
+export interface Deposit {
+  id: string;
+  uid: string;
   amount: number;
-  asset: 'BTC' | 'ETH' | 'SOL';
-  status: 'Verified' | 'Declined' | 'Pending';
-  submittedDate: string;
-  processedDate?: string;
-  txHash?: string;
+  from: string;
+  to: string;
+  method: string;
+  status: "pending" | "approved" | "declined";
+  createdAt: number;
+  updatedAt: number;
+  user: {
+    name: string;
+    email: string;
+  };
 }
 
+
 const DepositHistory = () => {
-  const [deposits] = useState<Deposit[]>([
-    { id: 1, user: 'John Doe', email: 'john@example.com', amount: 5000, asset: 'BTC', status: 'Verified', submittedDate: '2024-01-18 10:30', processedDate: '2024-01-18 11:00', txHash: '0x1234...abcd' },
-    { id: 2, user: 'Jane Smith', email: 'jane@example.com', amount: 3500, asset: 'ETH', status: 'Verified', submittedDate: '2024-01-18 11:15', processedDate: '2024-01-18 12:30', txHash: '0x5678...efgh' },
-    { id: 3, user: 'Mike Johnson', email: 'mike@example.com', amount: 7200, asset: 'SOL', status: 'Declined', submittedDate: '2024-01-18 09:45', processedDate: '2024-01-18 10:15', txHash: '0x9012...ijkl' },
-    { id: 4, user: 'Sarah Wilson', email: 'sarah@example.com', amount: 2100, asset: 'BTC', status: 'Verified', submittedDate: '2024-01-17 14:20', processedDate: '2024-01-17 15:00', txHash: '0x3456...mnop' },
-    { id: 5, user: 'Tom Brown', email: 'tom@example.com', amount: 4800, asset: 'ETH', status: 'Verified', submittedDate: '2024-01-17 10:30', processedDate: '2024-01-17 11:45', txHash: '0x7890...qrst' },
-    { id: 6, user: 'Lisa Anderson', email: 'lisa@example.com', amount: 1500, asset: 'SOL', status: 'Declined', submittedDate: '2024-01-17 08:15', processedDate: '2024-01-17 09:00', txHash: '0xabcd...uvwx' },
-    { id: 7, user: 'David Lee', email: 'david@example.com', amount: 6300, asset: 'BTC', status: 'Verified', submittedDate: '2024-01-16 16:45', processedDate: '2024-01-16 17:30', txHash: '0xefgh...yzab' },
-    { id: 8, user: 'Emma Davis', email: 'emma@example.com', amount: 2900, asset: 'ETH', status: 'Pending', submittedDate: '2024-01-16 14:00', txHash: '0xijkl...cdef' },
-  ]);
+  const [deposits, setDeposits] = useState<Deposit[]>([]);
 
   const [selectedDeposit, setSelectedDeposit] = useState<Deposit | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -36,17 +36,42 @@ const DepositHistory = () => {
     setShowDetailsModal(true);
   };
 
-  const filteredDeposits = deposits.filter(deposit => {
-    const matchesSearch = deposit.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         deposit.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'All' || deposit.status === statusFilter;
-    const matchesAsset = assetFilter === 'All' || deposit.asset === assetFilter;
-    return matchesSearch && matchesStatus && matchesAsset;
-  });
+  // const filteredDeposits = deposits.filter(deposit => {
+  //   const matchesSearch = deposit.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //                        deposit.email.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesStatus = statusFilter === 'All' || deposit.status === statusFilter;
+  //   const matchesAsset = assetFilter === 'All' || deposit.asset === assetFilter;
+  //   return matchesSearch && matchesStatus && matchesAsset;
+  // });
 
-  const totalDeposits = filteredDeposits.length;
-  const totalAmount = filteredDeposits.reduce((sum, d) => sum + d.amount, 0);
-  const verifiedCount = filteredDeposits.filter(d => d.status === 'Verified').length;
+  // const totalDeposits = filteredDeposits.length;
+  // const totalAmount = filteredDeposits.reduce((sum, d) => sum + d.amount, 0);
+  // const verifiedCount = filteredDeposits.filter(d => d.status === 'Verified').length;
+  const adminToken = useSelector((state:RootState)=> state?.admin?.token)
+  const [loading, setLoading] = useState<boolean>(false)
+  const getAllDeposits =async()=>{
+      setLoading(true)
+      try {
+        const response = await axios.get("/admin/deposits/all", {
+          headers:{
+            Authorization: `Bearer ${adminToken}`
+          }
+        })
+        setDeposits(response?.data?.data)
+        console.log(response?.data?.data)
+      }catch(error){
+        if (isAxiosError(error)) {
+          console.log(error)
+        }
+      }finally{
+        setLoading(false)
+      }
+    }
+    useEffect(()=>{
+      getAllDeposits()
+    },[])
+
+    console.log(deposits)
 
   return (
     <div>
@@ -58,15 +83,15 @@ const DepositHistory = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <p className="text-gray-600 text-sm mb-1">Total Deposits</p>
-          <p className="text-3xl font-bold text-gray-900">{totalDeposits}</p>
+          <p className="text-3xl font-bold text-gray-900">3</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6">
           <p className="text-gray-600 text-sm mb-1">Total Amount</p>
-          <p className="text-3xl font-bold text-gray-900">${totalAmount.toLocaleString()}</p>
+          <p className="text-3xl font-bold text-gray-900">$33,000</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6">
           <p className="text-gray-600 text-sm mb-1">Verified</p>
-          <p className="text-3xl font-bold text-green-600">{verifiedCount}</p>
+          <p className="text-3xl font-bold text-green-600">3</p>
         </div>
       </div>
 
@@ -118,41 +143,37 @@ const DepositHistory = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">User</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Amount</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Asset</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Submitted</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Processed</th>
+                {/* <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Submitted</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Processed</th> */}
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredDeposits.map((deposit) => (
+              {deposits.map((deposit) => (
                 <tr key={deposit.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
                   <td className="px-6 py-4">
                     <div>
-                      <p className="font-medium text-gray-900">{deposit.user}</p>
-                      <p className="text-sm text-gray-500">{deposit.email}</p>
+                      <p className="font-medium text-gray-900">{deposit?.from}</p>
+                      <p className="text-sm text-gray-500">{deposit?.from}</p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">${deposit.amount.toLocaleString()}</p>
+                    <p className="font-semibold text-gray-900">${deposit?.amount.toLocaleString()}</p>
                   </td>
                   <td className="px-6 py-4">
                     <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                      {deposit.asset}
+                      {deposit?.method}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="text-gray-600 text-sm">{deposit.submittedDate}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-gray-600 text-sm">{deposit.processedDate || '-'}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      deposit.status === 'Verified' ? 'bg-green-100 text-green-700' :
-                      deposit.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium${
+  deposit.status === "approved"
+    ? "bg-green-100 text-green-700"
+    : deposit.status === "pending"
+    ? " text-yellow-700 bg-yellow-100"
+    : "bg-red-100 text-red-700"
+}`}>
                       {deposit.status}
                     </span>
                   </td>
@@ -172,7 +193,7 @@ const DepositHistory = () => {
             </tbody>
           </table>
         </div>
-        {filteredDeposits.length === 0 && (
+        {deposits?.length === 0 && (
           <div className="p-8 text-center">
             <p className="text-gray-500 text-lg">No deposits found</p>
           </div>
@@ -186,37 +207,33 @@ const DepositHistory = () => {
             <div className="space-y-4 mb-6">
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">User:</span>
-                <span className="font-semibold">{selectedDeposit.user}</span>
+                <span className="font-semibold">{selectedDeposit?.user?.name}</span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Email:</span>
-                <span className="font-semibold">{selectedDeposit.email}</span>
+                <span className="font-semibold">{selectedDeposit?.user?.email}</span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Amount:</span>
-                <span className="font-semibold text-lg">${selectedDeposit.amount.toLocaleString()}</span>
+                <span className="font-semibold text-lg">${selectedDeposit?.amount.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Asset:</span>
-                <span className="font-semibold">{selectedDeposit.asset}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span className="text-gray-600">TX Hash:</span>
-                <span className="font-mono text-sm">{selectedDeposit.txHash}</span>
+                <span className="font-semibold">{selectedDeposit.method}</span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Submitted:</span>
-                <span className="font-semibold">{selectedDeposit.submittedDate}</span>
+                <span className="font-semibold">{selectedDeposit?.createdAt}</span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Processed:</span>
-                <span className="font-semibold">{selectedDeposit.processedDate || 'Not yet processed'}</span>
+                <span className="font-semibold">{selectedDeposit?.updatedAt || 'Not yet processed'}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-gray-600">Status:</span>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  selectedDeposit.status === 'Verified' ? 'bg-green-100 text-green-700' :
-                  selectedDeposit.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                  selectedDeposit?.status.toLowerCase() === 'approved' ? 'bg-green-100 text-green-700' :
+                  selectedDeposit?.status.toLowerCase() === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
                   'bg-red-100 text-red-700'
                 }`}>
                   {selectedDeposit.status}

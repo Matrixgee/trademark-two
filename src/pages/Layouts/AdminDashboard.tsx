@@ -36,7 +36,7 @@ const AdminDashboard = ({children}: {children :ReactNode}) => {
                 A
               </div>
               <div className="flex flex-col">
-                <p className="text-sm font-semibold text-gray-900">Hello Joe</p>
+                <p className="text-sm font-semibold text-gray-900">Hello,Admin</p>
                 <p className="text-xs text-gray-500">Administrator</p>
               </div>
               <ChevronDown size={16} className="text-gray-500" />

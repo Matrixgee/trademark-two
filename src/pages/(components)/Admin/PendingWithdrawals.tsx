@@ -1,5 +1,9 @@
+import axios from "@/config/axiosconfig";
+import { RootState } from "@/Global/store";
+import { isAxiosError } from "axios";
 import { CheckCircle, Eye, XCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 interface Withdrawal {
   id: number;
@@ -37,6 +41,31 @@ const PendingWithdrawals = () => {
   };
 
   const pendingCount = withdrawals.filter(w => w.status === 'Pending').length;
+
+   const adminToken = useSelector((state:RootState)=> state?.admin?.token)
+    const [loading, setLoading] = useState<boolean>(false)
+    const getAllWitdrawals =async()=>{
+        setLoading(true)
+        try {
+          const response = await axios.get("/admin/withdrawals/all", {
+            headers:{
+              Authorization: `Bearer ${adminToken}`
+            }
+          })
+          // setDeposits(response?.data?.data)
+          console.log(response?.data?.data)
+        }catch(error){
+          if (isAxiosError(error)) {
+            console.log(error)
+          }
+        }finally{
+          setLoading(false)
+        }
+      }
+      useEffect(()=>{
+        getAllWitdrawals()
+      },[])
+
 
   return (
     <div>
