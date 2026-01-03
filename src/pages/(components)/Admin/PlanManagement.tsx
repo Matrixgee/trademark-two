@@ -1,12 +1,13 @@
 // components/admin/PlanManagement.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Eye } from 'lucide-react';
 import axios from '@/config/axiosconfig';
 import { isAxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Global/store';
 import toast from 'react-hot-toast';
+import { User } from './AllUsers';
 
 interface Plan {
 name: string;
@@ -30,6 +31,7 @@ const PlanManagement = () => {
     uid:""
   });
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null)
 
   const handleOpenModal = (plan?: Plan) => {
     if (plan) {
@@ -67,6 +69,25 @@ const handleInputChange = (
   }));
 };
 
+  const getAllUsers =async()=>{
+    try {
+      const response = await axios.get("/admin/users", {
+        headers:{
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      setUsers(response?.data?.data)
+      console.log(response?.data?.data)
+    }catch(error){
+      if (isAxiosError(error)) {
+        console.log(error)
+      }
+    }finally{
+    }
+  }
+  useEffect(()=>{
+    getAllUsers()
+  },[])
 
 
 
@@ -184,7 +205,7 @@ const handleInputChange = (
               </tr>
             </thead>
             {
-              plans.length === 0 ? <div>No plans available for now</div> :
+              plans.length === 0 ? <div className='w-full items-center justify-center'>No plans available for now</div> :
               <tbody>
               {plans.map((plan) => (
                 <tr key={plan.name} className="border-b border-gray-200 hover:bg-gray-50 transition">
@@ -295,17 +316,23 @@ const handleInputChange = (
                   </div>
                 </div>
               </div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">UserId (optional)</label>
-                <input
-                  type="text"
-                  name="uid"
-                  value={formData.uid || ''}
-                  onChange={handleInputChange}
-                  placeholder="e.g"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+               <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">User (optional)</label>
+  <select
+    name="uid"
+    value={formData.uid || ''}
+    onChange={handleInputChange}
+    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+  >
+    <option value="">Select a user</option>
+    {users?.map((user: { id: string; uid:string, name: string }) => (
+      <option key={user.id} value={user.uid}>
+        {user.name}
+      </option>
+    ))}
+  </select>
+</div>
+
             </div>
 
             <div className="flex gap-3 mt-6" >
