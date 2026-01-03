@@ -1,4 +1,4 @@
-import React from 'react'
+"use client"
 import AdminDashboard from '../Layouts/AdminDashboard'
 import DashboardOverview from '../(components)/Admin/DashboardOverview'
 
