@@ -2,7 +2,6 @@ import axios from "@/config/axiosconfig";
 import { RootState } from "@/Global/store";
 import { isAxiosError } from "axios";
 import { CheckCircle, Eye, XCircle } from "lucide-react";
-import { headers } from "next/headers";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";

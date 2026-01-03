@@ -35,18 +35,6 @@ export default function AdminAuthForms() {
     });
   };
 
-  //   const handleSubmit = async (e: any) => {
-  //     e.preventDefault();
-  //     setLoading(true);
-  //     await new Promise((resolve) => setTimeout(resolve, 1500));
-  //     setLoading(false);
-  //     setSuccess(true);
-  //     setTimeout(() => {
-  //       setSuccess(false);
-  //       setFormData({ email: "", username: "", password: "", phoneNumber: "", name: "", referralId: "" });
-  //     }, 2000);
-  //   };
-
   const inputVariants = {
     focus: {
       boxShadow: "0 0 0 3px rgba(168, 85, 247, 0.2)",
@@ -76,9 +64,6 @@ export default function AdminAuthForms() {
 
       if (res.data?.message === "success") {
         toast.success("Registration successful");
-        // setTimeout(() => {
-        //   router.push("/auth/notverified");
-        // }, 3000);
       }
     } catch (error) {
       console.log(error);
