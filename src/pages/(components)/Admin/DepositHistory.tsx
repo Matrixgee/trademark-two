@@ -1,5 +1,6 @@
 import axios from "@/config/axiosconfig";
 import { RootState } from "@/Global/store";
+import Deposit from "@/pages/user/deposit";
 import { isAxiosError } from "axios";
 import { Eye, Filter, Search } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -36,13 +37,13 @@ const DepositHistory = () => {
     setShowDetailsModal(true);
   };
 
-  // const filteredDeposits = deposits.filter(deposit => {
-  //   const matchesSearch = deposit.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //                        deposit.email.toLowerCase().includes(searchQuery.toLowerCase());
-  //   const matchesStatus = statusFilter === 'All' || deposit.status === statusFilter;
-  //   const matchesAsset = assetFilter === 'All' || deposit.asset === assetFilter;
-  //   return matchesSearch && matchesStatus && matchesAsset;
-  // });
+  const filteredDeposits = deposits.filter(deposit => {
+    const matchesSearch = deposit.user?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         deposit.user?.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'All' || deposit.status === statusFilter.toLowerCase();
+    const matchesAsset = assetFilter === 'All' || deposit.method === assetFilter;
+    return matchesSearch && matchesStatus && matchesAsset;
+  });
 
   // const totalDeposits = filteredDeposits.length;
   // const totalAmount = filteredDeposits.reduce((sum, d) => sum + d.amount, 0);
@@ -70,8 +71,11 @@ const DepositHistory = () => {
     useEffect(()=>{
       getAllDeposits()
     },[])
-
-    console.log(deposits)
+    const totalDeposits = deposits.reduce(
+        (sum: number, deposit: { amount: number }) => sum + Number(deposit.amount),
+        0
+      )
+    const approvedArr = deposits.filter((deposit:Deposit)=>deposit.status === "approved")
 
   return (
     <div>
@@ -83,15 +87,15 @@ const DepositHistory = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <p className="text-gray-600 text-sm mb-1">Total Deposits</p>
-          <p className="text-3xl font-bold text-gray-900">3</p>
+          <p className="text-3xl font-bold text-gray-900">{deposits.length}</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6">
           <p className="text-gray-600 text-sm mb-1">Total Amount</p>
-          <p className="text-3xl font-bold text-gray-900">$33,000</p>
+          <p className="text-3xl font-bold text-gray-900">${totalDeposits}</p>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <p className="text-gray-600 text-sm mb-1">Verified</p>
-          <p className="text-3xl font-bold text-green-600">3</p>
+          <p className="text-gray-600 text-sm mb-1">Approved</p>
+          <p className="text-3xl font-bold text-green-600">{approvedArr.length}</p>
         </div>
       </div>
 
@@ -116,9 +120,9 @@ const DepositHistory = () => {
                 className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
               >
                 <option value="All">All Status</option>
-                <option value="Verified">Verified</option>
-                <option value="Pending">Pending</option>
-                <option value="Declined">Declined</option>
+                <option value="approved">Approved</option>
+                <option value="pending">Pending</option>
+                <option value="declined">Declined</option>
               </select>
             </div>
             <select
@@ -150,7 +154,7 @@ const DepositHistory = () => {
               </tr>
             </thead>
             <tbody>
-              {deposits.map((deposit) => (
+              {filteredDeposits.map((deposit) => (
                 <tr key={deposit.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
                   <td className="px-6 py-4">
                     <div>
@@ -169,12 +173,14 @@ const DepositHistory = () => {
                   <td className="px-6 py-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium${
   deposit.status === "approved"
-    ? "bg-green-100 text-green-700"
+    ? "text-green-700 bg-green-100"
     : deposit.status === "pending"
-    ? " text-yellow-700 bg-yellow-100"
-    : "bg-red-100 text-red-700"
+    ? "bg-yellow-100 text-yellow-700"
+    : "text-red-700 bg-red-100"
 }`}>
-                      {deposit.status}
+                      {
+                        deposit.status === "approved" ? "Approved" : deposit.status === "declined" ? "Declined" : deposit.status === "pending" ?"Pending" : deposit.status
+                      }
                     </span>
                   </td>
                   <td className="px-6 py-4">
@@ -193,7 +199,7 @@ const DepositHistory = () => {
             </tbody>
           </table>
         </div>
-        {deposits?.length === 0 && (
+        {filteredDeposits?.length === 0 && (
           <div className="p-8 text-center">
             <p className="text-gray-500 text-lg">No deposits found</p>
           </div>
