@@ -42,7 +42,7 @@ const ProfileDropdown:React.FC<DropdownProps> = ({ isOpen, onClose }) => {
             <User size={18} />
             Profile
           </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700">
+          <button onClick={()=>router.push("/user/settings")} className="w-full flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-gray-700">
             <Settings size={18} />
             Settings
           </button>

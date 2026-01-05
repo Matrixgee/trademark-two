@@ -128,9 +128,10 @@ const WithdrawHistory = () => {
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
             >
               <option value="All">All Assets</option>
-              <option value="BTC">BTC</option>
-              <option value="ETH">ETH</option>
-              <option value="SOL">SOL</option>
+              <option value="Bitcoin">BTC</option>
+              <option value="Ethereum">ETH</option>
+              <option value="Solana">SOL</option>
+              <option value="usdt">USDT</option>
             </select>
           </div>
         </div>

@@ -161,7 +161,7 @@ export default function AdminAuthForms() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              {isLogin ? "Welcome back" : "Register as an Admin"}
+              {isLogin ? "Welcome back Admin" : "Register as an Admin"}
             </motion.p>
           </motion.div>
 

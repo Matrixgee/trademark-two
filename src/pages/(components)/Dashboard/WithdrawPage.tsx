@@ -155,7 +155,7 @@ const isValidAmount = () => {
 
     try {
       const response = await axios.post(
-        `/withdraw/`,
+        `/withdrawal`,
         requestData,
         {
           headers: {

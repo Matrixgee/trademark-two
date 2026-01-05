@@ -19,7 +19,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex flex-row max-md:h-full h-[calc(100%-5rem)]">
           <TradingSide />
 
-          <main className="border-l border-gray-300 max-md:w-full md:w-[42%] bg-red-600 h-full">
+          <main className="border-l border-gray-300 max-md:w-full md:w-[42%] pb-2 bg-red-600 h-full">
             {children}
           </main>
         </div>

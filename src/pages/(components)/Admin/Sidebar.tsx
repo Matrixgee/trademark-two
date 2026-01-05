@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { clearAdmin } from "@/Global/AdminSlice";
+import toast from "react-hot-toast";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -40,6 +43,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       setIsOpen(false);
     }
   };
+  const dispatch = useDispatch()
+
+  const logOut = ()=>{
+    dispatch(clearAdmin())
+    setTimeout(()=>{
+      toast.success("Logout Successful!")
+      router.push("/admin/login")
+    }, 2000)
+  }
 
   return (
     <>
@@ -112,7 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         </nav>
 
         {/* Logout */}
-        <div className="p-6 border-t border-purple-700">
+        <div className="p-6 border-t border-purple-700" onClick={logOut}>
           <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-purple-500 text-purple-200 hover:bg-purple-700/50 transition">
             <span>🚪</span>
             <span className="font-medium">Logout</span>

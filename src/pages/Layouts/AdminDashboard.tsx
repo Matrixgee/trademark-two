@@ -52,7 +52,6 @@ const AdminDashboard = ({ children }: { children: ReactNode }) => {
                 </p>
                 <p className="text-xs text-gray-500">Administrator</p>
               </div>
-              <ChevronDown size={16} className="text-gray-500" />
             </div>
           </div>
         </div>

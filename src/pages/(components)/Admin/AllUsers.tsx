@@ -5,6 +5,7 @@ import { RootState } from "@/Global/store";
 import { isAxiosError } from "axios";
 import { Eye, Loader2, Lock, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 export interface User {
@@ -33,7 +34,7 @@ export interface User {
 
 const AllUsers = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('All');
+  const [filterStatus, setFilterStatus] = useState<"All" | "Verified" | "NotVerified">('All');
   const [loading, setLoading] = useState<boolean>(false)
   const adminToken = useSelector((state:RootState)=> state?.admin?.token)
   const [users, setUsers] = useState<User[]>();
@@ -60,13 +61,37 @@ const AllUsers = () => {
     getAllUsers()
   },[])
 
-  const filteredUsers = users?.filter((user:any) => {
+  const filteredUsers = users?.filter((user:User) => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase()) || user.username.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'All' || user.status === filterStatus;
+    const matchesStatus =
+    filterStatus === "Verified"
+      ? user.verified
+      : filterStatus === "NotVerified"
+      ? !user.verified
+      : true;
     return matchesSearch && matchesStatus;
   });
 
 
+  const handleDeleteUser = async (uid: string) => {
+    const loadingId = toast.loading("Deleting, Please wait...")
+    try {
+      const response = await axios.delete(`/admin/users/${uid}`, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      toast.success(response?.data?.message || "User deleted successfully")
+      console.log(response)
+      setTimeout(() => {
+        getAllUsers()
+      }, 1000);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      toast.dismiss(loadingId)
+    }
+  }
 
   return (
     <div>
@@ -77,10 +102,10 @@ const AllUsers = () => {
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
             <input type="text" placeholder="Search by name, email, or username..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
           </div>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as any)} className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
             <option value="All">All Status</option>
-            <option value="Active">Verified</option>
-            <option value="Active">Not Verified</option>
+            <option value="Verified">Verified</option>
+            <option value="NotVerified">Not Verified</option>
           </select>
         </div>
       </div>
@@ -113,7 +138,7 @@ const AllUsers = () => {
                   <td className="px-6 py-4"><p className="font-semibold text-gray-900">${user.balance.toLocaleString()}</p></td>
                   <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-medium ${user?.verified === false ? "bg-gray-100 text-gray-700" : "bg-green-100 text-green-700"} `}>{user?.verified === false ? "Not Verified" : "Verified"}</span></td>
                   <td className="px-6 py-4"><p className="text-gray-600 text-sm">25-09-2025</p></td>
-                  <td className="px-6 py-4"><div className="flex items-center justify-center gap-2"><button className="p-2 hover:bg-blue-100 rounded-lg transition" title="View"><Eye size={18} className="text-blue-600" /></button><button className="p-2 hover:bg-yellow-100 rounded-lg transition" title="Suspend"><Lock size={18} className="text-yellow-600" /></button><button className="p-2 hover:bg-red-100 rounded-lg transition" title="Delete"><Trash2 size={18} className="text-red-600" /></button></div></td>
+                  <td className="px-6 py-4"><div className="flex items-center justify-center gap-2"><button className="p-2 hover:bg-blue-100 rounded-lg transition" title="View"><Eye size={18} className="text-blue-600" /></button><button onClick={()=>handleDeleteUser(user?.uid)} className="p-2 hover:bg-red-100 rounded-lg transition" title="Delete"><Trash2 size={18} className="text-red-600" /></button></div></td>
                 </tr>
               ))}
                  

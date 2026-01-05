@@ -6,7 +6,7 @@ const Navbar = () => {
 const router = useRouter();
 
   return (
-    <div  className='z-50 shadow-[0_-6px_20px_rgba(0,0,0,0.12)] pt-3 max-md:px-3 md:px-15 p-1 bg-white w-full flex justify-between text-black'>
+    <div  className='z-50 shadow-md pt-3 max-md:px-3 md:px-15 p-1 bg-white w-full flex justify-between text-black'>
         {
             [
     {

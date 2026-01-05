@@ -9,6 +9,7 @@ import { isAxiosError } from 'axios'
 import axios from '@/config/axiosconfig'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Global/store'
+import { useRouter } from 'next/router'
 
 export interface UserProfile {
   name: string
@@ -147,6 +148,7 @@ const SettingsPage = () => {
     updateProfileInfo()
     setIsEditing(false)
   }
+  const router = useRouter()
 
   if (loading) {
     return (
@@ -168,7 +170,7 @@ const SettingsPage = () => {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button onClick={()=>router.back()} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
             <div>
@@ -246,7 +248,7 @@ const SettingsPage = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your name"
                   />
                 ) : (
@@ -267,7 +269,7 @@ const SettingsPage = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your username"
                   />
                 ) : (
@@ -288,7 +290,7 @@ const SettingsPage = () => {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your phone number"
                   />
                 ) : (
@@ -309,7 +311,7 @@ const SettingsPage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your email"
                   />
                 ) : (
@@ -330,7 +332,7 @@ const SettingsPage = () => {
                     name="dob"
                     value={formData.dob}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                   />
                 ) : (
                   <div className='p-2 px-3 border border-purple-400 rounded-md'>
@@ -350,7 +352,7 @@ const SettingsPage = () => {
                     name="state"
                     value={formData.state}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your state"
                   />
                 ) : (
@@ -371,7 +373,7 @@ const SettingsPage = () => {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your city"
                   />
                 ) : (
@@ -397,7 +399,7 @@ const SettingsPage = () => {
                     name="bankName"
                     value={formData.bankName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your bank name"
                   />
                 ) : (
@@ -418,7 +420,7 @@ const SettingsPage = () => {
                     name="accountNumber"
                     value={formData.accountNumber}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your account number"
                   />
                 ) : (
@@ -439,7 +441,7 @@ const SettingsPage = () => {
                     name="routingNumber"
                     value={formData.routingNumber}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your routing number"
                   />
                 ) : (
@@ -465,7 +467,7 @@ const SettingsPage = () => {
                     name="bitcoin"
                     value={formData.bitcoin}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your Bitcoin address"
                   />
                 ) : (
@@ -486,7 +488,7 @@ const SettingsPage = () => {
                     name="ethereum"
                     value={formData.ethereum}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your Ethereum address"
                   />
                 ) : (
@@ -507,7 +509,7 @@ const SettingsPage = () => {
                     name="sol"
                     value={formData.sol}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                     placeholder="Enter your Solana address"
                   />
                 ) : (
@@ -544,7 +546,7 @@ const SettingsPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleCancel}
-                className="flex-1 flex cursor-pointer items-center justify-center gap-2 border-2 border-gray-200 hover:border-gray-300 text-gray-600 font-bold py-3 rounded-xl transition-all"
+                className="flex-1 flex cursor-pointer items-center justify-center gap-2 border-2 border-gray-300 hover:border-gray-300 text-gray-600 font-bold py-3 rounded-xl transition-all"
               >
                 <X className='w-5 h-5' /> Cancel
               </motion.button>

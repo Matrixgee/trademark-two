@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { ChartNoAxesCombined, Goal, KeyRound, Wallet } from "lucide-react";
 
 const HowItWorks: React.FC = () => {
   const steps = [
@@ -7,28 +8,28 @@ const HowItWorks: React.FC = () => {
       title: "Create Your Account",
       description:
         "Sign up in minutes with just your email and basic information. Secure and verified instantly.",
-      icon: "📱",
+      icon: <KeyRound className="w-9 h-9 text-purple-400" />,
     },
     {
       number: "02",
       title: "Fund Your Wallet",
       description:
         "Link your bank account or deposit funds. We support all major payment methods with zero fees.",
-      icon: "💳",
+      icon: <Wallet className="w-9 h-9 text-purple-400" />,
     },
     {
       number: "03",
       title: "Choose Your Strategy",
       description:
         "Select from AI-powered portfolios or create your own investment mix. Customize to your goals.",
-      icon: "🎯",
+      icon: <Goal className="w-9 h-9 text-purple-400" />,
     },
     {
       number: "04",
       title: "Watch It Grow",
       description:
         "Monitor your investments in real-time with detailed analytics and get smart notifications.",
-      icon: "📈",
+      icon: <ChartNoAxesCombined className="w-9 h-9 text-purple-400" />,
     },
   ];
 

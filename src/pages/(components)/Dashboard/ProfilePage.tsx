@@ -9,6 +9,7 @@ import { isAxiosError } from 'axios'
 import axios from '@/config/axiosconfig'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Global/store'
+import { useRouter } from 'next/router'
 
 export interface UserProfile {
   name: string
@@ -102,9 +103,38 @@ const ProfilePage = () => {
         setLoading(false)
     }
   }
+
+
+  useEffect(()=>{
+getProfileInfo()
+  },[])
+  const handleSave = () => {
+  if (!userInfo) return;
+  updateProfileInfo()
+
+  setIsEditing(false);
+}
+const handleUpload = async ()=>{
+    try {
+        const res = await axios.post("/image/upload-single", userInfo?.profilePic, {
+            headers:{
+                Authorization: `Bearer ${user?.Token}`
+            }
+        })
+        // setUserInfo(res?.data?.data)
+        console.log(res?.data, "tht") 
+    } catch (error) {
+        if (isAxiosError(error)) {
+            console.log(error)
+        }
+    }
+
+}
+
     const updateProfileInfo =async()=>{
     setUpdating(true)
     try {
+        
         const res = await axios.patch("user/profile", {
             userInfo
         }, {
@@ -123,17 +153,6 @@ const ProfilePage = () => {
     }
   }
 
-  useEffect(()=>{
-getProfileInfo()
-  },[])
-  const handleSave = () => {
-  if (!userInfo) return;
-  updateProfileInfo()
-
-  setIsEditing(false);
-};
-
-
 
   if (loading) {
     return (
@@ -145,6 +164,8 @@ getProfileInfo()
     )
   }
 
+  const router = useRouter()
+
   return (
     <div className='bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen w-full p-4'>
       {/* Header */}
@@ -155,7 +176,7 @@ getProfileInfo()
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" onClick={()=>router.back()}>
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
             <div>
@@ -229,11 +250,11 @@ getProfileInfo()
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-purple-400  focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                   placeholder="Enter your name"
                 />
               ) : (
-                <div className='p-2 px-3 border border-purple-400 rounded-md'>
+                <div className='p-2 px-3 border border-gray-300 rounded-md'>
                   <p className="text-gray-900 font-semibold">{userInfo?.name}</p>
                 </div>
               )}
@@ -250,11 +271,11 @@ getProfileInfo()
                   name="username"
                   value={formData.username}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-purple-400 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                   placeholder="Enter your username"
                 />
               ) : (
-                <div className='p-2 px-3 border border-purple-400 rounded-md'>
+                <div className='p-2 px-3 border border-gray-300 rounded-md'>
                   <p className="text-gray-900 font-semibold">@{userInfo?.username}</p>
                 </div>
               )}
@@ -271,11 +292,11 @@ getProfileInfo()
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-purple-400 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                   placeholder="Enter your phone number"
                 />
               ) : (
-                <div className='p-2 px-3 border border-purple-400 rounded-md'>
+                <div className='p-2 px-3 border border-gray-300 rounded-md'>
                   <p className="text-gray-900 font-semibold">{userInfo?.phoneNumber}</p>
                 </div>
               )}
@@ -292,11 +313,11 @@ getProfileInfo()
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-purple-400 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                   placeholder="Enter your email"
                 />
               ) : (
-                <div className='p-2 px-3 border border-purple-400 rounded-md'>
+                <div className='p-2 px-3 border border-gray-300 rounded-md'>
                   <p className="text-gray-900 font-semibold">{userInfo?.email}</p>
                 </div>
               )}
@@ -313,10 +334,10 @@ getProfileInfo()
                   name="dob"
                   value={formData.dob}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
+                  className="w-full px-4 py-3 rounded-xl border border-purple-400 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                 />
               ) : (
-                <div className='p-2 px-3 border border-purple-400 rounded-md'>
+                <div className='p-2 px-3 border border-gray-300 rounded-md'>
                   <p className="text-gray-900 font-semibold">{userInfo?.dob || 'Not set'}</p>
                 </div>
                 
@@ -349,7 +370,7 @@ getProfileInfo()
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleCancel}
-                className="flex-1 flex cursor-pointer items-center justify-center gap-2 border-2 border-gray-200 hover:border-gray-300 text-gray-600 font-bold py-3 rounded-xl transition-all"
+                className="flex-1 flex cursor-pointer items-center justify-center gap-2 border-2 border-gray-300 hover:border-gray-300 text-gray-600 font-bold py-3 rounded-xl transition-all"
               >
                 <X className='w-5 h-5' /> Cancel
               </motion.button>
