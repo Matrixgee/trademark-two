@@ -7,9 +7,9 @@ const PricingSection = () => {
 
   const plans = [
     {
-      name: "Starter",
+      name: "Launch",
       description: "Perfect for beginners",
-      price: { monthly: 0, annual: 0 },
+      price: { monthly: 2, annual: 12 },
       features: [
         "Up to $10,000 in investments",
         "Basic portfolio analytics",
@@ -17,7 +17,7 @@ const PricingSection = () => {
         "Limited AI insights",
         "Mobile app access",
       ],
-      cta: "Start Free",
+      cta: "Start now",
       highlighted: false,
     },
     {

@@ -110,6 +110,7 @@ const Portfolio_Home = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={()=>router.push("user/invest")}
               className="bg-white text-purple-900 font-semibold text-sm py-2 px-6 rounded-lg hover:bg-purple-50 transition inline-flex items-center gap-2"
             >
               <ChartNoAxesColumn className="w-4 h-4" />
@@ -119,7 +120,7 @@ const Portfolio_Home = () => {
         </motion.div>
 
         {/* Chart */}
-        <div className="w-full h-[57vh] mb-8 rounded-lg shadow-md overflow-hidden">
+        <div className="w-full h-[66vh] mb-8 rounded-lg shadow-md overflow-hidden">
           <Chartone />
         </div>
 

@@ -8,19 +8,23 @@ import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Global/store'
 
-interface Investment {
+export interface Investment {
   id: string;
   uid: string;
   name: string;
   email: string;
+
   plan_name: string;
   plan_id: string;
   duration: string;
+
   amount: number;
   status: "pending" | "approved" | "declined";
+
   createdAt: number;
   updatedAt: number;
 }
+
 const InvestmentHistory = () => {
   const [searchId, setSearchId] = useState('')
   const [copiedId, setCopiedId] = useState(null)
@@ -92,9 +96,7 @@ const InvestmentHistory = () => {
     )
   }
 
-  const filteredTransactions = transactions.filter(tx =>
-    tx.transactionId.toLowerCase().includes(searchId.toLowerCase())
-  )
+
   const token = useSelector((state: RootState)=> state?.user.Token)
 
 console.log(token)
@@ -125,36 +127,40 @@ console.log(token)
       toast.dismiss(loadingId)
     }
   }
-  useEffect(()=>{
-    getAllInvestments()
-  },[])
-  console.log(allInvestment, "theVal")
+useEffect(() => {
+  if (!token) return
+  getAllInvestments()
+}, [token])
 
+
+    const filteredTransactions =  allInvestment.filter(tx =>
+    tx.plan_id.toLowerCase().includes(searchId.toLowerCase())
+  )
   return (
     <div className='bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen w-full p-4'>
       {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl p-8 mb-8"
+        className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-xl p-4 mb-8"
       >
-        <h1 className="text-3xl font-bold text-white mb-6">Investment Log</h1>
+        <h1 className="text-2xl font-bold text-white mb-6">Investment Log</h1>
         
         {/* Search Bar */}
-        <div className="flex gap-3">
+        <div className="flex w-full justify-between gap-2">
           <input
             type="text"
-            placeholder="Transaction ID"
+            placeholder="Plan ID"
             value={searchId}
             onChange={(e) => setSearchId(e.target.value)}
-            className="flex-1 px-6 py-4 rounded-2xl bg-white border-0 focus:outline-none placeholder-gray-400 text-gray-900"
+            className="flex-1 px-6 py-4 w-[70%] rounded-md bg-white border-0 focus:outline-none placeholder-gray-400 text-gray-900"
           />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-purple-400 hover:bg-purple-300 text-white font-bold py-4 px-8 rounded-2xl transition-all flex items-center gap-2"
+            className="bg-purple-400 w-max hover:bg-purple-300 text-white font-bold py-2 px-4 rounded-md transition-all flex items-center gap-2"
           >
-            <Search className='w-5 h-5' /> Search
+            <Search className='w-5 h-5' /> <span className='max-md:hidden max'>Search</span>
           </motion.button>
         </div>
       </motion.div>
@@ -170,63 +176,55 @@ console.log(token)
               transition={{ delay: index * 0.1 }}
               className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden"
             >
-              {/* Transaction Header */}
               <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold text-lg p-6">
-                Transaction No: {transaction.id}
+                Plan ID: {transaction.plan_id}
               </div>
 
-              {/* Transaction Content */}
               <div className="p-8">
                 <div className="flex gap-8 items-start">
                   {/* Icon */}
-                  <Image
+                  {/* <Image
                               src={getIcon(transaction.assets) ?? ""}
                               alt={transaction.assets}
                               width={70}
                               height={70}
                               className="cursor-pointer rounded-full"
-                            />
+                            /> */}
 
                   {/* Details */}
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Left Column */}
                     <div className="space-y-5">
                       <div>
-                        <p className="text-gray-500 text-sm font-semibold mb-1">Transaction ID:</p>
+                        <p className="text-gray-500 text-sm font-semibold mb-1">Plan ID:</p>
                         <div className="flex items-center gap-2">
                           <p className="text-gray-900 font-bold font-mono text-sm break-all">
-                            {transaction.transactionId}
+                            {transaction.plan_id}
                           </p>
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => handleCopy(transaction.transactionId)}
+                            onClick={() => handleCopy(transaction.plan_id)}
                             className="text-purple-600 hover:text-purple-700 transition-colors"
                           >
                             <Copy className='w-4 h-4' />
                           </motion.button>
-                          {copiedId === transaction.transactionId && (
+                          {copiedId === transaction.plan_id && (
                             <span className="text-xs text-green-600 font-bold">Copied!</span>
                           )}
                         </div>
                       </div>
 
                       <div>
-                        <p className="text-gray-500 text-sm font-semibold mb-1">Network:</p>
-                        <p className="text-gray-900 font-bold">{transaction.network}</p>
-                      </div>
-
-                      <div>
-                        <p className="text-gray-500 text-sm font-semibold mb-1">Gateway:</p>
-                        <p className="text-gray-900 font-bold">{transaction.gateway}</p>
+                        <p className="text-gray-500 text-sm font-semibold mb-1">Duration:</p>
+                        <p className="text-gray-900 font-bold">{transaction.duration}</p>
                       </div>
                     </div>
 
                     {/* Right Column */}
                     <div className="space-y-5">
                       <div>
-                        <p className="text-gray-500 text-sm font-semibold mb-1">Assets:</p>
-                        <p className="text-gray-900 font-bold">{transaction.assets}</p>
+                        <p className="text-gray-500 text-sm font-semibold mb-1">Plan name</p>
+                        <p className="text-gray-900 font-bold">{transaction.plan_name}</p>
                       </div>
 
                       <div>
@@ -234,10 +232,10 @@ console.log(token)
                         <p className="text-gray-900 font-bold">{transaction.amount}</p>
                       </div>
 
-                      <div>
+                      {/* <div>
                         <p className="text-gray-500 text-sm font-semibold mb-1">Transaction Date:</p>
                         <p className="text-gray-900 font-bold">{transaction.date}</p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -248,7 +246,7 @@ console.log(token)
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
-                      transaction.statusColor === 'green' 
+                      transaction.status === 'approved' 
                         ? 'bg-green-100 text-green-700' 
                         : 'bg-orange-100 text-orange-700'
                     } font-bold`}
@@ -266,8 +264,8 @@ console.log(token)
             animate={{ opacity: 1 }}
             className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 text-center"
           >
-            <p className="text-gray-500 font-bold text-lg">No transactions found</p>
-            <p className="text-gray-400 text-sm mt-2">Try searching with a different Transaction ID</p>
+            <p className="text-gray-500 font-bold text-lg">No Investments found</p>
+            <p className="text-gray-400 text-sm mt-2">Try searching with a different Plan ID</p>
           </motion.div>
         )}
       </div>

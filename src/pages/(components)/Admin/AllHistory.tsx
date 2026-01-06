@@ -5,42 +5,71 @@ import { Eye, Filter, Search, TrendingDown, TrendingUp, Wallet } from "lucide-re
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-interface Transaction {
-  id: number;
-  user: string;
+export interface User {
+  _id: string;
+  uid: string;
+  name: string;
+  username: string;
   email: string;
+
+  phoneNumber: string;
+
+  verified: boolean;
+  type: "user" | "admin";
+
+  // balances
+  balance: number;
+  btcBal: number;
+  ethBal: number;
+  solBal: number;
+  usdtBal: number;
+
+  // wallet addresses
+  bitcoin: string;
+  ethereum: string;
+  sol: string;
+
+  // optional profile / meta
+  profilePic: string;
+  dob: string;
+  state: string;
+  city: string;
+
+  // bank details
+  bankName: string;
+  accountNumber: string;
+  routingNumber: string;
+
+  referralId: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+export interface Transaction {
+  id: string;
+  uid: string;
   amount: number;
-  asset: 'BTC' | 'ETH' | 'SOL';
-  type: 'Deposit' | 'Withdrawal' | 'Investment';
-  status: 'Verified' | 'Processed' | 'Declined' | 'Pending' | 'Active' | 'Completed';
-  submittedDate: string;
-  processedDate?: string;
-  txHash?: string;
-  walletAddress?: string;
-  investmentPlan?: string;
-  roi?: number;
+
+  type: "deposit" | "withdrawal";
+  status: "pending" | "approved" | "declined";
+
+  source: string;
+
+  createdAt: number;
+  updatedAt: number;
+
+  user: User;
 }
 
+
 const AllHistory = () => {
-  const [transactions] = useState<Transaction[]>([
-    { id: 1, user: 'John Doe', email: 'john@example.com', amount: 5000, asset: 'BTC', type: 'Deposit', status: 'Verified', submittedDate: '2024-01-18 10:30', processedDate: '2024-01-18 11:00', txHash: '0x1234...abcd' },
-    { id: 2, user: 'Jane Smith', email: 'jane@example.com', amount: 2000, asset: 'ETH', type: 'Withdrawal', status: 'Processed', submittedDate: '2024-01-18 11:15', processedDate: '2024-01-18 12:30', txHash: '0x5678...efgh', walletAddress: '0x742d...' },
-    { id: 3, user: 'Mike Johnson', email: 'mike@example.com', amount: 10000, asset: 'BTC', type: 'Investment', status: 'Active', submittedDate: '2024-01-18 09:45', processedDate: '2024-01-18 10:15', investmentPlan: 'Premium Plan', roi: 15 },
-    { id: 4, user: 'Sarah Wilson', email: 'sarah@example.com', amount: 3500, asset: 'ETH', type: 'Deposit', status: 'Verified', submittedDate: '2024-01-17 14:20', processedDate: '2024-01-17 15:00', txHash: '0x3456...mnop' },
-    { id: 5, user: 'Tom Brown', email: 'tom@example.com', amount: 1500, asset: 'SOL', type: 'Withdrawal', status: 'Processed', submittedDate: '2024-01-17 10:30', processedDate: '2024-01-17 11:45', txHash: '0x7890...qrst', walletAddress: 'So11P...' },
-    { id: 6, user: 'Lisa Anderson', email: 'lisa@example.com', amount: 8000, asset: 'BTC', type: 'Investment', status: 'Completed', submittedDate: '2024-01-16 08:15', processedDate: '2024-01-16 09:00', investmentPlan: 'Standard Plan', roi: 12 },
-    { id: 7, user: 'David Lee', email: 'david@example.com', amount: 4200, asset: 'ETH', type: 'Deposit', status: 'Declined', submittedDate: '2024-01-16 16:45', processedDate: '2024-01-16 17:30', txHash: '0xefgh...yzab' },
-    { id: 8, user: 'Emma Davis', email: 'emma@example.com', amount: 2800, asset: 'SOL', type: 'Withdrawal', status: 'Pending', submittedDate: '2024-01-16 14:00', walletAddress: '3J98t...' },
-    { id: 9, user: 'Chris Martin', email: 'chris@example.com', amount: 15000, asset: 'BTC', type: 'Investment', status: 'Active', submittedDate: '2024-01-15 12:30', processedDate: '2024-01-15 13:00', investmentPlan: 'Elite Plan', roi: 20 },
-    { id: 10, user: 'Anna White', email: 'anna@example.com', amount: 3000, asset: 'ETH', type: 'Deposit', status: 'Verified', submittedDate: '2024-01-15 09:20', processedDate: '2024-01-15 10:00', txHash: '0xijkl...cdef' },
-  ]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'All' | 'Deposit' | 'Withdrawal' | 'Investment'>('All');
-  const [statusFilter, setStatusFilter] = useState<'All' | 'Verified' | 'Processed' | 'Declined' | 'Pending' | 'Active' | 'Completed'>('All');
-  const [assetFilter, setAssetFilter] = useState<'All' | 'BTC' | 'ETH' | 'SOL'>('All');
+  const [typeFilter, setTypeFilter] = useState<'All' | 'deposit' | 'withdrawal'>('All');
+  const [statusFilter, setStatusFilter] = useState<"All" | "pending" | "approved" | "declined">('All');
 
   const viewDetails = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
@@ -48,19 +77,18 @@ const AllHistory = () => {
   };
 
   const filteredTransactions = transactions.filter(transaction => {
-    const matchesSearch = transaction.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         transaction.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = transaction.user?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         transaction.user?.email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = typeFilter === 'All' || transaction.type === typeFilter;
     const matchesStatus = statusFilter === 'All' || transaction.status === statusFilter;
-    const matchesAsset = assetFilter === 'All' || transaction.asset === assetFilter;
-    return matchesSearch && matchesType && matchesStatus && matchesAsset;
+    return matchesSearch && matchesType && matchesStatus;
   });
 
   const totalTransactions = filteredTransactions.length;
   const totalAmount = filteredTransactions.reduce((sum, t) => sum + t.amount, 0);
-  const depositsCount = filteredTransactions.filter(t => t.type === 'Deposit').length;
-  const withdrawalsCount = filteredTransactions.filter(t => t.type === 'Withdrawal').length;
-  const investmentsCount = filteredTransactions.filter(t => t.type === 'Investment').length;
+  const depositsCount = filteredTransactions.filter(t => t.type === 'deposit').length;
+  const withdrawalsCount = filteredTransactions.filter(t => t.type === 'withdrawal').length;
+  // const investmentsCount = filteredTransactions.filter(t => t.type === 'Investment').length;
 
     const adminToken = useSelector((state: RootState) => state?.admin?.token);
     const [loading, setLoading] = useState<boolean>(false);
@@ -68,11 +96,12 @@ const AllHistory = () => {
     const getAllTransactions = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("/transaction/all", {
+        const response = await axios.get("/admin/all-transactions", {
           headers: {
             Authorization: `Bearer ${adminToken}`
           }
         });
+        setTransactions(response?.data?.data)
         console.log(response?.data?.data);
       } catch (error) {
         if (isAxiosError(error)) {
@@ -89,9 +118,9 @@ const AllHistory = () => {
   
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'Deposit':
+      case 'deposit':
         return <TrendingUp size={16} className="text-green-600" />;
-      case 'Withdrawal':
+      case 'withdrawal':
         return <TrendingDown size={16} className="text-red-600" />;
       case 'Investment':
         return <Wallet size={16} className="text-blue-600" />;
@@ -102,21 +131,18 @@ const AllHistory = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Verified':
-      case 'Processed':
-      case 'Completed':
+      case 'approved':
         return 'bg-green-100 text-green-700';
-      case 'Pending':
+      case 'pending':
         return 'bg-yellow-100 text-yellow-700';
-      case 'Active':
-        return 'bg-blue-100 text-blue-700';
-      case 'Declined':
+      case 'declined':
         return 'bg-red-100 text-red-700';
       default:
         return 'bg-gray-100 text-gray-700';
     }
   };
 
+  const filterDeposit = transactions.filter((t)=> t.type === "deposit")
   return (
     <div>
       <div className="mb-6">
@@ -149,7 +175,7 @@ const AllHistory = () => {
         </div>
       </div>
 
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg shadow-sm p-6 mb-6">
+      {/* <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg shadow-sm p-6 mb-6">
         <div className="flex items-center gap-2 mb-2">
           <Wallet size={20} className="text-blue-600" />
           <p className="text-gray-700 font-semibold">Investment Activity</p>
@@ -158,7 +184,7 @@ const AllHistory = () => {
           <p className="text-4xl font-bold text-blue-700">{investmentsCount}</p>
           <p className="text-gray-600">active and completed investments</p>
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div className="flex flex-col lg:flex-row gap-4">
@@ -181,25 +207,12 @@ const AllHistory = () => {
                 className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
               >
                 <option value="All">All Types</option>
-                <option value="Deposit">Deposit</option>
-                <option value="Withdrawal">Withdrawal</option>
+                <option value="deposit">Deposit</option>
+                <option value="withdrawal">Withdrawal</option>
                 <option value="Investment">Investment</option>
               </select>
             </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
-            >
-              <option value="All">All Status</option>
-              <option value="Verified">Verified</option>
-              <option value="Processed">Processed</option>
-              <option value="Pending">Pending</option>
-              <option value="Active">Active</option>
-              <option value="Completed">Completed</option>
-              <option value="Declined">Declined</option>
-            </select>
-            <select
+            {/* <select
               value={assetFilter}
               onChange={(e) => setAssetFilter(e.target.value as any)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
@@ -208,7 +221,7 @@ const AllHistory = () => {
               <option value="BTC">BTC</option>
               <option value="ETH">ETH</option>
               <option value="SOL">SOL</option>
-            </select>
+            </select> */}
           </div>
         </div>
       </div>
@@ -221,8 +234,6 @@ const AllHistory = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">User</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Type</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Asset</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Submitted</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
               </tr>
@@ -232,35 +243,27 @@ const AllHistory = () => {
                 <tr key={transaction.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
                   <td className="px-6 py-4">
                     <div>
-                      <p className="font-medium text-gray-900">{transaction.user}</p>
-                      <p className="text-sm text-gray-500">{transaction.email}</p>
+                      <p className="font-medium text-gray-900">{transaction?.user?.name}</p>
+                      <p className="text-sm text-gray-500">{transaction?.user?.email}</p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       {getTypeIcon(transaction.type)}
                       <span className={`font-medium ${
-                        transaction.type === 'Deposit' ? 'text-green-700' :
-                        transaction.type === 'Withdrawal' ? 'text-red-700' :
+                        transaction.type === 'deposit' ? 'text-green-700' :
+                        transaction.type === 'withdrawal' ? 'text-red-700' :
                         'text-blue-700'
                       }`}>
-                        {transaction.type}
+                        {transaction?.type === "deposit" ? "Deposit" : selectedTransaction?.type === "withdrawal" ? "Withdrawal" : selectedTransaction?.type}
+
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">${transaction.amount.toLocaleString()}</p>
-                    {transaction.roi && (
-                      <p className="text-xs text-green-600">ROI: {transaction.roi}%</p>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                      {transaction.asset}
+                    <span className="px-3 py-1 text-purple-700 rounded-full text-sm font-medium">
+                      ${transaction?.amount}
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-gray-600 text-sm">{transaction.submittedDate}</p>
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(transaction.status)}`}>
@@ -300,51 +303,21 @@ const AllHistory = () => {
             <div className="space-y-4 mb-6">
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">User:</span>
-                <span className="font-semibold">{selectedTransaction.user}</span>
+                <span className="font-semibold">{selectedTransaction?.user?.name}</span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Email:</span>
-                <span className="font-semibold">{selectedTransaction.email}</span>
+                <span className="font-semibold">{selectedTransaction?.user.email}</span>
+              </div>
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-gray-600">Type:</span>
+                <span className="font-semibold">
+                  {selectedTransaction?.type === "deposit" ? "Deposit" : selectedTransaction ?.type === "withdrawal" ? "Withdrawal" : selectedTransaction?.type}
+                  </span>
               </div>
               <div className="flex justify-between py-2 border-b">
                 <span className="text-gray-600">Amount:</span>
                 <span className="font-semibold text-lg">${selectedTransaction.amount.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span className="text-gray-600">Asset:</span>
-                <span className="font-semibold">{selectedTransaction.asset}</span>
-              </div>
-              {selectedTransaction.txHash && (
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-gray-600">TX Hash:</span>
-                  <span className="font-mono text-sm">{selectedTransaction.txHash}</span>
-                </div>
-              )}
-              {selectedTransaction.walletAddress && (
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-gray-600">Wallet Address:</span>
-                  <span className="font-mono text-sm">{selectedTransaction.walletAddress}</span>
-                </div>
-              )}
-              {selectedTransaction.investmentPlan && (
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-gray-600">Investment Plan:</span>
-                  <span className="font-semibold">{selectedTransaction.investmentPlan}</span>
-                </div>
-              )}
-              {selectedTransaction.roi && (
-                <div className="flex justify-between py-2 border-b">
-                  <span className="text-gray-600">ROI:</span>
-                  <span className="font-semibold text-green-600">{selectedTransaction.roi}%</span>
-                </div>
-              )}
-              <div className="flex justify-between py-2 border-b">
-                <span className="text-gray-600">Submitted:</span>
-                <span className="font-semibold">{selectedTransaction.submittedDate}</span>
-              </div>
-              <div className="flex justify-between py-2 border-b">
-                <span className="text-gray-600">Processed:</span>
-                <span className="font-semibold">{selectedTransaction.processedDate || 'Not yet processed'}</span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-gray-600">Status:</span>

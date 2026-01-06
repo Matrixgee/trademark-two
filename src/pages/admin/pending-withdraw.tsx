@@ -1,4 +1,3 @@
-import React from 'react'
 import AdminDashboard from '../Layouts/AdminDashboard'
 import PendingWithdrawals from '../(components)/Admin/PendingWithdrawals'
 

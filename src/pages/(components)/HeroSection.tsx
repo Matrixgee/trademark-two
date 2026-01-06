@@ -61,7 +61,8 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          Intelligent investment strategies powered by AI. Start with as little as $10 and watch your portfolio flourish with real-time insights and expert guidance.
+          Smart investment strategies powered by AI.
+          Build and grow your portfolio with data-driven insights, real-time analysis, and expert guidance designed to help you invest with confidence.
         </motion.p>
 
         <motion.div 

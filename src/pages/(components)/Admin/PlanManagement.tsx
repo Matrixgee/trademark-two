@@ -1,14 +1,16 @@
 // components/admin/PlanManagement.tsx
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, Eye } from 'lucide-react';
 import axios from '@/config/axiosconfig';
 import { isAxiosError } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/Global/store';
 import toast from 'react-hot-toast';
+import { User } from './AllUsers';
 
 interface Plan {
+  id:string
 name: string;
   returns: string;
   minAmount: string;
@@ -30,6 +32,32 @@ const PlanManagement = () => {
     uid:""
   });
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null)
+  const token = useSelector((state:RootState)=> state?.admin?.token)
+    const getPlans =async()=>{   
+      const loadingId = toast.loading("Fetching plans, Please wait...")   
+  try {
+            const res = await axios.get(`/plan/all`, {
+                headers:{
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            toast.success("Plans succesfully fetched")
+            setPlans(res?.data?.data)
+            console.log(res)
+        } catch (error) {
+            if (isAxiosError(error)) {
+                console.log(error)
+                toast.error("Error fetching plans")
+            }
+        }finally{
+          toast.dismiss(loadingId)
+        }
+      }
+    
+      useEffect(()=>{
+        getPlans()
+      },[])
 
   const handleOpenModal = (plan?: Plan) => {
     if (plan) {
@@ -67,14 +95,47 @@ const handleInputChange = (
   }));
 };
 
-
-
-
-  const handleDeletePlan = (name:string) => {
-    if (window.confirm('Are you sure you want to delete this plan?')) {
-      setPlans(plans.filter(p => p.name !== name));
+  const getAllUsers =async()=>{
+    try {
+      const response = await axios.get("/admin/users", {
+        headers:{
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      setUsers(response?.data?.data)
+      console.log(response?.data?.data)
+    }catch(error){
+      if (isAxiosError(error)) {
+        console.log(error)
+      }
+    }finally{
     }
-  };
+  }
+  useEffect(()=>{
+    getAllUsers()
+  },[])
+
+
+
+  const handleDeletePlan = async (id: string) => {
+    const loadingId = toast.loading("Deleting, Please wait...")
+    try {
+      const response = await axios.delete(`/admin/plans/${id}`, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`
+        }
+      })
+      toast.success(response?.data?.message || "Plan deleted successfully")
+      console.log(response)
+      setTimeout(() => {
+        getPlans()
+      }, 1000);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      toast.dismiss(loadingId)
+    }
+  }
 
     const adminToken = useSelector((state:RootState)=> state?.admin?.token)
     const createPlan =async()=>{
@@ -85,7 +146,6 @@ const handleInputChange = (
               Authorization: `Bearer ${adminToken}`
             }
           })
-          // setDeposits(response?.data?.data)
           console.log(response)
         }catch(error){
           if (isAxiosError(error)) {
@@ -96,20 +156,6 @@ const handleInputChange = (
         }
       }
 
-        const handleSavePlan = () => {
-    if (editingId) {
-      setPlans(plans.map(p => p.name === editingId ? { ...p, ...formData } : p));
-    } else {
-      const newPlan: Plan = {
-        ...formData as Omit<Plan, 'id'>,
-      };
-      setPlans([...plans, newPlan]);
-    }
-    handleCloseModal();
-  };
-  // const handleToggleStatus = (id: number) => {
-  //   setPlans(plans.map(p => p.id === id ? { ...p, status: p.status === 'Active' ? 'Inactive' : 'Active' } : p));
-  // };
 
   return (
     <div>
@@ -164,14 +210,14 @@ const handleInputChange = (
             </div>
 
             <div className="flex gap-2">
-              <button
+              {/* <button
                 onClick={() => handleOpenModal(plan)}
                 className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition border border-blue-200"
               >
                 <Edit2 size={16} /> Edit
-              </button>
+              </button> */}
               <button
-                onClick={() => handleDeletePlan(plan.name)}
+                onClick={() => handleDeletePlan(plan.id)}
                 className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition border border-red-200"
               >
                 <Trash2 size={16} /> Delete
@@ -181,65 +227,6 @@ const handleInputChange = (
         ))}
       </div>
 
-      {/* Plans Table View */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-bold text-gray-900">All Plans</h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Plan Name</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Investment Range</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Return Rate</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Duration</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
-              </tr>
-            </thead>
-            {
-              plans.length === 0 ? <div>No plans available for now</div> :
-              <tbody>
-              {plans.map((plan) => (
-                <tr key={plan.name} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                  <td className="px-6 py-4 font-medium text-gray-900">{plan.name}</td>
-                  <td className="px-6 py-4 text-gray-600">${plan.minAmount} - ${plan.maxAmount}</td>
-                  <td className="px-6 py-4">
-                    <span className="font-semibold text-green-600">{plan.returns}%</span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{plan.duration} {plan.duration}</td>
-                  <td className="px-6 py-4">
-                    {/* <button
-                      // onClick={() => handleToggleStatus(plan.id)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer transition`}
-                    >
-                      {plan.status}
-                    </button> */}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => handleOpenModal(plan)}
-                        className="p-2 hover:bg-blue-100 rounded-lg transition"
-                      >
-                        <Edit2 size={18} className="text-blue-600" />
-                      </button>
-                      <button
-                        onClick={() => handleDeletePlan(plan.name)}
-                        className="p-2 hover:bg-red-100 rounded-lg transition"
-                      >
-                        <Trash2 size={18} className="text-red-600" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            }
-          </table>
-        </div>
-      </div>
 
       {/* Create/Edit Plan Modal */}
       {showModal && (
@@ -310,17 +297,23 @@ const handleInputChange = (
                   </div>
                 </div>
               </div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">UserId (optional)</label>
-                <input
-                  type="text"
-                  name="uid"
-                  value={formData.uid || ''}
-                  onChange={handleInputChange}
-                  placeholder="e.g"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-              </div>
+               <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">User (optional)</label>
+  <select
+    name="uid"
+    value={formData.uid || ''}
+    onChange={handleInputChange}
+    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+  >
+    <option value="">Select a user</option>
+    {users?.map((user: { id: string; uid:string, name: string }) => (
+      <option key={user.id} value={user.uid}>
+        {user.name}
+      </option>
+    ))}
+  </select>
+</div>
+
             </div>
 
             <div className="flex gap-3 mt-6" >

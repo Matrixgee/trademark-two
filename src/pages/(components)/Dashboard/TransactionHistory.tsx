@@ -3,20 +3,33 @@
 import axios from "@/config/axiosconfig";
 import { RootState } from "@/Global/store";
 import { isAxiosError } from "axios";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
+
+interface Transaction {
+  id: string;
+  uid: string;
+  amount: number;
+  method:string
+  from: string;
+  to: string;
+
+  plan_name: string;
+  plan_id: string;
+  investment_id: string;
+
+  type: string;
+  status: string;
+
+  createdAt: number;
+  updatedAt: number;
+}
 const TransactionHistory = () => {
  const [loading, setLoading] = useState<boolean>(false) 
-const transactions = [
-    { method: 'BTC', type: 'Deposit', amount: '$60,000', date: '1/4/2025, 4:22:37 PM', status: 'APPROVED' },
-    { method: 'BTC', type: 'Deposit', amount: '$50,000', date: '1/6/2025, 11:44:01 PM', status: 'DECLINED' },
-    { method: 'SOL', type: 'Deposit', amount: '$70,000', date: '1/7/2025, 2:25:44 AM', status: 'APPROVED' },
-    { method: 'SOL', type: 'Withdrawal', amount: '$3,000', date: '1/7/2025, 2:49:35 AM', status: 'APPROVED' },
-    { method: 'SOL', type: 'Withdrawal', amount: '$3,000', date: '1/7/2025, 2:50:48 AM', status: 'DECLINED' },
-    { method: 'SOL', type: 'Withdrawal', amount: '$3,000', date: '1/7/2025, 2:50:53 AM', status: 'APPROVED' }
-  ];
+const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   const router = useRouter()
 
@@ -30,7 +43,8 @@ const transactions = [
           Authorization: `Bearer ${token}`
         }
       })
-      console.log(res)
+      console.log(res?.data?.data)
+      setTransactions(res?.data?.data)
     } catch (error) {
       if(isAxiosError(error)){
         console.log(error)
@@ -43,6 +57,14 @@ const transactions = [
   useEffect(()=>{
     getAllTransactions()
   },[])
+
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-purple-700" />
+        </div>
+      );
+    }
 
   return (
     <div className="p-6 w-full">
@@ -62,7 +84,7 @@ const transactions = [
                 <th className="text-left p-4 font-semibold">Method</th>
                 <th className="text-left p-4 font-semibold">Type</th>
                 <th className="text-left p-4 font-semibold">Amount</th>
-                <th className="text-left p-4 font-semibold">Date</th>
+                {/* <th className="text-left p-4 font-semibold">Date</th> */}
                 <th className="text-left p-4 font-semibold">Status</th>
               </tr>
             </thead>
@@ -70,12 +92,14 @@ const transactions = [
               {transactions.map((tx, idx) => (
                 <tr key={idx} className="border-b hover:bg-gray-50">
                   <td className="p-4 font-semibold">{tx.method}</td>
-                  <td className="p-4 text-gray-600">{tx.type}</td>
-                  <td className="p-4 font-semibold">{tx.amount}</td>
-                  <td className="p-4 text-gray-600">{tx.date}</td>
+                  <td className="p-4 text-gray-600">
+                    {tx.type === "deposit" ? "Deposit" : tx.type === "withdrawal" ? "Withdrawal" : tx.type}
+                    </td>
+                  <td className="p-4 font-semibold">${tx.amount}</td>
+                  {/* <td className="p-4 text-gray-600">{tx.date}</td> */}
                   <td className="p-4">
-                    <span className={`font-semibold ${tx.status === 'APPROVED' ? 'text-green-500' : 'text-red-500'}`}>
-                      {tx.status}
+                    <span className={`font-semibold ${tx.status === 'approved' ? 'text-green-500' : tx.status === "declined" ? 'text-red-500' : 'text-yellow-500'}`}>
+                      {tx.status === "approved" ? "APPROVED" : tx.status === "declined" ? "DECLINED" : tx.status === "pending" ? "PENDING" : tx.status}
                     </span>
                   </td>
                 </tr>
