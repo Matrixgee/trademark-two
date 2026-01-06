@@ -1,4 +1,4 @@
-import { ProcessedInvestments } from "../(components)/Admin/ProcessedInvestments"
+import ProcessedInvestments from "../(components)/Admin/ProcessedInvestments"
 import AdminDashboard from "../Layouts/AdminDashboard"
 
 const processedInvestments = () => {
