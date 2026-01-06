@@ -10,6 +10,12 @@ import {
   Plus,
   ChevronRight,
   X,
+  ChartBarIncreasing,
+  ChartNoAxesCombined,
+  ClipboardClock,
+  ClipboardCheck,
+  Gem,
+  Landmark,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -34,6 +40,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { id: "/admin/withdraw-history", icon: History, label: "Withdraw History" },
     { id: "/admin/all-history", icon: Zap, label: "All History" },
     { id: "/admin/plans", icon: Plus, label: "Plans & Create Plan" },
+    { id: "/admin/all-investments", icon: ChartNoAxesCombined, label: "All Investment" },
+    { id: "/admin/active-investments", icon: ChartBarIncreasing, label: "Active Investments" },
+    { id: "/admin/pending-investments", icon: ClipboardClock, label: "Pending Investments" },
+    { id: "/admin/processed-investments", icon: ClipboardCheck, label: "Processed Investments" },
+    { id: "/admin/topearnings", icon: Gem , label: "Top Earnings" },
+    { id: "/admin/all-earnings", icon: Landmark, label: "Earning History" },
   ];
 
   const handleNavigate = (path: string) => {
@@ -94,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         </div>
 
         {/* Menu */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = router.pathname === item.id;

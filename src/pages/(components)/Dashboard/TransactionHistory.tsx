@@ -3,6 +3,7 @@
 import axios from "@/config/axiosconfig";
 import { RootState } from "@/Global/store";
 import { isAxiosError } from "axios";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -57,6 +58,14 @@ const [transactions, setTransactions] = useState<Transaction[]>([]);
     getAllTransactions()
   },[])
 
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-purple-700" />
+        </div>
+      );
+    }
+
   return (
     <div className="p-6 w-full">
       <div className="flex justify-between items-center mb-8">
@@ -89,8 +98,8 @@ const [transactions, setTransactions] = useState<Transaction[]>([]);
                   <td className="p-4 font-semibold">${tx.amount}</td>
                   {/* <td className="p-4 text-gray-600">{tx.date}</td> */}
                   <td className="p-4">
-                    <span className={`font-semibold ${tx.status === 'approved' ? 'text-green-500' : 'text-red-500'}`}>
-                      {tx.status === "approved" ? "APPROVED" : tx.status === "declined" ? "DECLINED" : tx.status}
+                    <span className={`font-semibold ${tx.status === 'approved' ? 'text-green-500' : tx.status === "declined" ? 'text-red-500' : 'text-yellow-500'}`}>
+                      {tx.status === "approved" ? "APPROVED" : tx.status === "declined" ? "DECLINED" : tx.status === "pending" ? "PENDING" : tx.status}
                     </span>
                   </td>
                 </tr>

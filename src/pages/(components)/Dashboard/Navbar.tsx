@@ -35,7 +35,7 @@ const router = useRouter();
           return (
             <button
               key={item.label}
-              onClick={() => router.push(item.path)}
+              onClick={() => router.replace(item.path)}
               className={`flex flex-col items-center gap-3 text-xs transition cursor-pointer
                 ${isActive ? "text-purple-700 font-medium" : "text-gray-500 hove"}
               `}

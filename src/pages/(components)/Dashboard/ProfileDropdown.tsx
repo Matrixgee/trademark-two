@@ -1,16 +1,18 @@
+import { RootState } from '@/Global/store';
 import { clearUser, userInfo } from '@/Global/UserSlice';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LogOut, Settings, User } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React from 'react'
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface DropdownProps {
     isOpen: boolean
     onClose: ()=>void
 }
 const ProfileDropdown:React.FC<DropdownProps> = ({ isOpen, onClose }) => {
+  const user = useSelector((state:RootState)=>state?.user?.User?.user)
 
   const router = useRouter()
   const dispatch = useDispatch()
@@ -35,8 +37,8 @@ const ProfileDropdown:React.FC<DropdownProps> = ({ isOpen, onClose }) => {
             <div className='p-2 rounded-full border w-max border-white bg-black'>
                 <User className='text-white'/>
             </div>
-            <p className=" text-sm font-semibold text-white">Michael Jordan</p>
-            <p className="text-xs text-white">mike@mailinator.com</p>
+            <p className=" text-sm font-semibold text-white">{user?.user?.name}</p>
+            <p className="text-xs text-white">{user?.user?.email}</p>
           </div>
           <button onClick={()=>router.push("/user/profile")} className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-gray-700">
             <User size={18} />
