@@ -1,15 +1,10 @@
-import axios from '@/config/axiosconfig';
-import { RootState } from '@/Global/store';
+
 import { InvestmentPlan } from '@/pages/(components)/Dashboard/InvestmentPage';
-import { Button, Form, Input, Modal, Select } from 'antd';
-import { Option } from 'antd/es/mentions';
-import { isAxiosError } from 'axios';
-import { BluetoothConnected } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { Form, Input, Modal, Select } from 'antd';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
 
 interface DepositModalProps {
+  handleInvestment: (id:string)=>void
   isModalVisible: boolean;
   showModal: () => void;
   handleCancel: () => void;
@@ -17,15 +12,32 @@ interface DepositModalProps {
   setLoading: Dispatch<SetStateAction<boolean>>;
   setIsModalVisible: Dispatch<SetStateAction<boolean>>;
   plan:InvestmentPlan[] | null
+  selectedCoin: string
+  amount:string
+  setAmount:Dispatch<SetStateAction<string>>
+  getPlans: ()=>void
 }
 
-const InvestmentModal :React.FC<DepositModalProps> = ({isModalVisible, plan, setIsModalVisible, loading, setLoading, showModal, handleCancel}) => {
-      const [selectedPlanUid, setSelectedPlanUid] = useState<string | null>(null);
 
-        const selectedPlan = plan?.find((p) => p.uid === selectedPlanUid);
+const InvestmentModal :React.FC<DepositModalProps> = ({isModalVisible,getPlans, handleInvestment,amount, setAmount ,plan,selectedCoin, setIsModalVisible, loading, setLoading, showModal, handleCancel}) => {
+      const [selectedPlanUid, setSelectedPlanUid] = useState<string>("");
+      const [selectedPlanId, setSelectedPlanId] = useState<string>("");
+      const [storedPlans, setStoredPlans] = useState<InvestmentPlan[]>([]);
+useEffect(() => {
+  const saved = localStorage.getItem("InvestmentPlan");
+
+  if (saved) {
+    const plans = JSON.parse(saved);
+    setStoredPlans(plans);
+  }
+  getPlans()
+}, []);
+
+console.log(storedPlans)
+        const selectedPlan = storedPlans?.find((p) => p.uid === selectedPlanUid);
 
   const [form] = Form.useForm();
-  
+
 
   return (
     <>
@@ -34,54 +46,79 @@ const InvestmentModal :React.FC<DepositModalProps> = ({isModalVisible, plan, set
         onCancel={handleCancel}
         centered
         footer={[
-          <button className="bg-purple-600 text-white px-4 py-2 rounded-xl text-[16px] cursor-pointer w-max">
+          <button onClick={()=>handleInvestment(selectedPlanId)} className="bg-purple-600 text-white px-4 py-2 rounded-xl text-[16px] cursor-pointer w-max">
             Invest Now
           </button>
         ]}
       >
         <Form form={form} layout="vertical">
           <div className="flex flex-col mt-8 gap-3">
-            <h2 className="font-bold text-xl">Invest in</h2>
+            <h2 className="font-bold text-xl">Invest in {selectedCoin}</h2>
             
             <div className='mb-3'>
             <p className='font-semibold mb-1'>Amount <span className=" text-red-600 font-semibold">*</span></p>
-            <input type="number" className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount"/>
+            <input
+  type="text"
+  value={amount}
+  className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0"
+  placeholder="Enter amount"
+  onChange={(e) => {
+    const raw = e.target.value.replace(/,/g, "");
+    if (!/^\d*$/.test(raw)) return;
+
+    setAmount(raw);
+  }}
+
+            />
             </div>
           </div>
 
-          <div>
-            <p className='font-semibold mb-1'>Plan name <span className=" text-red-600 font-semibold">*</span></p>
-            <Select placeholder="Select a plan" className='outline-purple-500 w-full h-10 border-purple-500' onChange={(value) => setSelectedPlanUid(value)}>
-                <Option value="">Select a plan</Option>
-              {
-                plan?.map((plan)=>(
-                    <Option value={plan.name}>{plan.name} plan</Option>
-                ))
-              }
-            </Select>
-          </div>
-          {
-            selectedPlan && (
-                <div>
-            <div className='mb-3'>
-            <p className='font-semibold mb-1'>Minimum Amount <span className=" text-red-600 font-semibold">*</span></p>
-            <input type="number" className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount"/>
-            </div>
-            <div className='mb-3'>
-            <p className='font-semibold mb-1'>Maximum Amount <span className=" text-red-600 font-semibold">*</span></p>
-            <input type="number" className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount"/>
-            </div>
-            <div className='mb-3'>
-            <p className='font-semibold mb-1'>Returns (%) <span className=" text-red-600 font-semibold">*</span></p>
-            <input type="number" className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount"/>
-            </div>
-            <div className='mb-3'>
-            <p className='font-semibold mb-1'>Duration (Days) <span className=" text-red-600 font-semibold">*</span></p>
-            <input type="number" className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount"/>
-            </div>  
-          </div>
-            )
-          }
+<div>
+  <p className="font-semibold mb-1">
+    Plan name <span className="text-red-600 font-semibold">*</span>
+  </p>
+<Select
+  placeholder="Select a plan"
+  className="w-full h-10 border-purple-500 outline-0"
+  value={selectedPlanUid}
+  onChange={(value: string) => {
+    setSelectedPlanUid(value);
+
+    const selectedPlan = storedPlans?.find(p => p.uid === value);
+    if (selectedPlan) {
+      setSelectedPlanId(selectedPlan.id);
+    }
+  }}
+>
+  {storedPlans?.map((p) => (
+    <Select.Option key={p.uid} value={p.uid}>
+      {p.name} plan
+    </Select.Option>
+  ))}
+</Select>
+
+
+</div>
+{selectedPlan && (
+  <div className="mt-4 space-y-3">
+    <Form.Item label="Minimum Amount">
+      <Input value={selectedPlan.minAmount} className='h-10 border-purple-500 outline-0' disabled />
+    </Form.Item>
+
+    <Form.Item label="Maximum Amount">
+      <Input value={selectedPlan.maxAmount} className='h-10 border-purple-500 outline-0' disabled />
+    </Form.Item>
+
+    <Form.Item label="Returns (%)">
+      <Input value={selectedPlan.returns} className='h-10 border-purple-500 outline-0' disabled />
+    </Form.Item>
+
+    <Form.Item label="Duration (Days)">
+      <Input value={selectedPlan.duration} className='h-10 border-purple-500 outline-0' disabled />
+    </Form.Item>
+  </div>
+)}
+
         </Form>
       </Modal>
     </>

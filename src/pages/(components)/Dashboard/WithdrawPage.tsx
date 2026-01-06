@@ -131,12 +131,12 @@ const isValidAmount = () => {
       return;
     }
 
-    // if (!isValidAmount()) {
-    //   toast.error(
-    //     `Insuficient funds`
-    //   );
-    //   return;
-    // }
+    if (!isValidAmount()) {
+      toast.error(
+        `Insuficient funds`
+      );
+      return;
+    }
 
     const userId = localStorage.getItem("userId");
     if (!userId) {
