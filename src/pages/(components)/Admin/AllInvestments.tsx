@@ -24,7 +24,7 @@ export interface Investment {
 }
 
 
-export const AllInvestments = () => {
+const AllInvestments = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -170,3 +170,5 @@ export const AllInvestments = () => {
     </div>
   );
 };
+
+export default AllInvestments

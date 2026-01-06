@@ -16,7 +16,7 @@ export interface Earning{
   amount: number
   id:string
 }
-export const EarningsHistory = () => {
+const EarningsHistory = () => {
   const [earnings, setEarnings] = useState<Earning[]>([]);
   const [selectedEarning, setSelectedEarning] = useState<Earning | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -182,3 +182,5 @@ export const EarningsHistory = () => {
     </div>
   );
 };
+
+export default EarningsHistory

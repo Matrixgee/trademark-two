@@ -19,7 +19,7 @@ interface Earning {
   investmentId?: string;
 }
 
-export const TopEarnings = () => {
+const TopEarnings = () => {
   const [topEarnings, setTopEarnings] = useState<Earning[]>([]);
   const [loading, setLoading] = useState(false);
   const adminToken = useSelector((state: RootState) => state?.admin?.token);
@@ -161,3 +161,5 @@ export const TopEarnings = () => {
     </div>
   );
 };
+
+export default TopEarnings

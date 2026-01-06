@@ -7,7 +7,7 @@ import { Investment } from "./AllInvestments";
 import { Eye } from "lucide-react";
 
 
-export const ProcessedInvestments = () => {
+const ProcessedInvestments = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -154,3 +154,5 @@ setInvestments(
     </div>
   );
 };
+
+export default ProcessedInvestments

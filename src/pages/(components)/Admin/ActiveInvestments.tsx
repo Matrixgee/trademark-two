@@ -7,7 +7,7 @@ import { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 import { Eye, XCircle } from "lucide-react";
 
-export const ActiveInvestments = () => {
+ const ActiveInvestments = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -174,3 +174,5 @@ export const ActiveInvestments = () => {
     </div>
   );
 };
+
+export default ActiveInvestments

@@ -7,7 +7,7 @@ import { Investment } from "./AllInvestments";
 import { isAxiosError } from "axios";
 import { CheckCircle, Eye, XCircle } from "lucide-react";
 
-export const PendingInvestments = () => {
+const PendingInvestments = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -207,3 +207,5 @@ export const PendingInvestments = () => {
     </div>
   );
 };
+
+export default PendingInvestments
