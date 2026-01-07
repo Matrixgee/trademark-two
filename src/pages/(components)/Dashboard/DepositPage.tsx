@@ -23,8 +23,10 @@ const DepositPage = () => {
     const assets = [
     { id: 'btc', name: 'Bitcoin', symbol: 'BTC', balance: `$${userDetails?.btcBal}`, icon: '/bitcoin.svg', color: 'bg-orange-500' },
     { id: 'eth', name: 'Ethereum', symbol: 'ETH', balance: `$${userDetails?.ethBal}`, icon: '/ethimage.png', color: 'bg-gray-400' },
-    { id: 'sol', name: 'Solana', symbol: 'SOL', balance: `$${userDetails?.solBal}`, icon: '/solimage.png', color: 'bg-black' }
-  ];
+    { id: 'sol', name: 'Solana', symbol: 'SOL', balance: `$${userDetails?.solBal}`, icon: '/solimage.png', color: 'bg-black' },
+    { id: 'usdt', name: 'USDT', symbol: 'USDT', balance: `$100`, icon: '/usdtimage.png', color: 'bg-black' }
+  
+];
   
     const {setMode, setFrom} = useDepositContext()
 
@@ -35,7 +37,7 @@ const DepositPage = () => {
         <DepositModal setIsModalVisible={setIsModalVisible} isModalVisible={isModalVisible} showModal={showModal} handleCancel={handleCancel} loading={loading} setLoading={setLoading}/>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Deposit</h1>
-        <button className="text-purple-600 text-lg cursor-pointer" onClick={()=>router.back}>← Back</button>
+        <button className="text-purple-600 text-lg cursor-pointer" onClick={()=>router.back()}>← Back</button>
       </div>
 
       <div className="text-center mb-8">

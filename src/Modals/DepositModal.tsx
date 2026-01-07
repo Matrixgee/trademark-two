@@ -32,7 +32,14 @@ const DepositModal :React.FC<DepositModalProps> = ({isModalVisible, setIsModalVi
             
             <div>
             <p>Amount <span className=" text-red-600 font-semibold">*</span></p>
-            <input type="number" value={amount} className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount" onChange={(e)=> setAmount(Number(e.target.value))} />
+            <input type="number" value={amount} className="h-10 w-full p-1.5 border rounded-md border-purple-500 outline-0" placeholder="Enter amount" 
+              onChange={(e) => {
+    const raw = e.target.value.replace(/,/g, "");
+    if (!/^\d*$/.test(raw)) return;
+
+    setAmount(Number(raw));
+  }}
+             />
             </div>
           </div>
           <div className="w-full flex justify-end items-end mt-2">

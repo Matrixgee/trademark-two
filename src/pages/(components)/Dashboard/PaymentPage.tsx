@@ -3,6 +3,7 @@ import { useDepositContext } from "@/context/DepositContext";
 import { RootState } from "@/Global/store";
 import { isAxiosError } from "axios";
 import { Check, Copy } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -10,7 +11,6 @@ import { useSelector } from "react-redux";
 
 export default function PaymentPage() {
   const [copied, setCopied] = useState(false);
-  const walletAddress = 'bc1q9yqk8my0r90tdy94rdnxrt78pfwhkyfkfxyl2j';
   const token = useSelector((state:RootState)=>state?.user?.Token)
   const {mode, amount, from, setAmount, setFrom, setMode} = useDepositContext()
   const handleCopy = () => {
@@ -61,14 +61,33 @@ const MODE_LABEL: Record<string, string> = {
   btc: "Bitcoin",
   eth: "Ethereum",
   sol: "Solana",
+  usdt:"Usdt"
 };
+
+const WALLET_ADDRESS: Record<string, string> = {
+  btc: "bc1qtx7acjjmpeshnvg63f5jpas32g7d4kmj29ywgf",
+  eth: "0x7f2D483A5A151cf0F14857090a406d0B0055eCAc",
+  sol: "2VbK88Li6MVXeW4KSjABMsDVsDPeLCrh3YGrJ5Wdqsdf",
+  usdt: "TQMeKf1vNs2SqRtvvFoXjvkhe7pBgWRDPD",
+};
+const QR_CODE: Record<string, string> = {
+  btc: "/BTC.jpg",
+  eth: "/ETH.jpg",
+  sol: "/SOL.jpeg",
+  usdt: "/USDT.jpg",
+};
+
+const walletAddress = WALLET_ADDRESS[mode]; 
+
+
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="p-6 max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-xl font-bold">Payment Informations</h1>
-          <button onClick={()=>router.back()} className="text-purple-600 text-lg hover:text-purple-700">← Back</button>
+          <button onClick={()=>router.back()} className="text-purple-600 text-lg cursor-pointer hover:text-purple-700">← Back</button>
         </div>
 
         {/* QR Code Section */}
@@ -77,18 +96,19 @@ const MODE_LABEL: Record<string, string> = {
           <div className="inline-block bg-purple-100 rounded-lg px-4 py-2 mb-1">
             <span className="text-purple-600 font-bold text-lg">QR CODE</span>
           </div>
-          <h2 className="text-gray-600 text-sm font-semibold mb-4">{mode}</h2>
+          <h2 className="text-gray-600 text-sm font-semibold mb-4">{mode.charAt(0).toUpperCase().concat(mode.slice(1))}</h2>
 
-          <p className="text-gray-700 font-semibold mb-6">THIS IS YOUR BTC, WALLET QR CODE</p>
+          <p className="text-gray-700 font-semibold mb-6">THIS IS YOUR {mode.toUpperCase()}, WALLET QR CODE</p>
 
-          {/* QR Code Image */}
           <div className="flex justify-center mb-8">
-            <div className="bg-white border-2 border-gray-200 rounded-lg p-4">
-              <img 
-                src="" 
-                alt="QR Code" 
-                className="w-50 h-50"
-              />
+            <div className="bg-white border-2 border-gray-200 rounded-lg ">
+             <Image
+                           src={QR_CODE[mode]}
+                           alt="TradeMark"
+                           width={100}
+                           height={100}
+                           className="cursor-pointer"
+                         />
             </div>
           </div>
 

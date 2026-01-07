@@ -26,6 +26,8 @@ const DashboardOverview = () => {
     { title: 'Pending Deposits', value: stats.pendingDeposits, icon: Eye, bgColor: 'bg-yellow-100', iconColor: 'text-yellow-600', alert: true },
   ];
 
+    const [WrecentArr, setWRecentArr] = useState([])
+    const [DrecentArr, setDRecentArr] = useState([])
     const getAllWithdrawals = async () => {
       try {
         const response = await axios.get("/admin/withdrawals/all", {
@@ -37,7 +39,8 @@ const DashboardOverview = () => {
         (sum: number, withdrawal: { amount: number }) => sum + Number(withdrawal.amount),
         0
       );
-
+      const val = response.data.data
+      setWRecentArr(val.slice(0,2))
       const pendingWithdrawals = response.data.data.filter(
         (withdrawal: { status: string }) => withdrawal.status === "pending"
       ).length;
@@ -74,6 +77,8 @@ const DashboardOverview = () => {
         (sum: number, deposit: { amount: number }) => sum + Number(deposit.amount),
         0
       );
+      const val = response.data.data
+      setDRecentArr(val.slice(0,2))
 
       const pendingDeposits = response.data.data.filter(
         (deposit: { status: string }) => deposit.status === "pending"
@@ -91,6 +96,8 @@ const DashboardOverview = () => {
       getAllWithdrawals()
     }
   }, [adminToken]);
+
+  const recentTransaction = [...WrecentArr, ...DrecentArr]
 
   return (
     <div>
@@ -120,11 +127,10 @@ const DashboardOverview = () => {
       {/* Quick Stats & Recent Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Transactions */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        {/* <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Recent Transactions</h2>
-          {/* Replace with your real data */}
           <div className="space-y-4">
-            {[{ type: 'Deposit', user: 'John Doe', amount: '$5,000', status: 'Completed', time: '2 hours ago' }].map((tx, idx) => (
+            {recentTransaction.map((tx, idx) => (
               <div key={idx} className="flex items-center justify-between py-3 border-b last:border-0">
                 <div className="flex-1">
                   <p className="font-medium text-gray-900">{tx.user}</p>
@@ -137,7 +143,7 @@ const DashboardOverview = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Quick Stats */}
         <div className="bg-white rounded-lg shadow-sm p-6">
