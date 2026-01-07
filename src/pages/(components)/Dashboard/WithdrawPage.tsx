@@ -48,7 +48,7 @@ const WithdrawPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loading, setLoading] = useState<boolean>(false)
   const [userInfo, setUserInfo] = useState<Partial<UserProfile> | null>(null)
-    const paymentMethods = [
+  const paymentMethods = [
     {
       id: "btc",
       name: "Bitcoin",
@@ -81,29 +81,29 @@ const WithdrawPage = () => {
     },
   ];
 
-    const selectedPaymentMethod = paymentMethods.find(
+  const selectedPaymentMethod = paymentMethods.find(
     (m) => m.id === paymentMethod
   );
-    const user = useSelector((state: RootState) => state?.user);
-    const token = useSelector((state: RootState) => state?.user?.Token);    
-    const userDetails = user.User?.user?.user;
+  const user = useSelector((state: RootState) => state?.user);
+  const token = useSelector((state: RootState) => state?.user?.Token);
+  const userDetails = user.User?.user?.user;
 
-      const getUserInfo =async()=>{
+  const getUserInfo = async () => {
     setLoading(true)
     try {
-        const res = await axios.get("user/profile", {
-            headers:{
-                Authorization: `Bearer ${user?.Token}`
-            }
-        })
-        setUserInfo(res?.data?.data)
-        console.log(res?.data?.data, "tht")
-    } catch (error) {
-        if (isAxiosError(error)) {
-            console.log(error)
+      const res = await axios.get("user/profile", {
+        headers: {
+          Authorization: `Bearer ${user?.Token}`
         }
-    }finally{
-        setLoading(false)
+      })
+      setUserInfo(res?.data?.data)
+      console.log(res?.data?.data, "tht")
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error)
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -112,18 +112,18 @@ const WithdrawPage = () => {
       getUserInfo();
     }
   }, [token]);
-const isValidAmount = () => {
+  const isValidAmount = () => {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) return false;
     if (selectedPaymentMethod && numAmount < selectedPaymentMethod.minAmount)
       return false;
-    
+
     if (userInfo?.balance !== undefined && numAmount > userInfo.balance) return false;
 
     return true;
   };
 
-  console.log(amount, walletAddress, paymentMethod )
+  console.log(amount, walletAddress, paymentMethod)
   const handleWithdraw = async () => {
 
     if (!amount || !walletAddress || !paymentMethod) {
@@ -203,7 +203,7 @@ const isValidAmount = () => {
     <div className="p-6 w-full">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Withdraw</h1>
-        <button className="text-purple-600 text-lg cursor-pointer" onClick={()=> router.back()}>← Back</button>
+        <button className="text-purple-600 text-lg cursor-pointer" onClick={() => router.back()}>← Back</button>
       </div>
 
       <div className="text-center mb-8">
@@ -215,54 +215,61 @@ const isValidAmount = () => {
         <div>
           <label className="block font-semibold mb-2">Withdraw Method</label>
           <select
-  value={paymentMethod}
-  onChange={(e) => {
-    const val = e.target.value as PaymentMethod;
-    setPaymentMethod(val); 
-  }}
-  className="w-full border rounded-lg p-3 text-lg"
->
-  <option value="" >--Select a method--</option>
-  <option value="bank">Withdraw to bank</option>
-  <option value="Bitcoin">Bitcoin</option>
-  <option value="Ethereum">Ethereum</option>
-  <option value="Solana">Solana</option>
-</select>
+            value={paymentMethod}
+            onChange={(e) => {
+              const val = e.target.value as PaymentMethod;
+              setPaymentMethod(val);
+            }}
+            className="w-full border rounded-lg p-3 text-lg"
+          >
+            <option value="" >--Select a method--</option>
+            <option value="bank">Withdraw to bank</option>
+            <option value="Bitcoin">Bitcoin</option>
+            <option value="Ethereum">Ethereum</option>
+            <option value="Solana">Solana</option>
+            <option value="Usdt">Solana</option>
+          </select>
         </div>
 
         {
-          paymentMethod  === "" ? null : <>
+          paymentMethod === "" ? null : <>
             {
-          paymentMethod === "bank" ? null :
-          <div>
-          <label className="block font-semibold mb-2">Wallet Address</label>
-          <input type="text" placeholder="Enter your wallet address" 
-            value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)}
-            className="w-full border rounded-lg p-3 text-lg" />
-        </div>
-        }
+              paymentMethod === "bank" ? null :
+                <div>
+                  <label className="block font-semibold mb-2">Wallet Address</label>
+                  <input type="text" placeholder="Enter your wallet address"
+                    value={walletAddress} onChange={(e) => setWalletAddress(e.target.value)}
+                    className="w-full border rounded-lg p-3 text-lg" />
+                </div>
+            }
 
-        <div>
-          <label className="block font-semibold mb-2">Amount to Withdraw</label>
-          <input type="number" placeholder="Amount e.g. 2000" 
-            value={Number(amount).toLocaleString()} onChange={(e) => setAmount(e.target.value)}
-            className="w-full border rounded-lg p-3 text-lg" />
-          <p className="text-gray-500 text-sm mt-1">Max: 146000</p>
-        </div>
+            <div>
+              <label className="block font-semibold mb-2">Amount to Withdraw</label>
+              <input type="text" placeholder="Amount e.g. 2000"
+                value={Number(amount).toLocaleString()}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/,/g, "");
+                  if (!/^\d*$/.test(raw)) return;
 
-        <div>
-          <label className="block font-semibold mb-2">Withdraw Charge</label>
-          <div className="flex gap-2">
-            <input type="text" value="$0.00" disabled className="flex-1 border rounded-lg p-3 bg-gray-100" />
-            <button onClick={() => {}} className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700">
-              Fixed
+                  setAmount(raw);
+                }}
+                className="w-full border rounded-lg p-3 text-lg" />
+              <p className="text-gray-500 text-sm mt-1">Max: 146000</p>
+            </div>
+
+            <div>
+              <label className="block font-semibold mb-2">Withdraw Charge</label>
+              <div className="flex gap-2">
+                <input type="text" value="$0.00" disabled className="flex-1 border rounded-lg p-3 bg-gray-100" />
+                <button onClick={() => { }} className="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700">
+                  Fixed
+                </button>
+              </div>
+            </div>
+
+            <button onClick={handleWithdraw} className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700">
+              Withdraw
             </button>
-          </div>
-        </div>
-
-        <button onClick={handleWithdraw} className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700">
-          Withdraw
-        </button>
           </>
         }
       </div>

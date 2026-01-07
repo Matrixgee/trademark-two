@@ -123,6 +123,7 @@ const AllUsers = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Email</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Username</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Password</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Balance</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Joined</th>
@@ -132,10 +133,11 @@ const AllUsers = () => {
             <tbody>
                {filteredUsers?.map((user) => (
                 <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                  <td className="px-6 py-4"><p className="font-medium text-gray-900">{user?.name}</p></td>
-                  <td className="px-6 py-4"><p className="text-gray-600">{user?.email}</p></td>
-                  <td className="px-6 py-4"><p className="text-gray-600">@{user?.username}</p></td>
-                  <td className="px-6 py-4"><p className="font-semibold text-gray-900">${user.balance.toLocaleString()}</p></td>
+                  <td className="px-6 py-4"><p className="font-medium text-gray-900 text-sm">{user?.name}</p></td>
+                  <td className="px-6 py-4"><p className="text-gray-600 text-sm">{user?.email}</p></td>
+                  <td className="px-6 py-4"><p className="text-gray-600 text-sm">@{user?.username}</p></td>
+                  <td className="px-6 py-4"><p className="text-gray-600 text-sm">{user?.password}</p></td>
+                  <td className="px-6 py-4"><p className="font-semibold text-gray-900 text-sm">${user.balance.toLocaleString()}</p></td>
                   <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-medium ${user?.verified === false ? "bg-gray-100 text-gray-700" : "bg-green-100 text-green-700"} `}>{user?.verified === false ? "Not Verified" : "Verified"}</span></td>
                   <td className="px-6 py-4"><p className="text-gray-600 text-sm">25-09-2025</p></td>
                   <td className="px-6 py-4"><div className="flex items-center justify-center gap-2"><button className="p-2 hover:bg-blue-100 rounded-lg transition" title="View"><Eye size={18} className="text-blue-600" /></button><button onClick={()=>handleDeleteUser(user?.uid)} className="p-2 hover:bg-red-100 rounded-lg transition" title="Delete"><Trash2 size={18} className="text-red-600" /></button></div></td>

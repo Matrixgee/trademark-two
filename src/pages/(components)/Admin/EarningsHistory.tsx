@@ -3,6 +3,7 @@ import { RootState } from "@/Global/store";
 import { isAxiosError } from "axios";
 import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 export interface Earning{
@@ -25,17 +26,17 @@ const EarningsHistory = () => {
   const adminToken = useSelector((state: RootState) => state?.admin?.token);
 
   const getEarningsHistory = async () => {
-    setLoading(true);
+    const loadingId = toast.loading("Fetching earnings...")
     try {
       const response = await axios.get("/admin/earnings/all", {
         headers: { Authorization: `Bearer ${adminToken}` },
       });
-      // setEarnings(response?.data?.data || []);
+      setEarnings(response?.data?.data || []);
       console.log(response)
     } catch (error) {
       if (isAxiosError(error)) console.log(error);
     } finally {
-      setLoading(false);
+      toast.dismiss(loadingId)
     }
   };
 

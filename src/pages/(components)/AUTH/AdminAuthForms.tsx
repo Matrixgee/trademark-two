@@ -42,8 +42,6 @@ export default function AdminAuthForms() {
     },
   };
 
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-
   const dispatch = useDispatch();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,20 +88,12 @@ export default function AdminAuthForms() {
 
 
       setTimeout(() => {
-        if (res?.data?.data?.user?.type.toLowerCase() === "admin") {
+        if (res?.data?.data?.user?.type === "admin") {
             toast.success("Login successful")
             dispatch(setAdminToken(res?.data?.token));
             router.push("/admin");
         } else {
-          dispatch(setUser(res.data.data));
-          dispatch(setToken(res.data.token));
-          localStorage.setItem("userId", userId);
-          if (!res?.data?.data?.user?.user?.verified) {
-            router.push("/auth/notverified");
-          } else if(res?.data?.data?.user?.user?.verified) {
-            toast.success("Login successful")
-            router.push("/user/");
-          }
+          toast.error("This user is not an admin.")
         }
       }, 3000);
     } catch (error) {
