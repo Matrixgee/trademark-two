@@ -7,7 +7,7 @@ import { Mail, Lock, User, Eye, EyeOff, Phone } from "lucide-react";
 import Image from "next/image";
 import axios from "../../../config/axiosconfig";
 import { useRouter } from "next/router";
-import { validateEmail, validatePassword } from "@/utils/utils";
+import { validateEmail } from "@/utils/utils";
 import { useDispatch } from "react-redux";
 import { setToken, setUser } from "@/Global/UserSlice";
 import toast from "react-hot-toast";
@@ -29,7 +29,6 @@ export default function AuthForms() {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
 
   const handleInputChange = (e: any) => {
     setFormData({
@@ -58,6 +57,7 @@ export default function AuthForms() {
   };
 
   const [verified, setVerified] = useState<boolean>(false);
+  console.log(verified);
 
   const dispatch = useDispatch();
 
@@ -67,15 +67,18 @@ export default function AuthForms() {
       toast.error("Please input valid email");
       return;
     }
-    if (!validatePassword(formData.password)) {
-      toast.error("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
-      return;
-    }
+    // if (!validatePassword(formData.password)) {
+    //   toast.error(
+    //     "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character."
+    //   );
+    //   return;
+    // }
 
     setLoading(true);
     try {
       const res = await axios.post("/auth/register", formData);
       console.log(res);
+      setSuccess(res.data.data);
 
       if (res.data?.message === "success") {
         toast.success("Registration successful");
@@ -116,8 +119,8 @@ export default function AuthForms() {
           localStorage.setItem("userId", userId);
           if (!res?.data?.data?.user?.user?.verified) {
             router.push("/auth/notverified");
-          } else if(res?.data?.data?.user?.user?.verified) {
-            toast.success("Login successful")
+          } else if (res?.data?.data?.user?.user?.verified) {
+            toast.success("Login successful");
             router.push("/user/");
           }
         }
@@ -133,9 +136,7 @@ export default function AuthForms() {
     }
   };
 
-  const handleForgotPassword =()=>{
-    
-  }
+  // const handleForgotPassword = () => {};
   return (
     <div className="bg-linear-to-br from-gray-950 via-gray-900 to-slate-950 min-h-screen flex items-center justify-center px-4 py-12">
       <motion.div
@@ -308,7 +309,7 @@ export default function AuthForms() {
                     <span className="text-purple-300">Remember me</span>
                   </label>
                   <a
-                    onClick={()=>router.push("/auth/forgotpassword")}
+                    onClick={() => router.push("/auth/forgotpassword")}
                     className="text-purple-400 hover:text-purple-300 transition"
                   >
                     Forgot password?
@@ -444,7 +445,7 @@ export default function AuthForms() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      placeholder="+2347090347629"
+                      placeholder="+1234567890"
                       required
                       className="w-full pl-10 pr-4 py-2.5 bg-purple-900/20 border border-purple-500/30 rounded-lg text-white placeholder-purple-300/50 focus:outline-none transition-all"
                       variants={inputVariants}
@@ -458,7 +459,7 @@ export default function AuthForms() {
                   transition={{ delay: 0.5 }}
                 >
                   <label className="block text-sm font-semibold text-purple-300 mb-2">
-                    Referral Id
+                    Referral Id (Optional)
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-3.5 w-5 h-5 text-purple-400" />

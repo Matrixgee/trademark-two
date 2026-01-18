@@ -1,35 +1,35 @@
 "use client";
 
-import axios from "@/config/axiosconfig";
-import { RootState } from "@/Global/store";
+// import axios from "@/config/axiosconfig";
+// import { RootState } from "@/Global/store";
 import { easeInOut, motion, spring } from "framer-motion";
-import { AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+// import { useState } from "react";
+// import toast from "react-hot-toast";
+// import { useSelector } from "react-redux";
 
 export default function AccountNotVerified() {
   const router = useRouter();
-  const { otp, token } = router.query;
-  const [loading, setLoading] = useState<boolean>(false);
-  const user = useSelector((state: RootState) => state?.user);
-  const userEmail = user.User?.user?.user?.email;
+  // const { otp, token } = router.query;
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const user = useSelector((state: RootState) => state?.user);
+  // const userEmail = user.User?.user?.user?.email;
 
-  const handleSendVerificationLink = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.post("/auth/resend-verification", {
-        email: userEmail,
-      });
-      console.log(res.data?.message);
-      toast.success(res?.data?.message);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleSendVerificationLink = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.post("/auth/resend-verification", {
+  //       email: userEmail,
+  //     });
+  //     console.log(res.data?.message);
+  //     toast.success(res?.data?.message);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -134,12 +134,13 @@ export default function AccountNotVerified() {
               Account Not Verified
             </h1>
             <p className="text-purple-200 text-sm">
-              Your email address needs to be verified to access your account
+              Kindly check your email inbox for the verification link to
+              complete your account setup.
             </p>
           </motion.div>
 
           {/* Start Verification Button */}
-          <motion.button
+          {/* <motion.button
             onClick={handleSendVerificationLink}
             className="w-full py-3 bg-linear-to-r from-purple-600 via-purple-700 to-purple-800 text-white font-semibold rounded-lg relative overflow-hidden group mb-4"
             custom={1}
@@ -161,7 +162,7 @@ export default function AccountNotVerified() {
             <span className="relative z-10 flex items-center justify-center gap-2">
               Send Verification link
             </span>
-          </motion.button>
+          </motion.button> */}
 
           {/* Back Button */}
           <motion.button
