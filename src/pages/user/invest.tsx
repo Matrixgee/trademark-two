@@ -1,16 +1,16 @@
-import DashboardLayout from '../Layouts/DashboardLayout'
-import DashHomeLayout from '../Layouts/DashHomeLayout'
-import ProfilePage from '../(components)/Dashboard/ProfilePage'
-import InvestmentPage from '../(components)/Dashboard/InvestmentPage'
+import DashboardLayout from "../Layouts/DashboardLayout";
+import DashHomeLayout from "../Layouts/DashHomeLayout";
+
+import InvestmentPage from "../(components)/Dashboard/InvestmentPage";
 
 const invest = () => {
   return (
-<DashboardLayout>
+    <DashboardLayout>
       <DashHomeLayout>
-      <InvestmentPage/>
-    </DashHomeLayout>
-</DashboardLayout>
-  )
-}
+        <InvestmentPage />
+      </DashHomeLayout>
+    </DashboardLayout>
+  );
+};
 
-export default invest
+export default invest;
