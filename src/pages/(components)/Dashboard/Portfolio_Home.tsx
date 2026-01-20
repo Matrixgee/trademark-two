@@ -22,7 +22,7 @@ const Portfolio_Home = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector((state: RootState) => state?.user);
   const userDetails = user.User?.user?.user;
-  const financeDetails = user?.User?.user
+  const financeDetails = user?.User?.user;
 
   const assets = [
     {
@@ -65,7 +65,14 @@ const Portfolio_Home = () => {
           <div className="flex items-start justify-between px-3 py-3 bg-white rounded-lg shadow-sm">
             <div>
               <p className="text-gray-500 text-sm">Total portfolio</p>
-              <h2 className="text-xl font-bold text-gray-900">${userDetails?.balance}</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(userDetails?.balance || 0)}
+              </h2>
             </div>
 
             <div className="relative">
@@ -110,7 +117,7 @@ const Portfolio_Home = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={()=>router.push("user/invest")}
+              onClick={() => router.push("user/invest")}
               className="bg-white text-purple-900 font-semibold text-sm py-2 px-6 rounded-lg hover:bg-purple-50 transition inline-flex items-center gap-2"
             >
               <ChartNoAxesColumn className="w-4 h-4" />
@@ -129,13 +136,17 @@ const Portfolio_Home = () => {
           <div className="bg-white rounded-lg p-3 shadow-sm">
             <Send className="w-4 h-4 text-purple-600 mb-1" />
             <p className="text-gray-600 text-sm">Total Withdraw</p>
-            <p className="text-sm font-bold">${financeDetails?.totalWithdrawals}</p>
+            <p className="text-sm font-bold">
+              ${financeDetails?.totalWithdrawals}
+            </p>
           </div>
 
           <div className="bg-white rounded-lg p-3 shadow-sm">
             <Download className="w-4 h-4 text-purple-600 mb-1" />
             <p className="text-gray-600 text-sm">Total Deposit</p>
-            <p className="text-sm font-bold">${financeDetails?.totalDeposits}</p>
+            <p className="text-sm font-bold">
+              ${financeDetails?.totalDeposits}
+            </p>
           </div>
         </div>
 
@@ -157,9 +168,10 @@ const Portfolio_Home = () => {
             <p className="text-sm font-semibold mt-1 text-center">Deposit</p>
           </button>
 
-          <button 
-          onClick={() => router.push("/user/invest")}
-          className="border rounded-lg p-3 hover:border-purple-600 cursor-pointer hover:bg-purple-50 transition">
+          <button
+            onClick={() => router.push("/user/invest")}
+            className="border rounded-lg p-3 hover:border-purple-600 cursor-pointer hover:bg-purple-50 transition"
+          >
             <TrendingUp className="mx-auto w-5 h-5 text-purple-600" />
             <p className="text-sm font-semibold mt-1 text-center">Trade</p>
           </button>
