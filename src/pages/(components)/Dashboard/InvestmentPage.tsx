@@ -35,18 +35,18 @@ const InvestmentPage = () => {
   const [planInfo, setPlanInfo] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  console.log(loading);
 
   const showModal = () => setIsModalVisible(true);
 
-  const user = useSelector((state: RootState) => state?.user);
-  const userDetails = user.User?.user?.user;
+  const [userDetails, setUserDetails] = useState<any>(null);
   const token = useSelector((state: RootState) => state?.user?.Token);
   const assets = [
     {
       id: "btc",
       name: "Bitcoin",
       symbol: "BTC",
-      balance: `$${userDetails?.btcBal}`,
+      balance: `$${userDetails?.btcBal || 0}`,
       icon: "/bitcoin.svg",
       color: "bg-orange-500",
     },
@@ -54,7 +54,7 @@ const InvestmentPage = () => {
       id: "eth",
       name: "Ethereum",
       symbol: "ETH",
-      balance: `$${userDetails?.ethBal}`,
+      balance: `$${userDetails?.ethBal || 0}`,
       icon: "/ethimage.png",
       color: "bg-gray-400",
     },
@@ -62,7 +62,7 @@ const InvestmentPage = () => {
       id: "sol",
       name: "Solana",
       symbol: "SOL",
-      balance: `$${userDetails?.solBal}`,
+      balance: `$${userDetails?.solBal || 0}`,
       icon: "/solimage.png",
       color: "bg-black",
     },
@@ -99,8 +99,23 @@ const InvestmentPage = () => {
     }
   };
 
+  const getUserInfo = async () => {
+    try {
+      const res = await axios.get("/user/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUserDetails(res.data.data);
+    } catch (error) {
+      console.error("Failed to fetch user info", error);
+    }
+  };
+
   useEffect(() => {
     getPlans();
+    getUserInfo();
   }, []);
 
   const [selectedCoin, setSelectedCoin] = useState<string>("");
@@ -149,7 +164,7 @@ const InvestmentPage = () => {
       toast.dismiss(toastLoadingId);
       console.error("Investment Error:", error.response?.data);
       toast.error(
-        error.response?.data?.message || "An error occurred. Please try again."
+        error.response?.data?.message || "An error occurred. Please try again.",
       );
     }
   };
@@ -158,23 +173,19 @@ const InvestmentPage = () => {
     <div className="p-6 w-full">
       <InvestmentModal
         plan={planInfo}
-        getPlans={getPlans}
         selectedCoin={selectedCoin}
         amount={amount}
         setAmount={setAmount}
         handleInvestment={handleInvestment}
-        setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
-        showModal={showModal}
+        userId={userDetails?.uid}
         handleCancel={handleCancel}
-        loading={loading}
-        setLoading={setLoading}
       />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Invest</h1>
         <button
           className="text-purple-600 text-lg cursor-pointer"
-          onClick={() => router.back}
+          onClick={() => router.push("/user")}
         >
           ← Back
         </button>
@@ -182,7 +193,15 @@ const InvestmentPage = () => {
 
       <div className="text-center mb-8">
         <p className="text-gray-600 text-sm mb-2">Available Balance</p>
-        <p className="text-3xl font-bold">${userDetails?.balance}</p>
+        <p className="text-3xl font-bold">
+          {" "}
+          {new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }).format(userDetails?.balance || 0)}
+        </p>
       </div>
 
       <h2 className="text-gray-700 font-semibold mb-4">
