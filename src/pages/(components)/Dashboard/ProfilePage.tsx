@@ -1,173 +1,180 @@
-"use-client"
+/* eslint-disable react-hooks/exhaustive-deps */
+"use-client";
 
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { Edit2, Save, X, Camera, ArrowLeft } from 'lucide-react'
-import { Flex, Spin } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
-import { isAxiosError } from 'axios'
-import axios from '@/config/axiosconfig'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/Global/store'
-import { useRouter } from 'next/router'
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Edit2, Save, X, Camera, ArrowLeft } from "lucide-react";
+import { Flex, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { isAxiosError } from "axios";
+import axios from "@/config/axiosconfig";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Global/store";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 export interface UserProfile {
-  name: string
-  username: string
-  email: string
-  phoneNumber: string
-  dob: string
-  profilePic: string
-  uid: string
-  Token: string
-  bitcoin: string
-  sol: string
-  ethereum: string
+  name: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  dob: string;
+  profilePic: string;
+  uid: string;
+  Token: string;
+  bitcoin: string;
+  sol: string;
+  ethereum: string;
 }
 
 const ProfilePage = () => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [updating, setUpdating] = useState(false)
-  const [userInfo, setUserInfo] = useState<Partial<UserProfile> | null>(null)
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [userInfo, setUserInfo] = useState<Partial<UserProfile> | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    username: '',
-    email: '',
-    phoneNumber: '',
-    dob: '',
-    profilePic:'',
-      bitcoin: '',
-      sol:'',
-  ethereum: "",
-  })
+    name: "",
+    username: "",
+    email: "",
+    phoneNumber: "",
+    dob: "",
+    profilePic: "",
+    bitcoin: "",
+    sol: "",
+    ethereum: "",
+  });
 
   const handleEditClick = () => {
-    if (!userInfo) return
+    if (!userInfo) return;
     setFormData({
-      name: userInfo?.name ?? '',
-      username: userInfo?.username ?? '',
-      email: userInfo?.email ?? '',
-      phoneNumber: userInfo?.phoneNumber ?? '',
-      dob: userInfo?.dob ?? '',
-      profilePic: userInfo?.profilePic ?? '',
-      bitcoin:userInfo?.bitcoin ?? "",
-      ethereum:userInfo?.ethereum ?? "",  
-      sol:userInfo?.sol ?? ""
-    })
-    setIsEditing(true)
-  }
+      name: userInfo?.name ?? "",
+      username: userInfo?.username ?? "",
+      email: userInfo?.email ?? "",
+      phoneNumber: userInfo?.phoneNumber ?? "",
+      dob: userInfo?.dob ?? "",
+      profilePic: userInfo?.profilePic ?? "",
+      bitcoin: userInfo?.bitcoin ?? "",
+      ethereum: userInfo?.ethereum ?? "",
+      sol: userInfo?.sol ?? "",
+    });
+    setIsEditing(true);
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
-  }
+    setIsEditing(false);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          profilePic: reader.result as string
-        }))
-      }
-      reader.readAsDataURL(file)
+          profilePic: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
   const user = useSelector((state: RootState) => state?.user);
 
-    const getProfileInfo =async()=>{
-    setLoading(true)
+  const getProfileInfo = async () => {
+    setLoading(true);
     try {
-        const res = await axios.get("user/profile", {
-            headers:{
-                Authorization: `Bearer ${user?.Token}`
-            }
-        })
-        setUserInfo(res?.data?.data)
-        console.log(res?.data?.data, "tht")
+      const res = await axios.get("user/profile", {
+        headers: {
+          Authorization: `Bearer ${user?.Token}`,
+        },
+      });
+      setUserInfo(res?.data?.data);
+      console.log(res?.data?.data, "tht");
     } catch (error) {
-        if (isAxiosError(error)) {
-            console.log(error)
-        }
-    }finally{
-        setLoading(false)
+      if (isAxiosError(error)) {
+        console.log(error);
+      }
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
+  useEffect(() => {
+    getProfileInfo();
+  }, []);
 
-  useEffect(()=>{
-getProfileInfo()
-  },[])
   const handleSave = () => {
-  if (!userInfo) return;
-  updateProfileInfo()
+    if (!userInfo) return;
+    updateProfileInfo();
 
-  setIsEditing(false);
-}
-const handleUpload = async ()=>{
+    setIsEditing(false);
+  };
+  // const handleUpload = async () => {
+  //   try {
+  //     const res = await axios.post(
+  //       "/image/upload-single",
+  //       userInfo?.profilePic,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${user?.Token}`,
+  //         },
+  //       },
+  //     );
+  //     // setUserInfo(res?.data?.data)
+  //     console.log(res?.data, "tht");
+  //   } catch (error) {
+  //     if (isAxiosError(error)) {
+  //       console.log(error);
+  //     }
+  //   }
+  // };
+
+  const router = useRouter();
+
+  const updateProfileInfo = async () => {
+    setUpdating(true);
     try {
-        const res = await axios.post("/image/upload-single", userInfo?.profilePic, {
-            headers:{
-                Authorization: `Bearer ${user?.Token}`
-            }
-        })
-        // setUserInfo(res?.data?.data)
-        console.log(res?.data, "tht") 
+      const res = await axios.patch(
+        "user/profile",
+        {
+          userInfo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.Token}`,
+          },
+        },
+      );
+      // setUserInfo(res?.data?.data)
+      console.log(res?.data, "tht");
     } catch (error) {
-        if (isAxiosError(error)) {
-            console.log(error)
-        }
+      if (isAxiosError(error)) {
+        console.log(error);
+      }
+    } finally {
+      setUpdating(false);
     }
-
-}
-
-    const updateProfileInfo =async()=>{
-    setUpdating(true)
-    try {
-        
-        const res = await axios.patch("user/profile", {
-            userInfo
-        }, {
-            headers:{
-                Authorization: `Bearer ${user?.Token}`
-            }
-        })
-        // setUserInfo(res?.data?.data)
-        console.log(res?.data, "tht") 
-    } catch (error) {
-        if (isAxiosError(error)) {
-            console.log(error)
-        }
-    }finally{
-        setUpdating(false)
-    }
-  }
-
+  };
 
   if (loading) {
     return (
-      <div className='bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen w-full flex items-center justify-center'>
+      <div className="bg-linear-to-br from-slate-50 via-white to-slate-50 min-h-screen w-full flex items-center justify-center">
         <Flex align="center" gap="middle">
           <Spin indicator={<LoadingOutlined spin />} size="large" />
         </Flex>
       </div>
-    )
+    );
   }
 
-  const router = useRouter()
-
   return (
-    <div className='bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen w-full p-4'>
+    <div className="bg-linear-to-br from-slate-50 via-white to-slate-50 min-h-screen w-full p-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -176,7 +183,10 @@ const handleUpload = async ()=>{
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" onClick={()=>router.back()}>
+            <button
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              onClick={() => router.back()}
+            >
               <ArrowLeft className="w-6 h-6 text-gray-700" />
             </button>
             <div>
@@ -190,7 +200,7 @@ const handleUpload = async ()=>{
               onClick={handleEditClick}
               className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-xl transition-all shadow-lg"
             >
-              <Edit2 className='w-4 h-4' /> Edit Profile
+              <Edit2 className="w-4 h-4" /> Edit Profile
             </motion.button>
           )}
         </div>
@@ -209,11 +219,11 @@ const handleUpload = async ()=>{
             <div className="relative mb-6">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="w-32 h-32 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white overflow-hidden"
+                className="w-32 h-32 bg-linear-to-br from-purple-600 to-indigo-700 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white overflow-hidden"
               >
                 {formData.profilePic || userInfo?.profilePic ? (
-                  <img
-                    src={formData.profilePic || userInfo?.profilePic}
+                  <Image
+                    src={formData.profilePic || userInfo?.profilePic || ""}
                     alt="profile"
                     className="w-full h-full object-cover"
                   />
@@ -225,7 +235,7 @@ const handleUpload = async ()=>{
               </motion.div>
               {isEditing && (
                 <label className="absolute bottom-0 right-0 bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-full cursor-pointer shadow-lg transition-colors">
-                  <Camera className='w-5 h-5' />
+                  <Camera className="w-5 h-5" />
                   <input
                     type="file"
                     accept="image/*"
@@ -254,8 +264,10 @@ const handleUpload = async ()=>{
                   placeholder="Enter your name"
                 />
               ) : (
-                <div className='p-2 px-3 border border-gray-300 rounded-md'>
-                  <p className="text-gray-900 font-semibold">{userInfo?.name}</p>
+                <div className="p-2 px-3 border border-gray-300 rounded-md">
+                  <p className="text-gray-900 font-semibold">
+                    {userInfo?.name}
+                  </p>
                 </div>
               )}
             </div>
@@ -275,8 +287,10 @@ const handleUpload = async ()=>{
                   placeholder="Enter your username"
                 />
               ) : (
-                <div className='p-2 px-3 border border-gray-300 rounded-md'>
-                  <p className="text-gray-900 font-semibold">@{userInfo?.username}</p>
+                <div className="p-2 px-3 border border-gray-300 rounded-md">
+                  <p className="text-gray-900 font-semibold">
+                    @{userInfo?.username}
+                  </p>
                 </div>
               )}
             </div>
@@ -296,8 +310,10 @@ const handleUpload = async ()=>{
                   placeholder="Enter your phone number"
                 />
               ) : (
-                <div className='p-2 px-3 border border-gray-300 rounded-md'>
-                  <p className="text-gray-900 font-semibold">{userInfo?.phoneNumber}</p>
+                <div className="p-2 px-3 border border-gray-300 rounded-md">
+                  <p className="text-gray-900 font-semibold">
+                    {userInfo?.phoneNumber}
+                  </p>
                 </div>
               )}
             </div>
@@ -317,8 +333,10 @@ const handleUpload = async ()=>{
                   placeholder="Enter your email"
                 />
               ) : (
-                <div className='p-2 px-3 border border-gray-300 rounded-md'>
-                  <p className="text-gray-900 font-semibold">{userInfo?.email}</p>
+                <div className="p-2 px-3 border border-gray-300 rounded-md">
+                  <p className="text-gray-900 font-semibold">
+                    {userInfo?.email}
+                  </p>
                 </div>
               )}
             </div>
@@ -337,10 +355,11 @@ const handleUpload = async ()=>{
                   className="w-full px-4 py-3 rounded-xl border border-purple-400 focus:border-purple-600 focus:outline-none transition-colors bg-gray-50 focus:bg-white"
                 />
               ) : (
-                <div className='p-2 px-3 border border-gray-300 rounded-md'>
-                  <p className="text-gray-900 font-semibold">{userInfo?.dob || 'Not set'}</p>
+                <div className="p-2 px-3 border border-gray-300 rounded-md">
+                  <p className="text-gray-900 font-semibold">
+                    {userInfo?.dob || "Not set"}
+                  </p>
                 </div>
-                
               )}
             </div>
           </div>
@@ -362,7 +381,7 @@ const handleUpload = async ()=>{
                   </>
                 ) : (
                   <>
-                    <Save className='w-5 h-5' /> Save Changes
+                    <Save className="w-5 h-5" /> Save Changes
                   </>
                 )}
               </motion.button>
@@ -372,14 +391,14 @@ const handleUpload = async ()=>{
                 onClick={handleCancel}
                 className="flex-1 flex cursor-pointer items-center justify-center gap-2 border-2 border-gray-300 hover:border-gray-300 text-gray-600 font-bold py-3 rounded-xl transition-all"
               >
-                <X className='w-5 h-5' /> Cancel
+                <X className="w-5 h-5" /> Cancel
               </motion.button>
             </div>
           )}
         </motion.div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

@@ -43,14 +43,14 @@ const DepositPage = () => {
       icon: "/solimage.png",
       color: "bg-black",
     },
-    {
-      id: "usdt",
-      name: "USDT",
-      symbol: "USDT",
-      balance: `$100`,
-      icon: "/usdtimage.png",
-      color: "bg-black",
-    },
+    // {
+    //   id: "usdt",
+    //   name: "USDT",
+    //   symbol: "USDT",
+    //   balance: `$100`,
+    //   icon: "/usdtimage.png",
+    //   color: "bg-black",
+    // },
   ];
 
   const { setMode, setFrom } = useDepositContext();

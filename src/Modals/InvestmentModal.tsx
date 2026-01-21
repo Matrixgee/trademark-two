@@ -1,56 +1,54 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable react/jsx-key */
-
-import { InvestmentPlan } from "@/pages/(components)/Dashboard/InvestmentPage";
-import { Form, Input, Modal, Select } from "antd";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { Modal, Form, Select, Input } from "antd";
 
 interface DepositModalProps {
-  handleInvestment: (id: string) => void;
   isModalVisible: boolean;
-  showModal: () => void;
-  handleCancel: () => void;
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-  setIsModalVisible: Dispatch<SetStateAction<boolean>>;
-  plan: InvestmentPlan[] | null;
-  selectedCoin: string;
+  handleInvestment: (planId: string) => void;
   amount: string;
-  setAmount: Dispatch<SetStateAction<string>>;
-  getPlans: () => void;
+  setAmount: (amount: string) => void;
+  plan?: Array<{
+    id: string;
+    name: string;
+    minAmount: number;
+    maxAmount: number;
+    returns: number;
+    duration: number;
+    uid: string; // ✅ comes from API
+    user: any | null; // ✅ null = global plan
+  }>;
+  selectedCoin?: string;
+  handleCancel: () => void;
+  userId: string; // ✅ current user UID
 }
 
 const InvestmentModal: React.FC<DepositModalProps> = ({
   isModalVisible,
-
   handleInvestment,
   amount,
   setAmount,
   plan,
   selectedCoin,
-
   handleCancel,
+  userId,
 }) => {
-  const [selectedPlanUid, setSelectedPlanUid] = useState<string>("");
   const [selectedPlanId, setSelectedPlanId] = useState<string>("");
-  const [storedPlans, setStoredPlans] = useState<InvestmentPlan[]>([]);
 
-  useEffect(() => {
-    // Load from localStorage first
-    const saved = localStorage.getItem("InvestmentPlan");
-    if (saved) setStoredPlans(JSON.parse(saved));
+  // 🔹 Check if this user has a personal plan
+  const hasPersonalPlan = plan?.some((p) => p.uid && p.uid === userId);
 
-    // Fetch fresh plans
-    const fetchPlans = async () => {
-      if (plan) {
-        setStoredPlans(plan);
-        localStorage.setItem("InvestmentPlan", JSON.stringify(plan));
-      }
-    };
-    fetchPlans();
-  }, [plan]);
+  // 🔹 Decide which plans to show
+  const visiblePlans = plan?.filter((p) => {
+    if (hasPersonalPlan) {
+      // User HAS a personal plan → show ONLY their plan(s)
+      return p.uid === userId;
+    }
 
-  const selectedPlan = storedPlans.find((p) => p.uid === selectedPlanUid);
+    // User has NO personal plan → show ONLY global plans
+    return !p.uid || p.user === null;
+  });
+
+  const selectedPlan = visiblePlans?.find((p) => p.id === selectedPlanId);
 
   return (
     <Modal
@@ -59,6 +57,7 @@ const InvestmentModal: React.FC<DepositModalProps> = ({
       centered
       footer={[
         <button
+          key="invest"
           disabled={!selectedPlanId || !amount}
           onClick={() => handleInvestment(selectedPlanId)}
           className="bg-purple-600 text-white px-4 py-2 rounded-xl text-[16px] cursor-pointer w-max disabled:opacity-50 disabled:cursor-not-allowed"
@@ -70,7 +69,7 @@ const InvestmentModal: React.FC<DepositModalProps> = ({
       <Form layout="vertical">
         <h2 className="font-bold text-xl">Invest in {selectedCoin}</h2>
 
-        {/* Amount Input */}
+        {/* Amount */}
         <div className="mb-3">
           <p className="font-semibold mb-1">
             Amount <span className="text-red-600">*</span>
@@ -88,7 +87,7 @@ const InvestmentModal: React.FC<DepositModalProps> = ({
           />
         </div>
 
-        {/* Plan Selection */}
+        {/* Plan Select */}
         <div>
           <p className="font-semibold mb-1">
             Plan <span className="text-red-600">*</span>
@@ -96,15 +95,11 @@ const InvestmentModal: React.FC<DepositModalProps> = ({
           <Select
             placeholder="Select a plan"
             className="w-full h-10 border-purple-500 outline-0"
-            value={selectedPlanUid}
-            onChange={(value: string) => {
-              setSelectedPlanUid(value);
-              const plan = storedPlans.find((p) => p.uid === value);
-              if (plan) setSelectedPlanId(plan.id); // Make sure this is `id` from API
-            }}
+            value={selectedPlanId}
+            onChange={(value: string) => setSelectedPlanId(value)}
           >
-            {storedPlans.map((p) => (
-              <Select.Option key={p.uid} value={p.uid}>
+            {visiblePlans?.map((p) => (
+              <Select.Option key={p.id} value={p.id}>
                 {p.name} Plan
               </Select.Option>
             ))}
