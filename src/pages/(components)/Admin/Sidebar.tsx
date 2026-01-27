@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   LayoutGrid,
@@ -34,17 +34,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const menuItems = [
     { id: "/admin", icon: LayoutGrid, label: "Dashboard" },
     { id: "/admin/users", icon: Users, label: "All Users" },
-    { id: "/admin/pending-deposit", icon: CreditCard, label: "Pending Deposit" },
+    {
+      id: "/admin/pending-deposit",
+      icon: CreditCard,
+      label: "Pending Deposit",
+    },
     { id: "/admin/deposit-history", icon: History, label: "Deposit History" },
-    { id: "/admin/pending-withdraw", icon: TrendingDown, label: "Pending Withdraw" },
+    {
+      id: "/admin/pending-withdraw",
+      icon: TrendingDown,
+      label: "Pending Withdraw",
+    },
     { id: "/admin/withdraw-history", icon: History, label: "Withdraw History" },
     { id: "/admin/all-history", icon: Zap, label: "All History" },
     { id: "/admin/plans", icon: Plus, label: "Plans & Create Plan" },
-    { id: "/admin/all-investments", icon: ChartNoAxesCombined, label: "All Investment" },
-    { id: "/admin/active-investments", icon: ChartBarIncreasing, label: "Active Investments" },
-    { id: "/admin/pending-investments", icon: ClipboardClock, label: "Pending Investments" },
-    { id: "/admin/processed-investments", icon: ClipboardCheck, label: "Processed Investments" },
-    { id: "/admin/topearnings", icon: Gem , label: "Top Earnings" },
+    {
+      id: "/admin/all-investments",
+      icon: ChartNoAxesCombined,
+      label: "All Investment",
+    },
+    {
+      id: "/admin/active-investments",
+      icon: ChartBarIncreasing,
+      label: "Active Investments",
+    },
+    {
+      id: "/admin/pending-investments",
+      icon: ClipboardClock,
+      label: "Pending Investments",
+    },
+    {
+      id: "/admin/processed-investments",
+      icon: ClipboardCheck,
+      label: "Processed Investments",
+    },
+    { id: "/admin/topearnings", icon: Gem, label: "Top Earnings" },
     { id: "/admin/all-earnings", icon: Landmark, label: "Earning History" },
   ];
 
@@ -55,15 +79,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       setIsOpen(false);
     }
   };
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const logOut = ()=>{
-    dispatch(clearAdmin())
-    setTimeout(()=>{
-      toast.success("Logout Successful!")
-      router.push("/admin/login")
-    }, 2000)
-  }
+  const logOut = () => {
+    dispatch(clearAdmin());
+    setTimeout(() => {
+      toast.success("Logout Successful!");
+      router.push("/admin/login");
+    }, 2000);
+  };
 
   return (
     <>
@@ -79,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       <aside
         className={`
           fixed top-0 left-0 z-40 h-screen w-72
-          bg-gradient-to-b from-purple-900 via-purple-800 to-purple-900
+          bg-linear-to-b from-purple-900 via-purple-800 to-purple-900
           text-white flex flex-col
           transform transition-transform duration-300
           lg:translate-x-0 lg:relative
