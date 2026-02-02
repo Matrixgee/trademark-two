@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import axios from "@/config/axiosconfig";
 import { RootState } from "@/Global/store";
@@ -46,6 +48,8 @@ const WithdrawPage = () => {
   const [walletAddress, setWalletAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("");
   const [isProcessing, setIsProcessing] = useState(false);
+  console.log(isProcessing);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<Partial<UserProfile> | null>(null);
   const paymentMethods = [
