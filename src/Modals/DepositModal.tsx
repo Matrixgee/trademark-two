@@ -1,7 +1,8 @@
-import React, { SetStateAction, Dispatch, useState } from "react";
+import React, { SetStateAction, Dispatch } from "react";
 import { Modal, Form } from "antd";
 // import { useDepositContext } from "@/context/DepositContext";
 import { useRouter } from "next/router";
+import { useDepositContext } from "@/context/DepositContext";
 
 interface DepositModalProps {
   isModalVisible: boolean;
@@ -20,9 +21,9 @@ const DepositModal: React.FC<DepositModalProps> = ({
   // showModal,
   handleCancel,
 }) => {
-  // const { amount, setAmount } = useDepositContext();
+  const { amount, setAmount } = useDepositContext();
 
-  const [amount, setAmount] = useState<string>("");
+  // const [amount, setAmount] = useState<string>("");
 
   const router = useRouter();
   return (
@@ -53,7 +54,7 @@ const DepositModal: React.FC<DepositModalProps> = ({
 
                   if (!/^\d*$/.test(raw)) return;
 
-                  setAmount(raw); // 👈 keep it as string
+                  setAmount(raw === "" ? undefined : Number(raw));
                 }}
               />
             </div>
