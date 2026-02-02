@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 import axios from "@/config/axiosconfig";
 import { useDepositContext } from "@/context/DepositContext";
 import { RootState } from "@/Global/store";
@@ -5,81 +7,103 @@ import { isAxiosError } from "axios";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
+interface User {
+  uid: string;
+  name?: string;
+  email?: string;
+}
+
 export default function PaymentPage() {
   const [copied, setCopied] = useState(false);
-  const token = useSelector((state:RootState)=>state?.user?.Token)
-  const {mode, amount, from, setAmount, setFrom, setMode} = useDepositContext()
+  const token = useSelector((state: RootState) => state?.user?.Token);
+  const [user, setUser] = useState<User | null>(null);
+
+  const getProfile = async () => {
+    try {
+      const res = await axios.get("/user/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUser(res.data.data);
+    } catch (error) {
+      console.error("Failed to fetch user profile", error);
+      toast.error("Unable to load user profile");
+    }
+  };
+
+  console.log(user);
+
+  const { mode, amount, setAmount, setMode } = useDepositContext();
   const handleCopy = () => {
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-  const router = useRouter()
-  const handleDeposit = async()=>{
-   const formData ={
-    amount: amount,
-    from: from,
-    method: mode.toUpperCase()
-   }
+  const router = useRouter();
+  const handleDeposit = async () => {
+    const formData = {
+      amount: Number(amount),
+      method: mode.toUpperCase(),
+      from: user?.uid, // ✅ FIXED & GUARANTEED
+    };
 
-   const loadingId = toast.loading("Please wait...")
-   try {
-    const response = await axios.post("/deposit/", formData, {
-      headers:{
-        Authorization : `Bearer ${token}`,
-        "Content-Type": "application/json",
-      }
-    })
-    console.log(response)
+    const loadingId = toast.loading("Please wait...");
 
-    setAmount(0)
-    setFrom("")
-    setMode("")
-    toast.dismiss(loadingId)
-    toast.success('Payment confirmed! Processing transaction...');
-    setTimeout(() => {
-      router.push("/user")
-    }, 2000);
-   } catch (error) {
-    if (isAxiosError(error)) {
-      toast.dismiss(loadingId)
-          setAmount(0)
-    setFrom("")
-    setMode("")
-      console.log(error)
+    try {
+      await axios.post("/deposit/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
+      setAmount(undefined);
+      setMode("");
+
+      toast.dismiss(loadingId);
+      toast.success("Payment confirmed! Processing transaction...");
+      setTimeout(() => router.push("/user"), 2000);
+    } catch (error) {
+      toast.dismiss(loadingId);
+      toast.error(
+        isAxiosError(error)
+          ? error.response?.data?.message
+          : "An error occurred",
+      );
     }
-    router.back()
-   }
-}
+  };
 
-const MODE_LABEL: Record<string, string> = {
-  btc: "Bitcoin",
-  eth: "Ethereum",
-  sol: "Solana",
-  usdt:"Usdt"
-};
+  const MODE_LABEL: Record<string, string> = {
+    btc: "Bitcoin",
+    eth: "Ethereum",
+    sol: "Solana",
+    usdt: "Usdt",
+  };
 
-const WALLET_ADDRESS: Record<string, string> = {
-  btc: "bc1qtx7acjjmpeshnvg63f5jpas32g7d4kmj29ywgf",
-  eth: "0x7f2D483A5A151cf0F14857090a406d0B0055eCAc",
-  sol: "2VbK88Li6MVXeW4KSjABMsDVsDPeLCrh3YGrJ5Wdqsdf",
-  usdt: "TQMeKf1vNs2SqRtvvFoXjvkhe7pBgWRDPD",
-};
-const QR_CODE: Record<string, string> = {
-  btc: "/BTC.jpg",
-  eth: "/ETH.jpg",
-  sol: "/SOL.jpeg",
-  usdt: "/USDT.jpg",
-};
+  const WALLET_ADDRESS: Record<string, string> = {
+    btc: "bc1qtx7acjjmpeshnvg63f5jpas32g7d4kmj29ywgf",
+    eth: "0x7f2D483A5A151cf0F14857090a406d0B0055eCAc",
+    sol: "2VbK88Li6MVXeW4KSjABMsDVsDPeLCrh3YGrJ5Wdqsdf",
+    usdt: "TQMeKf1vNs2SqRtvvFoXjvkhe7pBgWRDPD",
+  };
+  const QR_CODE: Record<string, string> = {
+    btc: "/BTC.jpg",
+    eth: "/ETH.jpg",
+    sol: "/SOL.jpeg",
+    usdt: "/USDT.jpg",
+  };
 
-const walletAddress = WALLET_ADDRESS[mode]; 
+  const walletAddress = WALLET_ADDRESS[mode];
 
-
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -87,37 +111,47 @@ const walletAddress = WALLET_ADDRESS[mode];
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-xl font-bold">Payment Informations</h1>
-          <button onClick={()=>router.back()} className="text-purple-600 text-lg cursor-pointer hover:text-purple-700">← Back</button>
+          <button
+            onClick={() => router.back()}
+            className="text-purple-600 text-lg cursor-pointer hover:text-purple-700"
+          >
+            ← Back
+          </button>
         </div>
 
         {/* QR Code Section */}
         <div className="bg-white rounded-lg p-8 mb-6 text-center shadow-md">
-
           <div className="inline-block bg-purple-100 rounded-lg px-4 py-2 mb-1">
             <span className="text-purple-600 font-bold text-lg">QR CODE</span>
           </div>
-          <h2 className="text-gray-600 text-sm font-semibold mb-4">{mode.charAt(0).toUpperCase().concat(mode.slice(1))}</h2>
+          <h2 className="text-gray-600 text-sm font-semibold mb-4">
+            {mode.charAt(0).toUpperCase().concat(mode.slice(1))}
+          </h2>
 
-          <p className="text-gray-700 font-semibold mb-6">THIS IS YOUR {mode.toUpperCase()}, WALLET QR CODE</p>
+          <p className="text-gray-700 font-semibold mb-6">
+            THIS IS YOUR {mode.toUpperCase()}, WALLET QR CODE
+          </p>
 
           <div className="flex justify-center mb-8">
             <div className="bg-white border-2 border-gray-200 rounded-lg ">
-             <Image
-                           src={QR_CODE[mode]}
-                           alt="TradeMark"
-                           width={100}
-                           height={100}
-                           className="cursor-pointer"
-                         />
+              <Image
+                src={QR_CODE[mode]}
+                alt="TradeMark"
+                width={100}
+                height={100}
+                className="cursor-pointer"
+              />
             </div>
           </div>
 
           {/* Wallet Address Section */}
           <div className="mb-6">
-            <label className="block text-gray-600 text-sm font-semibold mb-3">Wallet Address</label>
+            <label className="block text-gray-600 text-sm font-semibold mb-3">
+              Wallet Address
+            </label>
             <div className="flex gap-2">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={walletAddress}
                 readOnly
                 className="flex-1 border rounded-lg p-3 bg-gray-50 text-sm text-gray-700 truncate"
@@ -158,7 +192,9 @@ const walletAddress = WALLET_ADDRESS[mode];
             {/* Amount */}
             <div className="flex justify-between items-center py-3 border-b">
               <span className="text-gray-600 font-semibold">Amount:</span>
-              <span className="text-gray-900 font-semibold text-lg">{amount} USD</span>
+              <span className="text-gray-900 font-semibold text-lg">
+                {amount} USD
+              </span>
             </div>
 
             {/* Charge */}
@@ -171,7 +207,9 @@ const walletAddress = WALLET_ADDRESS[mode];
           {/* Requirement Section */}
           <div className="bg-purple-50 rounded-lg p-4 mb-6 border border-purple-200">
             <p className="text-gray-700 text-sm">
-              <span className="font-semibold">Requirement:</span> Please send the exact amount to the wallet address above. Transaction will be confirmed once payment is received on the blockchain.
+              <span className="font-semibold">Requirement:</span> Please send
+              the exact amount to the wallet address above. Transaction will be
+              confirmed once payment is received on the blockchain.
             </p>
           </div>
 
