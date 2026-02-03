@@ -50,7 +50,7 @@ export default function PaymentPage() {
     const formData = {
       amount: Number(amount),
       method: mode.toUpperCase(),
-      from: user?.uid, // ✅ FIXED & GUARANTEED
+      from: user?.name, // ✅ FIXED & GUARANTEED
     };
 
     const loadingId = toast.loading("Please wait...");
