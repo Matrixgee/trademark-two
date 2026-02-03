@@ -39,13 +39,15 @@ const DepositPage = () => {
           Authorization: `Bearer ${user?.Token}`,
         },
       });
-      setUserDetails(res.data?.user);
+      setUserDetails(res.data.data);
     } catch (error) {
       console.error("Failed to fetch profile", error);
     } finally {
       setFetching(false);
     }
   };
+
+  console.log(userDetails);
 
   useEffect(() => {
     getProfile();
