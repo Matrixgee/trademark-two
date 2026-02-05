@@ -1,14 +1,15 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Menu, TrendingUp, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navItems = [
     { name: "Home", id: "/" },
@@ -197,7 +198,10 @@ const Header = () => {
             <a href="/contact" className="text-purple-100 hover:text-white">
               Contact
             </a>
-            <a href="/auth/login" className="text-purple-500 font-semibold hover:text-purple-500">
+            <a
+              href="/auth/login"
+              className="text-purple-500 font-semibold hover:text-purple-500"
+            >
               Login
             </a>
             <button
