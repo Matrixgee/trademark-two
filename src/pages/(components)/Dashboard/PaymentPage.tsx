@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/set-state-in-effect */
+
 import axios from "@/config/axiosconfig";
 import { useDepositContext } from "@/context/DepositContext";
 import { RootState } from "@/Global/store";
+import { useAuthGuard } from "@/hooks/useAuthguards";
 import { isAxiosError } from "axios";
 import { Check, Copy } from "lucide-react";
 import Image from "next/image";
@@ -18,6 +19,8 @@ interface User {
 }
 
 export default function PaymentPage() {
+  useAuthGuard();
+
   const [copied, setCopied] = useState(false);
   const token = useSelector((state: RootState) => state?.user?.Token);
   const [user, setUser] = useState<User | null>(null);
