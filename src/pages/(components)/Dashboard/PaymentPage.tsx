@@ -88,15 +88,16 @@ export default function PaymentPage() {
     sol: "Solana",
     usdt: "Usdt",
   };
+  // bc1qtx7acjjmpeshnvg63f5jpas32g7d4kmj29ywgf;
 
   const WALLET_ADDRESS: Record<string, string> = {
-    btc: "bc1qtx7acjjmpeshnvg63f5jpas32g7d4kmj29ywgf",
+    btc: "bc1qadc2euhg28npakafl7ltvghx5fp86r42j8c62k",
     eth: "0x7f2D483A5A151cf0F14857090a406d0B0055eCAc",
     sol: "2VbK88Li6MVXeW4KSjABMsDVsDPeLCrh3YGrJ5Wdqsdf",
     usdt: "TQMeKf1vNs2SqRtvvFoXjvkhe7pBgWRDPD",
   };
   const QR_CODE: Record<string, string> = {
-    btc: "/BTC.jpg",
+    btc: "/btctwo.jpg",
     eth: "/ETH.jpg",
     sol: "/SOL.jpeg",
     usdt: "/USDT.jpg",
